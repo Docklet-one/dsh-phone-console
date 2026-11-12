@@ -276,6 +276,9 @@ export function mapSessionEvents(event, hooks = {}) {
     case 'assistant/message': {
       const payload = messagePayload(data.message, hooks)
       if (!payload) return []
+      if (typeof hooks.rewriteImages === 'function') {
+        payload.text = hooks.rewriteImages(payload.text)
+      }
       const usage = normalizeUsage(data.usage) || usageOfStream(data.stream)
       if (usage) payload.usage = usage
       if (data.interrupted === true) payload.interrupted = true

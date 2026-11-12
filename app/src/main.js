@@ -235,11 +235,10 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
     } catch {
       /* 忽略 */
     }
-    // 老版本只有一个 url：和默认地址不同就当外网地址，否则当家里地址
+    // 老版本只有一个 url：没有单独地址时按家里地址迁移
     if (!lan && !wan && url) {
       const normalized = normalizeUrl(url)
-      if (normalized && normalized !== DEFAULT_URL) wan = normalized
-      else lan = normalized
+      if (normalized) lan = normalized
     }
     state.lanUrl = normalizeUrl(lan) || DEFAULT_URL
     state.wanUrl = wan ? normalizeUrl(wan) : ''
@@ -669,6 +668,7 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
       info && info.projections && typeof info.projections === 'object' ? info.projections : {}
     state.stream = null
     state.hydrated = true
+    state.booting = false
     state.waiting = false
     state.busy = false
     state.waitingSince = 0
@@ -981,6 +981,7 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
       applySnapshot(info)
       connectLive()
     } catch {
+      state.booting = false
       fallbackLegacy()
     }
   }
@@ -2474,7 +2475,11 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
 
   function updateServerSum() {
     if (!refs.serverSum) return
-    const url = state.url || DEFAULT_URL
+    if (!state.url) {
+      refs.serverSum.textContent = '未配置'
+      return
+    }
+    const url = state.url
     const mode = state.mode || 'auto'
     const where =
       mode === 'wan' ? '手动外部' : mode === 'lan' ? '手动家里' : url === state.lanUrl ? '自动·家里' : '自动·外部'
@@ -2502,12 +2507,18 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
   }
 
   function saveSettings() {
+    const lan = normalizeUrl(refs.inputUrl.value)
+    const wan = refs.inputWan ? normalizeUrl(refs.inputWan.value) : ''
+    if (!lan && !wan) {
+      toast('先填电脑地址，例如 http://192.168.1.1:8788', 'error')
+      return
+    }
     if (!refs.inputToken.value.trim()) {
       toast('访问令牌不能为空，电脑端「设置 → 手机中转」里可以看到', 'error')
       return
     }
-    state.lanUrl = normalizeUrl(refs.inputUrl.value) || DEFAULT_URL
-    state.wanUrl = refs.inputWan ? normalizeUrl(refs.inputWan.value) : ''
+    state.lanUrl = lan || ''
+    state.wanUrl = wan || ''
     // 三种连接方式：自动 / 只用家里 / 只用外网
     state.autoPick = state.mode === 'auto'
     state.pick = state.mode === 'wan' ? 'wan' : 'lan'
@@ -2828,6 +2839,39 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
         })
     })
 
+    // 工作区相对图片：插件改写为 docklet-file:，这里带令牌取回
+    refs.list.querySelectorAll('img.chat-image[data-workspace]').forEach((image) => {
+      if (image.dataset.bound) return
+      image.dataset.bound = '1'
+      const path = image.getAttribute('data-workspace') || ''
+      if (!path) return
+      const src = transport.workspaceUrl(path, state.currentSession)
+      const cached = imageCache.get(src)
+      if (cached) {
+        image.src = cached
+        return
+      }
+      fetch(src, { headers: transport.authHeaders(), credentials: 'omit' })
+        .then((res) => {
+          if (!res.ok) throw new Error('HTTP ' + res.status)
+          return res.blob()
+        })
+        .then((blob) => {
+          const url = URL.createObjectURL(blob)
+          imageCache.set(src, url)
+          image.src = url
+        })
+        .catch(() => {
+          if (!image.dataset.retried) {
+            image.dataset.retried = '1'
+            image.dataset.bound = ''
+            setTimeout(loadChatImages, 900)
+            return
+          }
+          showImageFallback(image, src, '工作区图片打不开 · 点按重试')
+        })
+    })
+
     // Markdown 里的 http 外链图：CSP 不允许 img-src http，但 connect-src 允许 http，
     // 所以用 fetch 转 blob 再显示（需要对方允许 CORS）
     refs.list.querySelectorAll('img.chat-image[data-remote]').forEach((image) => {
@@ -2919,21 +2963,6 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
       <div class="chat-skeleton-bubble"></div>
       <div class="chat-skeleton-footer"></div>
     </div>`
-  }
-
-  /** 工具/交付排到本轮最后一条助手消息之后 */
-  function lastTurnHasAssistant(items) {
-    let lastUser = -1
-    for (let i = 0; i < items.length; i += 1) {
-      const item = items[i]
-      if (item.kind === 'message' && item.message && item.message.who === 'me') lastUser = i
-    }
-    if (lastUser < 0) return false
-    for (let i = lastUser + 1; i < items.length; i += 1) {
-      const item = items[i]
-      if (item.kind === 'message' && item.message && item.message.who === 'ai') return true
-    }
-    return false
   }
 
   function lastTurnNotice(items) {
@@ -3349,6 +3378,11 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
     })
   }
 
+  function renderStreamingText(text) {
+    // 流式内容是半截 Markdown：不要走完整解析器，避免未闭合图片/链接把主线程卡死
+    return escapeHtml(String(text || '')).replace(/\n/g, '<br>')
+  }
+
   function paintMessages(forceScroll) {
     if (!refs.list) return
     const beforeTop = refs.list ? refs.list.scrollTop : 0
@@ -3401,7 +3435,7 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
       ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${mathBoardHtml()}`
       : ''
     const streaming = streamText || streamReasoning
-      ? `<div class="chat-turn is-ai"><div class="chat-meta">${avatarHtml(false, { me: state.avatarMe, ai: state.avatarAi })}<span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${streamThinkingOnly ? ' is-thinking' : ''}">${streamThinking}${streamText ? `<div class="chat-stream-text">${renderMarkdown(streamText)}</div>` : ''}${streamText ? '<span class="chat-typing-dot"></span>' : ''}</div></div>`
+      ? `<div class="chat-turn is-ai"><div class="chat-meta">${avatarHtml(false, { me: state.avatarMe, ai: state.avatarAi })}<span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${streamThinkingOnly ? ' is-thinking' : ''}">${streamThinking}${streamText ? `<div class="chat-stream-text">${renderStreamingText(streamText)}</div>` : ''}${streamText ? '<span class="chat-typing-dot"></span>' : ''}</div></div>`
       : ''
     const typing = active && !streamText && !streamReasoning
       ? `<div class="chat-turn is-ai"><div class="chat-meta">${avatarHtml(false, { me: state.avatarMe, ai: state.avatarAi })}<span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${thinking ? ' is-thinking' : ''}${stale ? ' is-stale' : ''}"><span class="chat-typing-head"><span class="chat-typing-text">${typingLabel}</span><span class="chat-typing-dot"></span></span>${typingDetail}</div></div>`
@@ -3788,29 +3822,9 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
           </div>
         </section>
 
-        <button type="button" class="chat-btn" data-action="open-help">使用说明</button>
-
         <p class="chat-version" data-role="version"></p>
+        <a class="chat-official chat-link" href="https://docklet.cn">官网：https://docklet.cn</a>
       </section>
-
-      <div class="chat-scrim" data-role="help" hidden>
-        <div class="chat-sheet">
-          <h2 class="chat-sheet-title">使用说明</h2>
-          <div class="chat-help">
-            <p class="chat-sheet-sub">配对</p>
-            <p class="chat-hint">电脑端打开 DSH → 插件 → 「手机中转」，确认端口（默认 8788）和访问令牌。手机在 ⚙ 里填地址：在家填家里地址，在外填外部地址，令牌与电脑一致，点「测试」确认可连接。</p>
-            <p class="chat-sheet-sub">地址切换</p>
-            <p class="chat-hint">连接方式可选：自动（家里优先、不通再走外部）、家里地址、外部地址。</p>
-            <p class="chat-sheet-sub">审批与提问</p>
-            <p class="chat-hint">手机上打开这个应用，审批就由手机接管：待审批会作为卡片出现在对话里，点「拒绝 / 允许」即可；电脑端提问也会变成卡片，选好（或自己输入）后点「提交」。手机点 ✕ 关闭应用后，这些交回电脑端；在电脑上也能直接处理。</p>
-            <p class="chat-sheet-sub">后台提醒</p>
-            <p class="chat-hint">在「通知」里打开后，离开对话也会在助手回复结束时弹通知。</p>
-            <p class="chat-sheet-sub">注意事项</p>
-            <p class="chat-hint">令牌相当于钥匙，不要外传；电脑的局域网地址变了（重启后可能变），要回来改「家里地址」；同一时间手机只连一个会话；插件重启的瞬间，正在等待的审批会暂时回到电脑原生弹窗。</p>
-          </div>
-          <button type="button" class="chat-btn" data-action="close-help">关闭</button>
-        </div>
-      </div>
 
       <div class="chat-scrim chat-drawer-scrim" data-role="scrim" hidden>
         <aside class="chat-drawer" data-role="drawer">
@@ -3964,8 +3978,7 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
       serverSum: appEl.querySelector('[data-role="server-sum"]'),
       serverBody: appEl.querySelector('[data-role="server-body"]'),
       version: appEl.querySelector('[data-role="version"]'),
-      helpScrim: appEl.querySelector('[data-role="help"]'),
-      scrim: appEl.querySelector('[data-role="scrim"]'),
+        scrim: appEl.querySelector('[data-role="scrim"]'),
       sheetBody: appEl.querySelector('[data-role="sheet-body"]'),
       viewer: appEl.querySelector('[data-role="viewer"]'),
       viewerImg: appEl.querySelector('[data-role="viewer-img"]'),
@@ -4115,10 +4128,6 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
       void openNewSheet()
     } else if (action === 'close-new') {
       closeNewSheet()
-    } else if (action === 'open-help') {
-      if (refs.helpScrim) refs.helpScrim.hidden = false
-    } else if (action === 'close-help') {
-      if (refs.helpScrim) refs.helpScrim.hidden = true
     } else if (action === 'create-session') {
       void createNew()
     } else if (action === 'open-models') {
@@ -4696,11 +4705,6 @@ const SSE_WATCHDOG_CHECK_MS = 10 * 1000
     }
     if (refs.newScrim && !refs.newScrim.hidden) {
       closeNewSheet()
-      event.detail.handled = true
-      return
-    }
-    if (refs.helpScrim && !refs.helpScrim.hidden) {
-      refs.helpScrim.hidden = true
       event.detail.handled = true
       return
     }

@@ -39,10 +39,10 @@ describe('createTransport', () => {
     )
   })
 
-  it('falls back to the default base when empty', () => {
+  it('keeps the base empty when no address is configured', () => {
     const { transport } = make('', '')
-    expect(transport.baseUrl()).toBe('http://192.168.2.6:8788')
-    expect(transport.eventsUrl(0, '')).toBe('http://192.168.2.6:8788/events')
+    expect(transport.baseUrl()).toBe('')
+    expect(transport.eventsUrl(0, '')).toBe('/events')
   })
 
   it('uses /messages?recent when there is no cursor and ?since when there is', async () => {

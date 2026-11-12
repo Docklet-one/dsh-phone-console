@@ -10,9 +10,9 @@
  */
 import { createServer } from 'node:http'
 import { randomBytes } from 'node:crypto'
-import { appendFileSync, closeSync, copyFileSync, createReadStream, existsSync, mkdirSync, openSync, readFileSync, readSync, statSync, writeFileSync } from 'node:fs'
+import { appendFileSync, closeSync, copyFileSync, createReadStream, existsSync, mkdirSync, openSync, readFileSync, readSync, realpathSync, statSync, writeFileSync } from 'node:fs'
 import { homedir, networkInterfaces } from 'node:os'
-import { basename, dirname, isAbsolute, join } from 'node:path'
+import { basename, dirname, isAbsolute, join, relative } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 // 插件装在工作区，依赖要从 DSH 安装目录里取
@@ -38,7 +38,6 @@ import {
   normalizeAnswers,
   normalizeQuestions,
   questionsFromArgs,
-  sseComment,
   sseData,
   summarizeToolArgs,
   textOfContent,
@@ -977,12 +976,55 @@ export function apply(ctx, config) {
     eventFlushTimers.set(key, setTimeout(write, 400))
   }
 
+  /** 把工作区里的相对图片改成 App 可请求的 docklet-file: 路径 */
+  function rewriteWorkspaceImages(text, sessionId) {
+    const source = String(text || '')
+    if (!source || !/\n?!\[[^\]]*\]\([^)]*\)/.test(source)) return source
+    let cwd = ''
+    try {
+      const agent = ctx.agents.get(String(sessionId || '')) || resolveAgent()
+      cwd = String((agent && agent.session && agent.session.header && agent.session.header.cwd) || (agent && agent.cwd) || '')
+      if (!cwd) return source
+      const root = realpathSync(cwd)
+      const rewrite = (line) =>
+        line.replace(
+          /!\[([^\]]*)\]\(([^()\s]+(?:\([^()]*\)[^()\s]*)*)\)/g,
+          (whole, alt, raw) => {
+            if (/^(?:[a-z][a-z0-9+.-]*:|\/)/i.test(raw)) return whole
+            try {
+              const rel = raw.replace(/^\.\//, '')
+              const file = realpathSync(join(cwd, rel))
+              const inside = relative(root, file)
+              if (!inside || inside.startsWith('..') || isAbsolute(inside)) return whole
+              if (!statSync(file).isFile()) return whole
+              return `![${alt}](docklet-file:${rel})`
+            } catch {
+              return whole
+            }
+          },
+        )
+      let inFence = false
+      return source
+        .split('\n')
+        .map((line) => {
+          if (/^\s*```/.test(line)) {
+            inFence = !inFence
+            return line
+          }
+          return inFence ? line : rewrite(line)
+        })
+        .join('\n')
+    } catch {
+      return source
+    }
+  }
+
   /** 映射时的配对状态：提问 callId → questions、审批 id → payload */
   function eventContextFor(sessionId) {
     const key = String(sessionId || '')
     let context = eventContexts.get(key)
     if (!context) {
-      context = { questions: new Map(), approvals: new Map(), materializeImage }
+      context = { questions: new Map(), approvals: new Map(), materializeImage, rewriteImages: (text) => rewriteWorkspaceImages(text, key) }
       eventContexts.set(key, context)
     }
     return context
@@ -1546,7 +1588,15 @@ export function apply(ctx, config) {
     ping = setInterval(() => {
       if (closed) return
       try {
-        res.write(sseComment('ping'))
+        res.write(
+          sseData({
+            id: `heartbeat-${Date.now().toString(36)}`,
+            seq: currentCursor(session),
+            type: 'heartbeat',
+            at: Date.now(),
+            payload: {},
+          }),
+        )
       } catch {
         close()
       }
@@ -2380,6 +2430,72 @@ export function apply(ctx, config) {
     }
 
     // 交付文件：只允许取 session 日志里 deliverables/presented 声明过的路径
+    if (req.method === 'GET' && url.pathname === '/workspace/file') {
+      const sessionId = String(url.searchParams.get('session') || target || '')
+      const agent = sessionId ? ctx.agents.get(sessionId) : resolveAgent()
+      const session = agent && agent.session
+      const cwd = String(
+        (session && session.header && session.header.cwd) || (agent && agent.cwd) || '',
+      )
+      const requested = String(url.searchParams.get('path') || '')
+      if (!cwd) {
+        json(res, 404, { error: '没有工作区' })
+        return
+      }
+      if (!requested || isAbsolute(requested)) {
+        json(res, 400, { error: '路径无效' })
+        return
+      }
+      let file = ''
+      try {
+        const root = realpathSync(cwd)
+        file = realpathSync(join(cwd, requested))
+        const inside = relative(root, file)
+        if (!inside || inside.startsWith('..') || isAbsolute(inside)) {
+          json(res, 403, { error: '路径不在工作区' })
+          return
+        }
+      } catch {
+        json(res, 404, { error: '文件不存在' })
+        return
+      }
+      try {
+        if (!statSync(file).isFile()) {
+          json(res, 404, { error: '不是文件' })
+          return
+        }
+        const size = statSync(file).size
+        if (size > 25 * 1024 * 1024) {
+          json(res, 413, { error: '文件太大（上限 25MB）' })
+          return
+        }
+        const ext = file.toLowerCase().slice(file.lastIndexOf('.'))
+        const type =
+          {
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.webp': 'image/webp',
+            '.gif': 'image/gif',
+            '.svg': 'image/svg+xml',
+          }[ext] || ''
+        if (!type) {
+          json(res, 415, { error: '不是支持的图片格式' })
+          return
+        }
+        res.writeHead(200, {
+          'Content-Type': type,
+          'Content-Length': String(size),
+          'Cache-Control': 'no-store',
+          'Access-Control-Allow-Origin': '*',
+        })
+        createReadStream(file).pipe(res)
+      } catch (error) {
+        json(res, 500, { error: '读取图片失败：' + (error && error.message) })
+      }
+      return
+    }
+
     if (req.method === 'GET' && url.pathname === '/presented/file') {
       const sessionId = String(url.searchParams.get('session') || '')
       const seq = Number(url.searchParams.get('seq'))

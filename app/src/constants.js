@@ -1,5 +1,5 @@
 /** 对话应用的常量与文案（从 5.17.7 单文件拆出） */
-export const DEFAULT_URL = 'http://192.168.2.6:8788'
+export const DEFAULT_URL = ''
 export const POLL_MS = 800
 export const PREFS_KEY = 'prefs.v1'
 export const CACHE_KEY = 'history.v1'

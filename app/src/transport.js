@@ -112,6 +112,13 @@ export function createTransport({ base, token }) {
       if (name) params.set('name', String(name))
       return baseUrl() + '/presented/file?' + params.toString()
     },
+    workspaceUrl: (path, session) => {
+      const params = new URLSearchParams({ path: String(path || '') })
+      if (session) params.set('session', String(session))
+      const bearer = currentToken()
+      if (bearer) params.set('token', bearer)
+      return baseUrl() + '/workspace/file?' + params.toString()
+    },
     stop: () => postJson('/stop', {}, 8000),
     approvalDecision: (id, allow) => postJson('/approvals', { id, decision: allow ? 'allow' : 'deny' }, 5000),
     respond: (id, answers, session) => postJson('/respond', { id, answers, session }, 8000),

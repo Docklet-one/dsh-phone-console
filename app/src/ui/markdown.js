@@ -24,6 +24,10 @@ const ALIASES = {
 }
 
 function markdownImageHtml(alt, src) {
+  if (/^docklet-file:/i.test(src)) {
+    const path = src.replace(/^docklet-file:/i, '')
+    return `<img class="chat-image chat-md-image" data-workspace="${escapeAttr(path)}" alt="${escapeAttr(alt)}" />`
+  }
   if (!/^https?:\/\//i.test(src)) return escapeHtml(alt)
   if (/^https:/i.test(src)) {
     return `<img class="chat-image chat-md-image" src="${escapeAttr(src)}" alt="${escapeAttr(alt)}" loading="lazy" referrerpolicy="no-referrer" />`
