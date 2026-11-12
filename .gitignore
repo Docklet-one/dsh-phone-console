@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.tmp/
+backups/
+*.zip
+*.apk
+*.jks
+*.bak
+.env
+.env.local
+.DS_Store
+*.log

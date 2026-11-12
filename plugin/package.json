@@ -1,0 +1,30 @@
+{
+  "name": "@local/phone-relay",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH手机控制台：把手机发来的话送进会话，把会话里的回复送回手机",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "events.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  }
+}

@@ -1,0 +1,4 @@
+- insert:
+    - id: phone-relay
+      name: '@local/phone-relay'
+      config: {}

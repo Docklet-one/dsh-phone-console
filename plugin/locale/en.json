@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DSH Mobile Console",
+    "description": "Sends what you type on the phone into the current session, and mirrors the session's replies back to the phone. Port and token are configurable."
+  }
+}

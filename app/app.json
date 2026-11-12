@@ -1,0 +1,42 @@
+{
+  "spec": 1,
+  "id": "dsh-console",
+  "name": "DSH控制台",
+  "version": "1.0.118",
+  "entry": "app.js",
+  "icon": "💬",
+  "category": "工具",
+  "tagline": "手机上的 DSH 控制台",
+  "description": "手机上的 DSH 控制台：收发消息、图片与文件，工具调用可折叠，审批与提问以卡片处理；支持多会话、历史记录与离线缓存。",
+  "author": "Docklet",
+  "authorContact": "docklet@163.com",
+  "capabilities": [
+    "fs",
+    "openExternal",
+    "clipboard",
+    "share",
+    "background",
+    "download"
+  ],
+  "permissions": [
+    {
+      "name": "notifications",
+      "reason": "接收新消息提醒"
+    }
+  ],
+  "immersive": true,
+  "shortcutColor": "#5b7f96",
+  "search": {
+    "keywords": [
+      "dsh",
+      "dshkongzhitai",
+      "duihua",
+      "kzt",
+      "dh",
+      "console",
+      "chat"
+    ]
+  },
+  "publishedAt": "2026-11-08",
+  "updatedAt": "2026-11-08"
+}
