@@ -1456,6 +1456,46 @@ export function apply(ctx, config) {
     }
   }
 
+  function publishPhoneApproval(entry, status, outcome) {
+    if (!entry || !entry.session) return
+    try {
+      const session = ctx.agents.get(entry.session)?.session
+      const cursor = session ? currentCursor(session) : -1
+      const approvalKey = entry.approvalId || entry.id
+      if (status === 'pending') {
+        recordEvent(entry.session, {
+          id: 'approval-' + approvalKey,
+          seq: Math.max(0, cursor) + 0.5,
+          type: 'approval.request',
+          at: Date.now(),
+          status: 'pending',
+          payload: {
+            approvalId: entry.approvalId || '',
+            title: entry.tool ? `允许执行 ${entry.tool}？` : '需要审批',
+            tool: entry.tool || '',
+            reason: entry.reason || '',
+            callId: entry.callId || '',
+          },
+        })
+      } else {
+        recordEvent(entry.session, {
+          id: 'approval-' + approvalKey,
+          seq: Math.max(0, cursor) + 0.5,
+          type: 'approval.result',
+          at: Date.now(),
+          status: 'failed',
+          payload: {
+            approvalId: entry.approvalId || '',
+            decision: 'deny',
+            outcome: outcome || 'cancelled',
+          },
+        })
+      }
+    } catch {
+      /* 审批事件推不出去不影响审批本身 */
+    }
+  }
+
   async function receiveGatewayApproval(frame) {
     if (!phoneMode) return
     const eventId = String(frame.eventId || '')
@@ -1480,6 +1520,7 @@ export function apply(ctx, config) {
     }
     pendingApprovals.set(id, entry)
     if (approvalId) pendingByApprovalId.set(approvalId, entry)
+    publishPhoneApproval(entry, 'pending')
   }
 
   function receiveGatewayApprovalCancel(eventId) {
@@ -1487,6 +1528,7 @@ export function apply(ctx, config) {
       if (entry.eventId !== eventId) continue
       pendingApprovals.delete(id)
       if (entry.approvalId) pendingByApprovalId.delete(entry.approvalId)
+      publishPhoneApproval(entry, 'result', 'cancelled')
       break
     }
   }
