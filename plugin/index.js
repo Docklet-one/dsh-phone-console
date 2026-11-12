@@ -1456,7 +1456,7 @@ export function apply(ctx, config) {
     }
   }
 
-  function publishPhoneApproval(entry, status, outcome) {
+  function publishPhoneApproval(entry, status, outcome, decision) {
     if (!entry || !entry.session) return
     try {
       const session = ctx.agents.get(entry.session)?.session
@@ -1483,11 +1483,11 @@ export function apply(ctx, config) {
           seq: Math.max(0, cursor) + 0.5,
           type: 'approval.result',
           at: Date.now(),
-          status: 'failed',
+          status: 'ok',
           payload: {
             approvalId: entry.approvalId || '',
-            decision: 'deny',
-            outcome: outcome || 'cancelled',
+            decision: decision === 'deny' ? 'deny' : 'allow',
+            outcome: outcome || '',
           },
         })
       }
@@ -1528,7 +1528,7 @@ export function apply(ctx, config) {
       if (entry.eventId !== eventId) continue
       pendingApprovals.delete(id)
       if (entry.approvalId) pendingByApprovalId.delete(entry.approvalId)
-      publishPhoneApproval(entry, 'result', 'cancelled')
+      publishPhoneApproval(entry, 'result', 'cancelled', 'deny')
       break
     }
   }
@@ -1771,6 +1771,7 @@ export function apply(ctx, config) {
         })
         pendingApprovals.delete(entry.id)
         if (entry.approvalId) pendingByApprovalId.delete(entry.approvalId)
+        publishPhoneApproval(entry, 'result', decision === 'deny' ? 'rejected' : 'allowed-once', decision)
         return { ok: true }
       } catch {
         entry.answering = false
