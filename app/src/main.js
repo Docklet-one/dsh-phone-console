@@ -114,6 +114,7 @@ export default function mount(root, api) {
     /^(127\.0\.0\.1|localhost)$/.test(location.hostname)
   const STUCK_PROMPT_MS = VERIFY_WATCHDOG ? 120 : 5 * 60 * 1000
   const NOT_RUNNING_GRACE_MS = 6000
+const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
   const STUCK_ABORT_MS = VERIFY_WATCHDOG ? 450 : 15 * 60 * 1000
   const STUCK_CHECK_MS = VERIFY_WATCHDOG ? 80 : 10000
   const INITIAL_TURNS = 3
@@ -1051,14 +1052,21 @@ export default function mount(root, api) {
       if (!info.running) {
         // 不用单次轮询结果结束本轮；连续确认一段时间后才收尾
         state.running = false
-        if (state.awaitingReply) {
+        if (state.runActive) {
           if (!state.notRunningSince) state.notRunningSince = Date.now()
+          const idleSince = state.notRunningSince
+          const idleFor = Date.now() - idleSince
           const noRunningTool = !state.currentTool && !hasRunningTool()
-          if (noRunningTool && Date.now() - state.notRunningSince >= NOT_RUNNING_GRACE_MS) {
-            clearRunState(true, true)
-          } else {
-            paintMessages()
+          if (noRunningTool && idleFor >= NOT_RUNNING_GRACE_MS) {
+            if (idleFor >= RUN_ACTIVE_TIMEOUT_MS) {
+              clearRunState(true, false)
+            } else {
+              clearRunState(true, true)
+              // clearRunState 会清计时；保留一段“可能已断开”的等待时间
+              state.notRunningSince = idleSince
+            }
           }
+          paintMessages()
         }
         return
       }
@@ -1172,10 +1180,14 @@ export default function mount(root, api) {
     paintMessages(true)
     if (liveMode !== 'sse') startPolling()
 
+    const clientMessageId =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10)
     let lastError = null
     for (let attempt = 0; attempt < SEND_ATTEMPTS; attempt += 1) {
       try {
-        await transport.send({ text: value, images, files })
+        await transport.send({ text: value, images, files, clientMessageId })
         lastError = null
         state.pending = []
         paintPending()
@@ -3211,7 +3223,7 @@ export default function mount(root, api) {
     const eventAge = state.lastEventAt
       ? Date.now() - state.lastEventAt
       : Number(state.lastEventAge) || 0
-    const stale = (state.runActive || state.awaitingReply || state.running || runningTool) && eventAge > RUNNING_STALE_MS
+    const stale = (state.runActive || state.awaitingReply || state.running || runningTool) && (eventAge > RUNNING_STALE_MS || Boolean(state.notRunningSince))
     state.staleShown = stale
     // 工具之间有一小段空档：保留上一条 10 秒，避免跳回「思考中」
     const active =
