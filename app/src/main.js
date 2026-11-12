@@ -661,9 +661,8 @@ export default function mount(root, api) {
     state.busy = false
     state.waitingSince = 0
     state.running = Boolean(session.running)
-    if (session.running && !lastTurnHasAssistant(store.timeline())) {
+    if (session.running) {
       state.awaitingReply = true
-      state.runActive = true
     }
     state.lastEventAt = Date.now()
     state.currentTool = null
@@ -778,6 +777,7 @@ export default function mount(root, api) {
       if (payload.ended) {
         state.stream = null
       } else {
+        state.runActive = true
         state.stream = {
           text: String(payload.text || ''),
           reasoning: String(payload.reasoning || ''),
@@ -792,9 +792,8 @@ export default function mount(root, api) {
       const session = (event.payload && event.payload.session) || {}
       if (session.running !== undefined) {
       state.running = Boolean(session.running)
-      if (session.running && !lastTurnHasAssistant(store.timeline())) {
+      if (session.running) {
         state.awaitingReply = true
-        state.runActive = true
       }
     }
       if (event.payload && event.payload.instance) {
@@ -841,6 +840,7 @@ export default function mount(root, api) {
         changed = true
       }
     } else if (event.type === 'tool.start') {
+      state.runActive = true
       const tool = {
         name: String((event.payload && event.payload.name) || ''),
         detail: String((event.payload && event.payload.summary) || ''),
@@ -2875,7 +2875,13 @@ export default function mount(root, api) {
     let toolRunning = 0
     const flushGroup = () => {
       if (group.length === 0 && toolTotal === 0) return
-      const showGroup = turnNo >= totalTurns - 2 && !(state.stopped && turnIsLast)
+      const activeTurn =
+        state.runActive || state.awaitingReply || state.running || toolRunning > 0
+      const noFinal = turnIsLast && !lastAssistantInTurn
+      const showGroup =
+        turnNo >= totalTurns - 2 &&
+        !(state.stopped && turnIsLast) &&
+        !(noFinal && !activeTurn)
       const gid = group[0] ? 'group-' + group[0].id : 'group-turn-' + turnNo
       if (showGroup) {
         push(
@@ -2930,7 +2936,10 @@ export default function mount(root, api) {
         flushTurn()
         turnIsLast = index === lastUserIndex
         const key = item.message.id || item.message.eventId || item.message.seq || `at-${item.message.at}-${index}`
-        push(blocks, 'm:' + key, renderMessage(item.message, assetUrl))
+        push(blocks, 'm:' + key, renderMessage(item.message, assetUrl), {
+          mine: true,
+          mineText: String(item.message.text || ''),
+        })
         return
       }
       if (item.kind === 'tool') {
@@ -2952,6 +2961,7 @@ export default function mount(root, api) {
         if (item.message.who === 'ai') lastAssistantInTurn = true
         push(pre, 'm:' + key, renderMessage(item.message, assetUrl), {
           assistant: item.message.who === 'ai',
+          assistantText: item.message.who === 'ai' ? String(item.message.text || '') : '',
         })
       } else {
         push(pre, item.kind + ':' + (item.id || index), cardHtmlOf(item))
@@ -3293,7 +3303,29 @@ export default function mount(root, api) {
       execution,
       localNotice,
     })
-    const nodeByKey = reconcileBlocks(blocks)
+    // 渲染层兜底：连续两个内容完全相同的 assistant / 自己消息只保留一个
+    let lastAssistantText = ''
+    let lastMineText = ''
+    const renderedBlocks = blocks.filter((block) => {
+      if (block.mine) {
+        const text = block.mineText || ''
+        if (text && text === lastMineText) return false
+        lastMineText = text
+        lastAssistantText = ''
+        return true
+      }
+      if (!block.assistant) {
+        lastAssistantText = ''
+        lastMineText = ''
+        return true
+      }
+      const text = block.assistantText || ''
+      if (text && text === lastAssistantText) return false
+      lastAssistantText = text
+      lastMineText = ''
+      return true
+    })
+    const nodeByKey = reconcileBlocks(renderedBlocks)
     let focusedAnswer = false
     if (state.focusLastAssistant) {
       if (!state.reading && stick) {

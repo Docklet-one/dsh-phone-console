@@ -336,6 +336,25 @@ export function createStore() {
       noteSeq(incoming.seq)
       return cardChanged
     }
+    // 不同 seq/事件 id 但 15 秒内角色和内容完全相同的助手消息，也视为重复回放
+    if (
+      incoming.who === 'ai' &&
+      messages.some(
+        (message) =>
+          message.who === 'ai' &&
+          message.text === incoming.text &&
+          Math.abs(Number(message.at || 0) - Number(incoming.at || 0)) < 15000,
+      )
+    ) {
+      noteSeq(incoming.seq)
+      return cardChanged
+    }
+    // 连续两条 assistant 内容完全相同：直接视为重复
+    const previous = messages[messages.length - 1]
+    if (previous && previous.who === 'ai' && incoming.who === 'ai' && previous.text === incoming.text) {
+      noteSeq(incoming.seq)
+      return cardChanged
+    }
     if (incoming.who === 'me') {
       const local = messages.find((message) => message.local && message.text === incoming.text)
       if (local) {
@@ -347,6 +366,18 @@ export function createStore() {
         local.files = incoming.files
         noteSeq(incoming.seq)
         return true
+      }
+      // 15 秒内重复的同一句用户消息，视为重试/回放
+      if (
+        messages.some(
+          (message) =>
+            message.who === 'me' &&
+            message.text === incoming.text &&
+            Math.abs(Number(message.at || 0) - Number(incoming.at || 0)) < 15000,
+        )
+      ) {
+        noteSeq(incoming.seq)
+        return cardChanged
       }
     }
     // 同一 seq 的 user/assistant 不会被认成重复；同 seq 的 error 保留一次
