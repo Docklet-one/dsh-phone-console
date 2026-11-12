@@ -3276,8 +3276,8 @@ export default function mount(root, api) {
     const typing = active && !streamText && !streamReasoning
       ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${thinking ? ' is-thinking' : ''}${stale ? ' is-stale' : ''}"><span class="chat-typing-head"><span class="chat-typing-text">${typingLabel}</span><span class="chat-typing-dot"></span></span>${typingDetail}</div></div>`
       : ''
-    // 只在真正有输出/执行时显示；没有内容就整块隐藏
-    const execution = active && !state.stopped ? streaming || typing : ''
+    // 正在输出/执行，且仍允许本轮输出时才显示；最终回复后立即隐藏
+    const execution = active && state.runActive && !state.stopped ? streaming || typing : ''
     if (thinking || streamThinkingOnly) startThinkingMath()
     else stopThinkingMath()
     const projections = projectionHtml()
@@ -3384,7 +3384,7 @@ export default function mount(root, api) {
 
   function paintSend() {
     if (!refs.send) return
-    const stop = state.waiting || state.running || state.awaitingReply || hasRunningTool()
+    const stop = hasRunningTool() || (state.runActive && (state.waiting || state.running || state.awaitingReply))
     refs.send.textContent = stop ? '■' : '↑'
     refs.send.classList.toggle('is-stop', stop)
     refs.send.setAttribute('aria-label', stop ? '停止等待' : '发送')

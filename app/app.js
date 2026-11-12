@@ -49,55 +49,55 @@ function Wo(i) {
 function Ko({ base: i, token: c }) {
   const t = () => Wo(i()) || ft, k = () => String(c() || "").trim();
   function p(T) {
-    const m = Object.assign({}, T || {}), h = k();
-    return h && (m.Authorization = "Bearer " + h), m;
+    const b = Object.assign({}, T || {}), f = k();
+    return f && (b.Authorization = "Bearer " + f), b;
   }
   function v() {
     return p({ "Content-Type": "application/json" });
   }
   function L(T) {
-    const m = String(T || "");
-    return /^https?:\/\//.test(m) ? m : t() + m;
+    const b = String(T || "");
+    return /^https?:\/\//.test(b) ? b : t() + b;
   }
-  async function q(T, m, h) {
-    const g = new AbortController(), x = setTimeout(() => g.abort(), h || 8e3);
+  async function A(T, b, f) {
+    const h = new AbortController(), m = setTimeout(() => h.abort(), f || 8e3);
     try {
-      return await fetch(L(T), Object.assign({}, m, { signal: g.signal }));
+      return await fetch(L(T), Object.assign({}, b, { signal: h.signal }));
     } finally {
-      clearTimeout(x);
+      clearTimeout(m);
     }
   }
-  async function B(T, m, h) {
-    const g = await q(T, m, h);
-    if (!g.ok) {
-      const x = await g.json().catch(() => ({})), b = new Error(x && x.error || "HTTP " + g.status);
-      throw b.status = g.status, b.code = x && x.code || "", b;
+  async function B(T, b, f) {
+    const h = await A(T, b, f);
+    if (!h.ok) {
+      const m = await h.json().catch(() => ({})), x = new Error(m && m.error || "HTTP " + h.status);
+      throw x.status = h.status, x.code = m && m.code || "", x;
     }
-    return g.json();
+    return h.json();
   }
-  function w(T, m, h) {
-    return B(T, { method: "POST", headers: v(), body: JSON.stringify(m || {}) }, h);
+  function w(T, b, f) {
+    return B(T, { method: "POST", headers: v(), body: JSON.stringify(b || {}) }, f);
   }
-  function j(T, m, h) {
-    const g = String(m ?? "").replace(/^file:/, ""), x = t() + "/" + T + "/" + encodeURIComponent(g), b = [], f = k();
-    return f && b.push("token=" + encodeURIComponent(f)), h && b.push("name=" + encodeURIComponent(h)), b.length ? x + "?" + b.join("&") : x;
+  function j(T, b, f) {
+    const h = String(b ?? "").replace(/^file:/, ""), m = t() + "/" + T + "/" + encodeURIComponent(h), x = [], g = k();
+    return g && x.push("token=" + encodeURIComponent(g)), f && x.push("name=" + encodeURIComponent(f)), x.length ? m + "?" + x.join("&") : m;
   }
-  function H(T, m) {
-    const h = [];
-    Number.isFinite(Number(T)) && Number(T) > 0 && h.push("after=" + encodeURIComponent(T)), m && h.push("session=" + encodeURIComponent(m));
-    const g = k();
-    return g && h.push("token=" + encodeURIComponent(g)), t() + "/events" + (h.length ? "?" + h.join("&") : "");
+  function H(T, b) {
+    const f = [];
+    Number.isFinite(Number(T)) && Number(T) > 0 && f.push("after=" + encodeURIComponent(T)), b && f.push("session=" + encodeURIComponent(b));
+    const h = k();
+    return h && f.push("token=" + encodeURIComponent(h)), t() + "/events" + (f.length ? "?" + f.join("&") : "");
   }
   return {
     baseUrl: t,
     authHeaders: p,
     authJson: v,
-    fetchWithTimeout: q,
+    fetchWithTimeout: A,
     fetchJson: B,
     assetUrl: j,
     eventsUrl: H,
     health: () => B("/health", { headers: p() }, 5e3),
-    messages: ({ since: T = 0, recent: m = 5 } = {}) => B(T > 0 ? "/messages?since=" + T : "/messages?recent=" + m, { headers: p() }, 9e3),
+    messages: ({ since: T = 0, recent: b = 5 } = {}) => B(T > 0 ? "/messages?since=" + T : "/messages?recent=" + b, { headers: p() }, 9e3),
     send: (T) => w("/send", T, 3e4),
     sessions: () => B("/sessions", { headers: p() }, 1e4),
     options: () => B("/options", { headers: p() }, 8e3),
@@ -105,27 +105,27 @@ function Ko({ base: i, token: c }) {
     createSession: (T) => w("/new", T, 2e4),
     selectModel: (T) => w("/model", T, 1e4),
     setPermission: (T) => w("/permission", { preset: T }, 8e3),
-    renameSession: (T, m) => w("/rename", { id: T, title: m }, 8e3),
-    forkSession: (T, m) => w("/fork", m ? { id: T, atSeq: m } : { id: T }, 15e3),
-    archiveSession: (T, m) => w("/session/archive", m ? { id: T, stopActivity: !0 } : { id: T }, 1e4),
+    renameSession: (T, b) => w("/rename", { id: T, title: b }, 8e3),
+    forkSession: (T, b) => w("/fork", b ? { id: T, atSeq: b } : { id: T }, 15e3),
+    archiveSession: (T, b) => w("/session/archive", b ? { id: T, stopActivity: !0 } : { id: T }, 1e4),
     unarchiveSession: (T) => w("/session/unarchive", { id: T }, 8e3),
-    presentedFileUrl: (T, m, h, g) => {
-      const x = new URLSearchParams({ seq: String(T), index: String(m) });
-      g && x.set("session", String(g));
-      const b = k();
-      return b && x.set("token", b), h && x.set("name", String(h)), t() + "/presented/file?" + x.toString();
+    presentedFileUrl: (T, b, f, h) => {
+      const m = new URLSearchParams({ seq: String(T), index: String(b) });
+      h && m.set("session", String(h));
+      const x = k();
+      return x && m.set("token", x), f && m.set("name", String(f)), t() + "/presented/file?" + m.toString();
     },
     stop: () => w("/stop", {}, 8e3),
-    approvalDecision: (T, m) => w("/approvals", { id: T, decision: m ? "allow" : "deny" }, 5e3),
-    respond: (T, m, h) => w("/respond", { id: T, answers: m, session: h }, 8e3),
-    presence: (T, m) => w("/presence", m === void 0 ? { phone: !!T } : { phone: !!T, input: !!m }, 3e3),
+    approvalDecision: (T, b) => w("/approvals", { id: T, decision: b ? "allow" : "deny" }, 5e3),
+    respond: (T, b, f) => w("/respond", { id: T, answers: b, session: f }, 8e3),
+    presence: (T, b) => w("/presence", b === void 0 ? { phone: !!T } : { phone: !!T, input: !!b }, 3e3),
     uploadImage: (T) => w("/upload-image", T, 6e4),
     uploadFile: (T) => w("/upload-file", T, 6e4),
-    snapshot: (T, { turns: m = 0, before: h = 0 } = {}) => {
-      const g = new URLSearchParams();
-      T && g.set("session", T), m > 0 && g.set("turns", String(m)), h > 0 && g.set("before", String(h));
-      const x = g.toString();
-      return B("/snapshot" + (x ? "?" + x : ""), { headers: p() }, 9e3);
+    snapshot: (T, { turns: b = 0, before: f = 0 } = {}) => {
+      const h = new URLSearchParams();
+      T && h.set("session", T), b > 0 && h.set("turns", String(b)), f > 0 && h.set("before", String(f));
+      const m = h.toString();
+      return B("/snapshot" + (m ? "?" + m : ""), { headers: p() }, 9e3);
     }
   };
 }
@@ -159,201 +159,203 @@ function Yo() {
   function p() {
     i.length = 0, c.clear(), t = 0, k = -1;
   }
-  function v(m) {
-    if (!m || !m.type) return !1;
-    const h = m.payload || {}, g = Number(m.seq), x = (f) => f ? f.seq : Number.isFinite(g) ? g : 0, b = Number(m.at) || Date.now();
-    if (m.type === "tool.update") {
-      const f = String(h.callId || "");
-      if (!f) return !1;
-      const E = "tool-" + f, s = c.get(E);
+  function v(b) {
+    if (!b || !b.type) return !1;
+    const f = b.payload || {}, h = Number(b.seq), m = (g) => g ? g.seq : Number.isFinite(h) ? h : 0, x = Number(b.at) || Date.now();
+    if (b.type === "tool.update") {
+      const g = String(f.callId || "");
+      if (!g) return !1;
+      const E = "tool-" + g, s = c.get(E);
       return c.set(E, {
         kind: "tool",
         id: E,
-        callId: f,
-        name: String(h.name || (s ? s.name : "")),
-        summary: String(h.summary || (s ? s.summary : "")),
-        args: String(h.args || (s ? s.args : "")),
+        callId: g,
+        name: String(f.name || (s ? s.name : "")),
+        summary: String(f.summary || (s ? s.summary : "")),
+        args: String(f.args || (s ? s.args : "")),
         status: s && s.status !== "running" ? s.status : "running",
         preview: s ? s.preview : "",
         error: s ? s.error : null,
         images: s && Array.isArray(s.images) ? s.images : [],
         seq: s && s.provisional !== !0 ? s.seq : Number.MAX_SAFE_INTEGER,
         provisional: !0,
-        at: s ? s.at : b
+        at: s ? s.at : x
       }), !0;
     }
-    if (m.type === "tool.start") {
-      const f = String(h.callId || ""), E = "tool-" + (f || m.id), s = c.get(E);
+    if (b.type === "tool.start") {
+      const g = String(f.callId || ""), E = "tool-" + (g || b.id), s = c.get(E);
       return c.set(E, {
         kind: "tool",
         id: E,
-        callId: f,
-        name: String(h.name || (s ? s.name : "")),
-        summary: String(h.summary || (s ? s.summary : "")),
-        args: String(h.args || (s ? s.args : "")),
+        callId: g,
+        name: String(f.name || (s ? s.name : "")),
+        summary: String(f.summary || (s ? s.summary : "")),
+        args: String(f.args || (s ? s.args : "")),
         status: "running",
         preview: s ? s.preview : "",
         error: s ? s.error : null,
         images: s && Array.isArray(s.images) ? s.images : [],
-        seq: s && s.provisional !== !0 ? s.seq : Number.isFinite(g) ? g : s ? s.seq : 0,
+        seq: s && s.provisional !== !0 ? s.seq : Number.isFinite(h) ? h : s ? s.seq : 0,
         provisional: !1,
-        at: s ? s.at : b
-      }), q(g), !0;
+        at: s ? s.at : x
+      }), A(h), !0;
     }
-    if (m.type === "tool.end") {
-      const f = String(h.callId || ""), E = "tool-" + (f || m.id), s = c.get(E);
+    if (b.type === "tool.end") {
+      const g = String(f.callId || ""), E = "tool-" + (g || b.id), s = c.get(E);
       return c.set(E, {
         kind: "tool",
         id: E,
-        callId: f,
+        callId: g,
         name: s ? s.name : "",
         summary: s ? s.summary : "",
         args: s ? s.args : "",
-        status: h.ok === !1 ? "failed" : "ok",
-        preview: String(h.preview || (s ? s.preview : "")),
-        error: h.error || (s ? s.error : null),
-        images: Array.isArray(h.images) ? h.images : s && Array.isArray(s.images) ? s.images : [],
-        seq: x(s),
+        status: f.ok === !1 ? "failed" : "ok",
+        preview: String(f.preview || (s ? s.preview : "")),
+        error: f.error || (s ? s.error : null),
+        images: Array.isArray(f.images) ? f.images : s && Array.isArray(s.images) ? s.images : [],
+        seq: m(s),
         provisional: !1,
-        at: s ? s.at : b
-      }), q(g), !0;
+        at: s ? s.at : x
+      }), A(h), !0;
     }
-    if (m.type === "deliverable.present") {
-      const f = String(h.callId || ""), E = (Array.isArray(h.files) ? h.files : []).filter(
+    if (b.type === "deliverable.present") {
+      const g = String(f.callId || ""), E = (Array.isArray(f.files) ? f.files : []).filter(
         (D) => D && typeof D.path == "string" && D.path.trim()
       );
       if (E.length === 0) return !1;
-      const s = "deliverable-" + (f || m.id || g), n = c.get(s);
+      const s = "deliverable-" + (g || b.id || h), n = c.get(s);
       return c.set(s, {
         kind: "deliverable",
         id: s,
-        callId: f,
-        turn: Number(h.turn) || 0,
+        callId: g,
+        turn: Number(f.turn) || 0,
         files: E,
-        seq: n && n.provisional !== !0 ? n.seq : Number.isFinite(g) ? g : n ? n.seq : 0,
-        at: n ? n.at : b
-      }), q(g), !0;
+        seq: n && n.provisional !== !0 ? n.seq : Number.isFinite(h) ? h : n ? n.seq : 0,
+        at: n ? n.at : x
+      }), A(h), !0;
     }
-    if (m.type === "approval.request") {
-      const f = String(h.approvalId || "");
-      if (!f) return !1;
-      const E = "approval-" + f, s = c.get(E);
+    if (b.type === "approval.request") {
+      const g = String(f.approvalId || "");
+      if (!g) return !1;
+      const E = "approval-" + g, s = c.get(E);
       return c.set(E, {
         kind: "approval",
         id: E,
-        approvalId: f,
-        title: String(h.title || (s ? s.title : "")),
-        tool: String(h.tool || (s ? s.tool : "")),
-        reason: String(h.reason || ""),
-        callId: String(h.callId || ""),
+        approvalId: g,
+        title: String(f.title || (s ? s.title : "")),
+        tool: String(f.tool || (s ? s.tool : "")),
+        reason: String(f.reason || ""),
+        callId: String(f.callId || ""),
         decision: "",
         outcome: "",
-        seq: x(s),
-        at: s ? s.at : b
-      }), q(g), !0;
+        seq: m(s),
+        at: s ? s.at : x
+      }), A(h), !0;
     }
-    if (m.type === "approval.result") {
-      const f = String(h.approvalId || "");
-      if (!f) return !1;
-      const E = "approval-" + f, s = c.get(E);
+    if (b.type === "approval.result") {
+      const g = String(f.approvalId || "");
+      if (!g) return !1;
+      const E = "approval-" + g, s = c.get(E);
       return c.set(E, {
         kind: "approval",
         id: E,
-        approvalId: f,
+        approvalId: g,
         title: s ? s.title : "",
-        tool: String(h.tool || (s ? s.tool : "")),
-        reason: String(h.reason || (s ? s.reason : "")),
+        tool: String(f.tool || (s ? s.tool : "")),
+        reason: String(f.reason || (s ? s.reason : "")),
         callId: s ? s.callId : "",
-        decision: h.decision === "deny" ? "deny" : "allow",
-        outcome: String(h.outcome || ""),
-        seq: x(s),
-        at: s ? s.at : b
-      }), q(g), !0;
+        decision: f.decision === "deny" ? "deny" : "allow",
+        outcome: String(f.outcome || ""),
+        seq: m(s),
+        at: s ? s.at : x
+      }), A(h), !0;
     }
-    if (m.type === "input.request" || m.type === "input.result") {
-      const f = String(h.callId || "");
-      if (!f) return !1;
-      const E = "input-" + f, s = c.get(E), n = Array.isArray(h.questions) ? h.questions : s ? s.questions : [];
-      return m.type === "input.request" ? c.set(E, {
+    if (b.type === "input.request" || b.type === "input.result") {
+      const g = String(f.callId || "");
+      if (!g) return !1;
+      const E = "input-" + g, s = c.get(E), n = Array.isArray(f.questions) ? f.questions : s ? s.questions : [];
+      return b.type === "input.request" ? c.set(E, {
         kind: "input",
         id: E,
-        callId: f,
+        callId: g,
         questions: n,
-        state: String(h.state || (s ? s.state : "open")),
+        state: String(f.state || (s ? s.state : "open")),
         answers: s ? s.answers : null,
-        seq: x(s),
-        at: s ? s.at : b
+        seq: m(s),
+        at: s ? s.at : x
       }) : c.set(E, {
         kind: "input",
         id: E,
-        callId: f,
+        callId: g,
         questions: n,
         state: "answered",
-        answers: Array.isArray(h.answers) ? h.answers : [],
-        seq: x(s),
-        at: s ? s.at : b
-      }), q(g), !0;
+        answers: Array.isArray(f.answers) ? f.answers : [],
+        seq: m(s),
+        at: s ? s.at : x
+      }), A(h), !0;
     }
     return !1;
   }
   function L() {
-    t = i.reduce((m, h) => Math.max(m, Number(h && h.id) || 0), 0);
+    t = i.reduce((b, f) => Math.max(b, Number(f && f.id) || 0), 0);
   }
-  function q(m) {
-    const h = Number(m);
-    Number.isFinite(h) && h > k && (k = h);
+  function A(b) {
+    const f = Number(b);
+    Number.isFinite(f) && f > k && (k = f);
   }
-  function B(m) {
-    const h = i.filter((g) => g.local);
+  function B(b) {
+    const f = i.filter((h) => h.local);
     i.length = 0;
-    for (const g of m) i.push(g);
-    for (const g of h) i.push(g);
+    for (const h of b) i.push(h);
+    for (const h of f) i.push(h);
     L();
-    for (const g of i) q(g.seq);
+    for (const h of i) A(h.seq);
   }
-  function w(m) {
-    if (!m) return !1;
-    if (m.id) {
-      if (m.who === "me") {
-        const h = i.find((g) => g.local && g.text === m.text && !g.id);
-        if (h)
-          return h.id = m.id, h.at = m.at || h.at, Number.isFinite(Number(m.seq)) && (h.seq = m.seq), h.local = !1, h.images = m.images || [], h.files = m.files || [], q(h.seq), L(), !0;
+  function w(b) {
+    if (!b) return !1;
+    if (b.id) {
+      if (b.who === "me") {
+        const f = i.find((h) => h.local && h.text === b.text && !h.id);
+        if (f)
+          return f.id = b.id, f.at = b.at || f.at, Number.isFinite(Number(b.seq)) && (f.seq = b.seq), f.local = !1, f.images = b.images || [], f.files = b.files || [], A(f.seq), L(), !0;
       }
-      if (i.some((h) => h.id === m.id)) return !1;
+      if (i.some((f) => f.id === b.id)) return !1;
     }
-    return i.push(m), q(m.seq), L(), !0;
+    return i.push(b), A(b.seq), L(), !0;
   }
-  function j(m) {
-    const h = v(m), g = Vo(m);
-    if (!g)
-      return q(m && m.seq), h;
-    if (g.eventId && i.some((x) => x.eventId === g.eventId))
-      return q(g.seq), h;
-    if (g.who === "me") {
-      const x = i.find((b) => b.local && b.text === g.text);
-      if (x)
-        return x.eventId = g.eventId, x.at = g.at || x.at, x.seq = g.seq, x.local = !1, x.images = g.images, x.files = g.files, q(g.seq), !0;
+  function j(b) {
+    const f = v(b), h = Vo(b);
+    if (!h)
+      return A(b && b.seq), f;
+    if (h.eventId && i.some((m) => m.eventId === h.eventId) || h.seq !== void 0 && i.some(
+      (m) => m.seq === h.seq && m.who === h.who && m.text === h.text
+    ))
+      return A(h.seq), f;
+    if (h.who === "me") {
+      const m = i.find((x) => x.local && x.text === h.text);
+      if (m)
+        return m.eventId = h.eventId, m.at = h.at || m.at, m.seq = h.seq, m.local = !1, m.images = h.images, m.files = h.files, A(h.seq), !0;
     }
-    return g.seq !== void 0 && g.who === "error" && i.some((x) => x.seq === g.seq && x.who === "error") ? (q(g.seq), h) : (i.push(g), q(g.seq), !0);
+    return h.seq !== void 0 && h.who === "error" && i.some((m) => m.seq === h.seq && m.who === "error") ? (A(h.seq), f) : (i.push(h), A(h.seq), !0);
   }
-  function H(m) {
-    const h = i.filter((x) => x.local);
+  function H(b) {
+    const f = i.filter((m) => m.local);
     i.length = 0, c.clear(), k = -1;
-    for (const x of h) i.push(x);
-    let g = h.length > 0;
-    for (const x of [...m || []].sort((b, f) => Number(b.seq) - Number(f.seq)))
-      j(x) && (g = !0);
-    return g;
+    for (const m of f) i.push(m);
+    let h = f.length > 0;
+    for (const m of [...b || []].sort((x, g) => Number(x.seq) - Number(g.seq)))
+      j(m) && (h = !0);
+    return h;
   }
   function T() {
-    const m = [];
-    for (const h of i)
-      m.push({ kind: "message", message: h, seq: Number(h.seq) });
-    for (const h of c.values()) m.push(h);
-    return m.sort((h, g) => {
-      const x = Number.isFinite(Number(h.seq)) ? Number(h.seq) : Number.MAX_SAFE_INTEGER, b = Number.isFinite(Number(g.seq)) ? Number(g.seq) : Number.MAX_SAFE_INTEGER;
-      return x - b;
-    }), m;
+    const b = [];
+    for (const f of i)
+      b.push({ kind: "message", message: f, seq: Number(f.seq) });
+    for (const f of c.values()) b.push(f);
+    return b.sort((f, h) => {
+      const m = Number.isFinite(Number(f.seq)) ? Number(f.seq) : Number.MAX_SAFE_INTEGER, x = Number.isFinite(Number(h.seq)) ? Number(h.seq) : Number.MAX_SAFE_INTEGER;
+      return m - x;
+    }), b;
   }
   return {
     messages: i,
@@ -362,8 +364,8 @@ function Yo() {
     get cursor() {
       return t;
     },
-    set cursor(m) {
-      t = Number(m) || 0;
+    set cursor(b) {
+      t = Number(b) || 0;
     },
     get lastSeq() {
       return k;
@@ -388,76 +390,76 @@ function Jo() {
 }
 function Zo({ limit: i = Xo } = {}) {
   let c = null, t = 0;
-  function k(g) {
-    return new Promise((x, b) => {
-      const f = g.transaction([pe, Mt], "readwrite"), E = f.objectStore(pe), s = E.get(an);
+  function k(h) {
+    return new Promise((m, x) => {
+      const g = h.transaction([pe, Mt], "readwrite"), E = g.objectStore(pe), s = E.get(an);
       s.onsuccess = () => {
         const n = s.result ? Number(s.result.value) : 0;
-        n !== Ye && (n && n !== Ye && f.objectStore(Mt).clear(), E.put({ key: an, value: Ye }));
-      }, f.oncomplete = () => x(), f.onerror = () => b(f.error || new Error("indexedDB schema failed"));
+        n !== Ye && (n && n !== Ye && g.objectStore(Mt).clear(), E.put({ key: an, value: Ye }));
+      }, g.oncomplete = () => m(), g.onerror = () => x(g.error || new Error("indexedDB schema failed"));
     });
   }
   function p() {
-    return Jo() ? c || (c = new Promise((g, x) => {
-      const b = indexedDB.open(en, Qo);
-      b.onupgradeneeded = () => {
-        const f = b.result;
-        f.objectStoreNames.contains(Mt) || f.createObjectStore(Mt, { keyPath: "key" }).createIndex("session", "session", { unique: !1 }), f.objectStoreNames.contains(pe) || f.createObjectStore(pe, { keyPath: "key" });
-      }, b.onsuccess = () => {
-        const f = b.result;
-        k(f).then(() => g(f)).catch(() => g(f));
-      }, b.onerror = () => x(b.error || new Error("indexedDB open failed")), b.onblocked = () => x(new Error("indexedDB blocked"));
+    return Jo() ? c || (c = new Promise((h, m) => {
+      const x = indexedDB.open(en, Qo);
+      x.onupgradeneeded = () => {
+        const g = x.result;
+        g.objectStoreNames.contains(Mt) || g.createObjectStore(Mt, { keyPath: "key" }).createIndex("session", "session", { unique: !1 }), g.objectStoreNames.contains(pe) || g.createObjectStore(pe, { keyPath: "key" });
+      }, x.onsuccess = () => {
+        const g = x.result;
+        k(g).then(() => h(g)).catch(() => h(g));
+      }, x.onerror = () => m(x.error || new Error("indexedDB open failed")), x.onblocked = () => m(new Error("indexedDB blocked"));
     }), c) : Promise.reject(new Error("no indexedDB"));
   }
-  function v(g, x) {
+  function v(h, m) {
     return p().then(
-      (b) => new Promise((f, E) => {
-        const s = b.transaction(Mt, g), n = s.objectStore(Mt);
+      (x) => new Promise((g, E) => {
+        const s = x.transaction(Mt, h), n = s.objectStore(Mt);
         let D;
         try {
-          D = x(n);
+          D = m(n);
         } catch (W) {
           E(W);
           return;
         }
-        s.oncomplete = () => f(D), s.onerror = () => E(s.error || new Error("indexedDB transaction failed")), s.onabort = () => E(s.error || new Error("indexedDB transaction aborted"));
+        s.oncomplete = () => g(D), s.onerror = () => E(s.error || new Error("indexedDB transaction failed")), s.onabort = () => E(s.error || new Error("indexedDB transaction aborted"));
       })
     );
   }
-  function L(g) {
-    return !!(g && (g.name === "QuotaExceededError" || g.code === 22 || /quota|storage/i.test(String(g.message || ""))));
+  function L(h) {
+    return !!(h && (h.name === "QuotaExceededError" || h.code === 22 || /quota|storage/i.test(String(h.message || ""))));
   }
-  function q(g) {
-    return v("readwrite", (x) => {
-      const b = x.index("session");
-      return new Promise((f, E) => {
-        const s = b.getAll(g);
+  function A(h) {
+    return v("readwrite", (m) => {
+      const x = m.index("session");
+      return new Promise((g, E) => {
+        const s = x.getAll(h);
         s.onsuccess = () => {
           const n = (s.result || []).sort((W, Y) => Number(W.seq) - Number(Y.seq)), D = n.slice(0, Math.max(1, Math.ceil(n.length / 2)));
-          for (const W of D) x.delete(W.key);
-          f(D.length);
+          for (const W of D) m.delete(W.key);
+          g(D.length);
         }, s.onerror = () => E(s.error);
       });
     });
   }
-  function B(g, x) {
-    const b = String(g || ""), f = (Array.isArray(x) ? x : []).filter((n) => n && n.id && Number.isFinite(Number(n.seq)));
-    if (!b || f.length === 0) return Promise.resolve(0);
+  function B(h, m) {
+    const x = String(h || ""), g = (Array.isArray(m) ? m : []).filter((n) => n && n.id && Number.isFinite(Number(n.seq)));
+    if (!x || g.length === 0) return Promise.resolve(0);
     const E = () => v("readwrite", (n) => {
-      for (const D of f)
-        n.put({ key: b + ":" + D.id, session: b, seq: Number(D.seq), event: D });
-      return f.length;
-    }), s = () => (t += f.length, t < 40 ? 0 : (t = 0, w(b)));
+      for (const D of g)
+        n.put({ key: x + ":" + D.id, session: x, seq: Number(D.seq), event: D });
+      return g.length;
+    }), s = () => (t += g.length, t < 40 ? 0 : (t = 0, w(x)));
     return E().then(s).catch((n) => {
       if (!L(n)) throw n;
-      return q(b).then(E).then(s).catch(() => 0);
+      return A(x).then(E).then(s).catch(() => 0);
     });
   }
-  function w(g) {
-    return v("readwrite", (x) => {
-      const b = x.index("session");
-      return new Promise((f, E) => {
-        const s = b.getAll(g);
+  function w(h) {
+    return v("readwrite", (m) => {
+      const x = m.index("session");
+      return new Promise((g, E) => {
+        const s = x.getAll(h);
         s.onsuccess = () => {
           const n = (s.result || []).sort((_, K) => Number(_.seq) - Number(K.seq)), D = (() => {
             const _ = n.filter((K) => K.event && K.event.type === "turn.start").map((K) => Number(K.seq));
@@ -466,18 +468,18 @@ function Zo({ limit: i = Xo } = {}) {
           let Y = W > 0 ? n.filter((_) => Number(_.seq) >= W) : n;
           Y.length > i && (Y = Y.slice(Y.length - i));
           const U = new Set(Y.map((_) => _.key)), V = n.filter((_) => !U.has(_.key));
-          for (const _ of V) x.delete(_.key);
-          f(V.length);
+          for (const _ of V) m.delete(_.key);
+          g(V.length);
         }, s.onerror = () => E(s.error);
       });
     });
   }
-  function j(g) {
-    const x = String(g || "");
-    return x ? v("readwrite", (b) => {
-      const f = b.index("session");
+  function j(h) {
+    const m = String(h || "");
+    return m ? v("readwrite", (x) => {
+      const g = x.index("session");
       return new Promise((E, s) => {
-        const n = f.openCursor();
+        const n = g.openCursor();
         let D = 0;
         n.onsuccess = () => {
           const W = n.result;
@@ -485,17 +487,17 @@ function Zo({ limit: i = Xo } = {}) {
             E(D);
             return;
           }
-          W.value && W.value.session !== x && (W.delete(), D += 1), W.continue();
+          W.value && W.value.session !== m && (W.delete(), D += 1), W.continue();
         }, n.onerror = () => s(n.error);
       });
     }) : Promise.resolve(0);
   }
-  function H(g) {
-    const x = String(g || "");
-    return x ? v("readonly", (b) => {
-      const f = b.index("session");
+  function H(h) {
+    const m = String(h || "");
+    return m ? v("readonly", (x) => {
+      const g = x.index("session");
       return new Promise((E, s) => {
-        const n = f.getAll(x);
+        const n = g.getAll(m);
         n.onsuccess = () => {
           const D = (n.result || []).sort((V, _) => Number(V.seq) - Number(_.seq)), W = (() => {
             const V = D.filter((_) => _.event && _.event.type === "turn.start").map((_) => Number(_.seq));
@@ -507,44 +509,44 @@ function Zo({ limit: i = Xo } = {}) {
       });
     }) : Promise.resolve([]);
   }
-  function T(g) {
-    const x = String(g || "");
-    return v("readwrite", (b) => {
-      const f = b.index("session");
+  function T(h) {
+    const m = String(h || "");
+    return v("readwrite", (x) => {
+      const g = x.index("session");
       return new Promise((E, s) => {
-        const n = f.getAllKeys(x);
+        const n = g.getAllKeys(m);
         n.onsuccess = () => {
-          for (const D of n.result || []) b.delete(D);
+          for (const D of n.result || []) x.delete(D);
           E(!0);
         }, n.onerror = () => s(n.error);
       });
     });
   }
-  function m() {
-    return v("readwrite", (g) => (g.clear(), !0));
+  function b() {
+    return v("readwrite", (h) => (h.clear(), !0));
   }
-  function h() {
+  function f() {
     return (async () => {
       if (c) {
         try {
-          const x = await c;
-          x && typeof x.close == "function" && x.close();
+          const m = await c;
+          m && typeof m.close == "function" && m.close();
         } catch {
         }
         c = null;
       }
     })().then(
-      () => new Promise((x) => {
+      () => new Promise((m) => {
         try {
-          const b = indexedDB.deleteDatabase(en);
-          b.onsuccess = b.onerror = b.onblocked = () => x(!0);
+          const x = indexedDB.deleteDatabase(en);
+          x.onsuccess = x.onerror = x.onblocked = () => m(!0);
         } catch {
-          x(!1);
+          m(!1);
         }
       })
     );
   }
-  return { put: B, get: H, clear: T, clearAll: m, clearOthers: j, destroy: h };
+  return { put: B, get: H, clear: T, clearAll: b, clearOthers: j, destroy: f };
 }
 function tr({ appId: i, base: c, token: t, notify: k, mode: p = "turn" }) {
   const v = {
@@ -633,8 +635,8 @@ function wt(i) {
       t += er.test(j) ? `<a class="chat-link" href="${I(j)}" data-href="${I(j)}" target="_blank" rel="noreferrer noopener">${N(w)}</a>` : N(w);
       continue;
     }
-    const L = v[10], q = L.replace(/[).,;:!?'"”’）】》]+$/gu, ""), B = L.slice(q.length);
-    t += `<a class="chat-link" href="${I(q)}" data-href="${I(q)}" target="_blank" rel="noreferrer noopener">${N(q)}</a>${N(B)}`;
+    const L = v[10], A = L.replace(/[).,;:!?'"”’）】》]+$/gu, ""), B = L.slice(A.length);
+    t += `<a class="chat-link" href="${I(A)}" data-href="${I(A)}" target="_blank" rel="noreferrer noopener">${N(A)}</a>${N(B)}`;
   }
   return t += N(c.slice(k)), t;
 }
@@ -646,16 +648,16 @@ function nr(i, c) {
     p + String.raw`|("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|` + "`(?:\\\\[\\s\\S]|[^`\\\\])*`)",
     "g"
   ), L = [];
-  let q = k.replace(v, (w) => (L.push(w), `\0${"z".repeat(L.length)}\0`));
-  q = N(q);
+  let A = k.replace(v, (w) => (L.push(w), `\0${"z".repeat(L.length)}\0`));
+  A = N(A);
   const B = nn[t].split(/\s+/);
-  return q = q.replace(
+  return A = A.replace(
     /\b([A-Za-z_$][\w$]*)\b/g,
     (w) => B.includes(w) ? `<span class="tk-k">${w}</span>` : w
-  ), q = q.replace(/\b\d+(?:\.\d+)?\b/g, (w) => `<span class="tk-n">${w}</span>`), q = q.replace(/\u0000(z+)\u0000/g, (w, j) => {
+  ), A = A.replace(/\b\d+(?:\.\d+)?\b/g, (w) => `<span class="tk-n">${w}</span>`), A = A.replace(/\u0000(z+)\u0000/g, (w, j) => {
     const H = L[j.length - 1] || "";
     return `<span class="${H.startsWith("/") || H.startsWith("#") ? "tk-c" : "tk-s"}">${N(H)}</span>`;
-  }), { html: q, lang: t };
+  }), { html: A, lang: t };
 }
 function or(i, c) {
   const t = nr(i, c), k = t.lang || "code";
@@ -714,10 +716,10 @@ function dn(i) {
 `), w));
       continue;
     }
-    const q = /^(#{1,6})\s+(.+?)\s*$/.exec(v);
-    if (q) {
-      const w = q[1].length;
-      k.push(`<h${w}>${wt(q[2])}</h${w}>`), p += 1;
+    const A = /^(#{1,6})\s+(.+?)\s*$/.exec(v);
+    if (A) {
+      const w = A[1].length;
+      k.push(`<h${w}>${wt(A[2])}</h${w}>`), p += 1;
       continue;
     }
     if (/^\s*([-*_])(?:\s*\1){2,}\s*$/.test(v)) {
@@ -790,35 +792,35 @@ function sn(i, c) {
   if (i.who === "sys")
     return `<div class="chat-sys">${Fo(N(ue(i.text)))}</div>`;
   if (i.who === "error") {
-    const x = i.retryText ? `<button type="button" class="chat-retry" data-retry="${I(encodeURIComponent(i.retryText))}">点按重试</button>` : "";
-    return `<div class="chat-turn is-ai"${k}>${x}<div class="chat-bubble is-error" data-copy="${I(encodeURIComponent(ue(i.text)))}">${N(ue(i.text))}</div></div>`;
+    const m = i.retryText ? `<button type="button" class="chat-retry" data-retry="${I(encodeURIComponent(i.retryText))}">点按重试</button>` : "";
+    return `<div class="chat-turn is-ai"${k}>${m}<div class="chat-bubble is-error" data-copy="${I(encodeURIComponent(ue(i.text)))}">${N(ue(i.text))}</div></div>`;
   }
-  const p = i.who === "me", v = Array.isArray(i.images) ? i.images : [], L = Array.isArray(i.files) ? i.files : [], q = v.length ? `<div class="chat-md-gallery ${v.length === 1 ? "is-one" : v.length === 2 ? "is-two" : v.length >= 5 ? "is-many" : "is-few"}" data-count="${v.length}">${v.map((x) => {
-    const b = String(x.id || "").startsWith("local:") ? String(x.src || "") : "";
-    if (b) return `<img class="chat-image chat-md-image" src="${I(b)}" alt="图片" />`;
-    const f = c("image", x.id);
-    return `<img class="chat-image chat-md-image" data-src="${I(f)}" alt="图片" />`;
-  }).join("")}</div>` : "", B = L.map((x) => {
-    const b = x.name || "文件";
-    if (String(x.id || "").startsWith("local:"))
-      return `<div class="chat-file"><span class="chat-file-icon">📦</span><span class="chat-file-main"><span class="chat-file-name">${N(b)}</span><span class="chat-file-size">${tn(x.size)} · 发送中</span></span></div>`;
-    const f = c("file", x.id, b);
-    return `<a class="chat-file" href="${I(f)}" data-file-url="${I(f)}" data-file-name="${I(b)}" download="${I(b)}">
+  const p = i.who === "me", v = Array.isArray(i.images) ? i.images : [], L = Array.isArray(i.files) ? i.files : [], A = v.length ? `<div class="chat-md-gallery ${v.length === 1 ? "is-one" : v.length === 2 ? "is-two" : v.length >= 5 ? "is-many" : "is-few"}" data-count="${v.length}">${v.map((m) => {
+    const x = String(m.id || "").startsWith("local:") ? String(m.src || "") : "";
+    if (x) return `<img class="chat-image chat-md-image" src="${I(x)}" alt="图片" />`;
+    const g = c("image", m.id);
+    return `<img class="chat-image chat-md-image" data-src="${I(g)}" alt="图片" />`;
+  }).join("")}</div>` : "", B = L.map((m) => {
+    const x = m.name || "文件";
+    if (String(m.id || "").startsWith("local:"))
+      return `<div class="chat-file"><span class="chat-file-icon">📦</span><span class="chat-file-main"><span class="chat-file-name">${N(x)}</span><span class="chat-file-size">${tn(m.size)} · 发送中</span></span></div>`;
+    const g = c("file", m.id, x);
+    return `<a class="chat-file" href="${I(g)}" data-file-url="${I(g)}" data-file-name="${I(x)}" download="${I(x)}">
           <span class="chat-file-icon">📦</span>
           <span class="chat-file-main">
-            <span class="chat-file-name">${N(b)}</span>
-            <span class="chat-file-size">${tn(x.size)} · 点按下载</span>
+            <span class="chat-file-name">${N(x)}</span>
+            <span class="chat-file-size">${tn(m.size)} · 点按下载</span>
           </span>
         </a>`;
-  }).join(""), w = i.text ? dn(i.text) : "", j = i.reasoning ? `<details class="chat-thinking"><summary>思考过程</summary><div class="chat-thinking-text">${N(i.reasoning)}</div></details>` : "", H = i.pending ? " is-typing" : "", T = `<div class="chat-bubble ${p ? "is-me" : "is-ai"}${H}${v.length ? " has-images" : ""}" data-copy="${I(encodeURIComponent(ue(i.text || "")))}">${q}${B}${j}${w}</div>`, m = !i.pending && i.text ? '<button type="button" class="chat-copy" data-action="copy-message" aria-label="复制这条消息">复制</button>' : "", h = p && !i.pending && i.text ? '<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>' : "", g = `<div class="chat-meta"><span class="chat-avatar">${p ? "🙂" : "🤖"}</span><span class="chat-stamp">${Et(i.at)}</span>${m}${h}</div>`;
-  return `<div class="chat-turn ${p ? "is-me" : "is-ai"}"${k}>${g}${T}</div>`;
+  }).join(""), w = i.text ? dn(i.text) : "", j = i.reasoning ? `<details class="chat-thinking"><summary>思考过程</summary><div class="chat-thinking-text">${N(i.reasoning)}</div></details>` : "", H = i.pending ? " is-typing" : "", T = `<div class="chat-bubble ${p ? "is-me" : "is-ai"}${H}${v.length ? " has-images" : ""}" data-copy="${I(encodeURIComponent(ue(i.text || "")))}">${A}${B}${j}${w}</div>`, b = !i.pending && i.text ? '<button type="button" class="chat-copy" data-action="copy-message" aria-label="复制这条消息">复制</button>' : "", f = p && !i.pending && i.text ? '<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>' : "", h = `<div class="chat-meta"><span class="chat-avatar">${p ? "🙂" : "🤖"}</span><span class="chat-stamp">${Et(i.at)}</span>${b}${f}</div>`;
+  return `<div class="chat-turn ${p ? "is-me" : "is-ai"}"${k}>${h}${T}</div>`;
 }
 function cr(i, c) {
-  const t = I(i.id || ""), k = i.title || (i.blank ? "新对话" : "未命名对话"), p = N(k), v = i.id === c ? "✓ " : "", L = i.running ? "运行中" : i.online ? "在线" : "", q = Et(i.at);
+  const t = I(i.id || ""), k = i.title || (i.blank ? "新对话" : "未命名对话"), p = N(k), v = i.id === c ? "✓ " : "", L = i.running ? "运行中" : i.online ? "在线" : "", A = Et(i.at);
   return `<div class="chat-session-row">
             <button type="button" class="chat-session" data-session="${t}" data-current="${i.id === c ? "1" : "0"}">
               <span class="chat-session-label">${v}${p}</span>
-              <span class="chat-session-time">${L ? N(L) + " · " : ""}${q}</span>
+              <span class="chat-session-time">${L ? N(L) + " · " : ""}${A}</span>
             </button>
             <button type="button" class="chat-session-more" data-action="session-menu" data-session="${t}" data-title="${I(k)}" aria-label="会话操作">⋯</button>
           </div>`;
@@ -827,18 +829,18 @@ function Xe(i) {
   return i ? `<span class="chat-card-time">${Et(i)}</span>` : "";
 }
 function lr(i, c, t = null, k = 0, p = !1) {
-  const v = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", L = i.name || "工具", q = i.summary || "", B = Number(k) || 0, w = B ? `<span class="chat-tool-index ${v}">${B}</span>` : '<span class="chat-tool-dot" aria-hidden="true"></span>';
+  const v = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", L = i.name || "工具", A = i.summary || "", B = Number(k) || 0, w = B ? `<span class="chat-tool-index ${v}">${B}</span>` : '<span class="chat-tool-dot" aria-hidden="true"></span>';
   return `<div class="chat-tool ${v}${p ? " is-active" : ""}" data-tool="${I(i.id)}">
     <button type="button" class="chat-tool-head" data-action="tool-open" data-tool="${I(i.id)}">
       ${w}
       <span class="chat-tool-name">${N(L)}</span>
-      ${q ? `<span class="chat-tool-sum">${N(q)}</span>` : ""}
+      ${A ? `<span class="chat-tool-sum">${N(A)}</span>` : ""}
       <span class="chat-tool-chevron" aria-hidden="true">›</span>
     </button>
   </div>`;
 }
 function dr(i, c = null) {
-  const t = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", k = i.name || "工具", p = i.summary || "", v = !!(i.preview || i.error), L = (w) => `<button type="button" class="chat-tool-copy" data-action="tool-copy" data-tool="${I(i.id)}" data-copy="${w}">复制</button>`, q = [
+  const t = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", k = i.name || "工具", p = i.summary || "", v = !!(i.preview || i.error), L = (w) => `<button type="button" class="chat-tool-copy" data-action="tool-copy" data-tool="${I(i.id)}" data-copy="${w}">复制</button>`, A = [
     i.preview ? `<div class="chat-tool-code-head"><span>结果</span>${L("preview")}</div><pre class="chat-tool-preview">${N(i.preview)}</pre>` : "",
     i.error ? `<p class="chat-tool-label">错误</p><p class="chat-tool-error">${N([i.error.name, i.error.code, i.error.reason].filter(Boolean).join(" · "))}</p>` : "",
     v ? "" : '<p class="chat-tool-preview">没有输出</p>'
@@ -849,7 +851,7 @@ function dr(i, c = null) {
       <span class="chat-tool-name">${N(k)}</span>
       ${p ? `<span class="chat-tool-sum">${N(p)}</span>` : ""}
     </div>
-    ${q}
+    ${A}
     ${B}
   </div>`;
 }
@@ -862,7 +864,7 @@ function ur() {
   </div>`;
 }
 function pr(i, c, t, k = null, p = {}) {
-  const v = Number.isFinite(Number(p.total)) ? Number(p.total) : i.length, L = i.filter((m) => m.status === "failed").length, q = Number(p.running) || 0, B = L > 0 ? `${L} 次失败` : q > 0 ? "执行中" : "已完成", w = "group-" + (i[0] ? i[0].id : "current"), j = i.map((m, h) => lr(m, !1, k, h + 1, m.id === p.activeId)).join(""), H = c && v > 3 ? `<button type="button" class="chat-tool-group-collapse" data-action="tool-group-toggle" data-group="${I(w)}">收起工具列表</button>` : "", T = i.length ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${I(w)}" aria-expanded="${c ? "true" : "false"}">
+  const v = Number.isFinite(Number(p.total)) ? Number(p.total) : i.length, L = i.filter((b) => b.status === "failed").length, A = Number(p.running) || 0, B = L > 0 ? `${L} 次失败` : A > 0 ? "执行中" : "已完成", w = "group-" + (i[0] ? i[0].id : "current"), j = i.map((b, f) => lr(b, !1, k, f + 1, b.id === p.activeId)).join(""), H = c && v > 3 ? `<button type="button" class="chat-tool-group-collapse" data-action="tool-group-toggle" data-group="${I(w)}">收起工具列表</button>` : "", T = i.length ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${I(w)}" aria-expanded="${c ? "true" : "false"}">
         <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
         <span class="chat-tool-group-title">本轮 ${v} 次工具调用</span>
         <span class="chat-tool-group-badge${L > 0 ? " is-failed" : ""}">${B}</span>
@@ -880,7 +882,7 @@ function pr(i, c, t, k = null, p = {}) {
 }
 function hr(i, c) {
   const t = Array.isArray(i.files) ? i.files : [], k = t.map((p, v) => {
-    const L = String(p.path || "").split(/[\\/]/).pop() || "文件", q = typeof c == "function" ? c(i.seq, v, L) : "", B = /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(L), w = `<a class="chat-file chat-deliverable-file" href="${I(q)}" data-file-url="${I(q)}" data-file-name="${I(L)}" download="${I(L)}">
+    const L = String(p.path || "").split(/[\\/]/).pop() || "文件", A = typeof c == "function" ? c(i.seq, v, L) : "", B = /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(L), w = `<a class="chat-file chat-deliverable-file" href="${I(A)}" data-file-url="${I(A)}" data-file-name="${I(L)}" download="${I(L)}">
         <span class="chat-file-icon">${B ? "🖼" : "📄"}</span>
         <span class="chat-file-main">
           <span class="chat-file-name">${N(L)}</span>
@@ -889,7 +891,7 @@ function hr(i, c) {
         ${B ? '<span class="chat-deliverable-download">下载</span>' : ""}
       </a>`;
     return B ? `<div class="chat-deliverable-media">
-        <img class="chat-image chat-deliverable-thumb" data-src="${I(q)}" alt="${I(L)}" />
+        <img class="chat-image chat-deliverable-thumb" data-src="${I(A)}" alt="${I(L)}" />
         ${w}
       </div>` : w;
   }).join("");
@@ -923,28 +925,28 @@ function fr(i) {
 function gr(i, c) {
   const t = c && c.selected || {}, k = c && c.custom || {}, p = [];
   for (const v of i.questions || []) {
-    const L = Array.isArray(t[v.id]) ? t[v.id] : [], q = String(k[v.id] || "").trim();
-    if (L.length === 0 && !q) return null;
+    const L = Array.isArray(t[v.id]) ? t[v.id] : [], A = String(k[v.id] || "").trim();
+    if (L.length === 0 && !A) return null;
     const B = { id: v.id, selected: L };
-    q && (B.custom = q), p.push(B);
+    A && (B.custom = A), p.push(B);
   }
   return p.length ? p : null;
 }
 function mr(i, c, t) {
-  const k = i.state !== "answered" && !t, p = i.state === "answered", v = c && c.selected || {}, L = c && c.custom || {}, q = (i.questions || []).map((w) => {
-    const j = Array.isArray(v[w.id]) ? v[w.id] : [], H = Array.isArray(w.options) ? w.options : [], T = p && Array.isArray(i.answers) ? i.answers.find((x) => x.id === w.id) : null, m = H.length ? `<div class="chat-q-opts">${H.map((x) => {
-      const b = j.includes(x.label), f = T && Array.isArray(T.selected) && T.selected.includes(x.label);
-      return `<button type="button" class="chat-q-opt${b || f ? " is-on" : ""}" data-action="q-pick" data-input="${I(i.callId)}" data-q="${I(w.id)}" data-value="${I(x.label)}" ${w.multiSelect ? 'data-multi="1"' : ""} ${k ? "" : "disabled"}>
-                <span class="chat-q-opt-label">${N(x.label)}</span>
-                ${x.description ? `<small class="chat-q-opt-desc">${N(x.description)}</small>` : ""}
+  const k = i.state !== "answered" && !t, p = i.state === "answered", v = c && c.selected || {}, L = c && c.custom || {}, A = (i.questions || []).map((w) => {
+    const j = Array.isArray(v[w.id]) ? v[w.id] : [], H = Array.isArray(w.options) ? w.options : [], T = p && Array.isArray(i.answers) ? i.answers.find((m) => m.id === w.id) : null, b = H.length ? `<div class="chat-q-opts">${H.map((m) => {
+      const x = j.includes(m.label), g = T && Array.isArray(T.selected) && T.selected.includes(m.label);
+      return `<button type="button" class="chat-q-opt${x || g ? " is-on" : ""}" data-action="q-pick" data-input="${I(i.callId)}" data-q="${I(w.id)}" data-value="${I(m.label)}" ${w.multiSelect ? 'data-multi="1"' : ""} ${k ? "" : "disabled"}>
+                <span class="chat-q-opt-label">${N(m.label)}</span>
+                ${m.description ? `<small class="chat-q-opt-desc">${N(m.description)}</small>` : ""}
               </button>`;
-    }).join("")}</div>` : "", h = p && T && T.custom ? T.custom : String(L[w.id] || ""), g = k ? `<input class="chat-q-custom" data-role="q-custom" data-input="${I(i.callId)}" data-q="${I(w.id)}" value="${I(h)}" placeholder="或者自己输入" autocomplete="off" />` : h ? `<p class="chat-q-custom-text">${N(h)}</p>` : "";
+    }).join("")}</div>` : "", f = p && T && T.custom ? T.custom : String(L[w.id] || ""), h = k ? `<input class="chat-q-custom" data-role="q-custom" data-input="${I(i.callId)}" data-q="${I(w.id)}" value="${I(f)}" placeholder="或者自己输入" autocomplete="off" />` : f ? `<p class="chat-q-custom-text">${N(f)}</p>` : "";
     return `<div class="chat-q">
         ${w.header ? `<p class="chat-q-header">${N(w.header)}</p>` : ""}
         <p class="chat-q-text">${N(w.question || "")}</p>
         ${w.detail ? `<p class="chat-q-sub">${N(w.detail)}</p>` : ""}
-        ${m}
-        ${g}
+        ${b}
+        ${h}
       </div>`;
   }).join(""), B = k ? `<div class="chat-card-actions"><button type="button" class="chat-btn is-primary" data-action="q-submit" data-input="${I(i.callId)}">${t ? "已提交" : "提交"}</button></div>` : "";
   return `<div class="chat-card chat-input-card${k ? " is-pending" : ""}${p ? " is-answered" : ""}" data-input="${I(i.callId)}">
@@ -953,7 +955,7 @@ function mr(i, c, t) {
       <span class="chat-card-title">${p ? "已回答" : t ? "已提交，等待继续" : "需要你选择"}</span>
       ${Xe(i.at)}
     </div>
-    ${q}
+    ${A}
     ${B}
   </div>`;
 }
@@ -1038,7 +1040,7 @@ function br(i, c) {
     sessionPermission: "",
     projections: {},
     openAcc: ""
-  }, k = String(c.manifest && c.manifest.version || ""), p = typeof window < "u" && !!window.__verifyWatchdog && /^(127\.0\.0\.1|localhost)$/.test(location.hostname), v = p ? 120 : 5 * 60 * 1e3, L = 6e3, q = p ? 450 : 15 * 60 * 1e3, B = p ? 80 : 1e4, w = 3, j = 5, H = 30, T = [
+  }, k = String(c.manifest && c.manifest.version || ""), p = typeof window < "u" && !!window.__verifyWatchdog && /^(127\.0\.0\.1|localhost)$/.test(location.hostname), v = p ? 120 : 5 * 60 * 1e3, L = 6e3, A = p ? 450 : 15 * 60 * 1e3, B = p ? 80 : 1e4, w = 3, j = 5, H = 30, T = [
     // 8 道错题：4 道带问号，4 道不带
     "6 × 3 = 19?",
     "9 + 6 = 14?",
@@ -1073,17 +1075,17 @@ function br(i, c) {
     "11 + 4 = 15",
     "7 × 7 = 49",
     "24 ÷ 6 = 4"
-  ], m = 1e3, h = "我这边在手机上处理不了刚才的确认，已经中断当前回合。请改用不需要电脑端弹窗的方式继续；如果必须用电脑操作，请先告诉我需要做什么。", g = 180, x = String(c.manifest && c.manifest.id || "dsh-console"), b = Ko({ base: () => t.url, token: () => t.token }), f = Yo(), E = Zo();
-  t.messages = f.messages;
+  ], b = 1e3, f = "我这边在手机上处理不了刚才的确认，已经中断当前回合。请改用不需要电脑端弹窗的方式继续；如果必须用电脑操作，请先告诉我需要做什么。", h = 180, m = String(c.manifest && c.manifest.id || "dsh-console"), x = Ko({ base: () => t.url, token: () => t.token }), g = Yo(), E = Zo();
+  t.messages = g.messages;
   let s = null, n = {}, D = null, W = 0, Y = !1, U = !1, V = 0, _ = 0, K = [], gt = null, Je = 0, fe = null, ge = null, me = null, It = null, O = { list: [], index: 0, scale: 1, x: 0, y: 0 }, at = null, tt = /* @__PURE__ */ new Map(), mt = null, et = !1, bt = 0, ct = 0, J = "unknown", _t = null, Ze = 0;
   const Ot = /* @__PURE__ */ new Set(), Ft = /* @__PURE__ */ new Map(), Wt = /* @__PURE__ */ new Set();
   function un() {
-    let e = "", a = "", o = !0, r = "turn", l = "", d = "", y = !0, A = "lan";
+    let e = "", a = "", o = !0, r = "turn", l = "", d = "", y = !0, q = "lan";
     try {
       const C = c.storage.get(Ve);
       if (C) {
         const u = JSON.parse(C);
-        e = u && typeof u.url == "string" ? u.url : "", a = u && typeof u.token == "string" ? u.token : "", u && u.notify !== void 0 && (o = u.notify !== !1), u && u.notifyMode === "message" && (r = "message"), u && typeof u.lanUrl == "string" && (l = u.lanUrl), u && typeof u.wanUrl == "string" && (d = u.wanUrl), u && u.autoPick !== void 0 && (y = u.autoPick !== !1), u && u.pick === "wan" && (A = "wan");
+        e = u && typeof u.url == "string" ? u.url : "", a = u && typeof u.token == "string" ? u.token : "", u && u.notify !== void 0 && (o = u.notify !== !1), u && u.notifyMode === "message" && (r = "message"), u && typeof u.lanUrl == "string" && (l = u.lanUrl), u && typeof u.wanUrl == "string" && (d = u.wanUrl), u && u.autoPick !== void 0 && (y = u.autoPick !== !1), u && u.pick === "wan" && (q = "wan");
       }
     } catch {
     }
@@ -1091,7 +1093,7 @@ function br(i, c) {
       const C = vt(e);
       C && C !== ft ? d = C : l = C;
     }
-    t.lanUrl = vt(l) || ft, t.wanUrl = d ? vt(d) : "", t.autoPick = y !== !1, t.pick = A, t.mode = t.autoPick ? "auto" : t.pick === "wan" ? "wan" : "lan", t.token = String(a || "").trim(), t.notify = o !== !1, t.notifyMode = r, t.url = t.autoPick ? t.lanUrl : t.pick === "wan" && t.wanUrl ? t.wanUrl : t.lanUrl;
+    t.lanUrl = vt(l) || ft, t.wanUrl = d ? vt(d) : "", t.autoPick = y !== !1, t.pick = q, t.mode = t.autoPick ? "auto" : t.pick === "wan" ? "wan" : "lan", t.token = String(a || "").trim(), t.notify = o !== !1, t.notifyMode = r, t.url = t.autoPick ? t.lanUrl : t.pick === "wan" && t.wanUrl ? t.wanUrl : t.lanUrl;
   }
   function Kt() {
     c.storage.set(Ve, JSON.stringify({
@@ -1148,7 +1150,7 @@ function br(i, c) {
         for (const e of await caches.keys()) await caches.delete(e);
     } catch {
     }
-    ta(), f.clear(), t.toolDetailId = "", t.toolActiveId = "", R(!0), P("缓存已清理");
+    ta(), g.clear(), t.toolDetailId = "", t.toolActiveId = "", R(!0), P("缓存已清理");
     try {
       await xt();
     } catch {
@@ -1171,7 +1173,7 @@ function br(i, c) {
         await e.removeEntry(a, { recursive: !0 });
     } catch {
     }
-    c.storage.remove(Ve), c.storage.remove(be), c.storage.remove(Xa), f.clear(), R(!0), P("正在恢复初始化…"), window.setTimeout(() => {
+    c.storage.remove(Ve), c.storage.remove(be), c.storage.remove(Xa), g.clear(), R(!0), P("正在恢复初始化…"), window.setTimeout(() => {
       c.shell && typeof c.shell.exit == "function" ? c.shell.exit() : location.reload();
     }, 400);
   }
@@ -1188,7 +1190,7 @@ function br(i, c) {
   async function ye(e) {
     if (t.url)
       try {
-        await b.presence(e, !0);
+        await x.presence(e, !0);
       } catch {
       }
   }
@@ -1199,12 +1201,12 @@ function br(i, c) {
     }
     t.lastProgressAt = Date.now();
     try {
-      await b.approvalDecision(e, a), P(a ? "已允许" : "已拒绝");
+      await x.approvalDecision(e, a), P(a ? "已允许" : "已拒绝");
     } catch (o) {
       P("提交失败：" + (o && o.message || "网络错误"), "error");
     }
   }
-  const Vt = (e, a, o) => b.assetUrl(e, a, o), ea = (e, a, o) => b.fetchWithTimeout(e, a, o);
+  const Vt = (e, a, o) => x.assetUrl(e, a, o), ea = (e, a, o) => x.fetchWithTimeout(e, a, o);
   async function bn() {
     if (!t.url) {
       Q("unset", "未配置");
@@ -1212,7 +1214,7 @@ function br(i, c) {
     }
     Q("checking", "连接中…");
     try {
-      const e = await b.health();
+      const e = await x.health();
       Q("ok", e && e.hasKey === !1 ? "连上了，但电脑缺 key" : "已连接");
     } catch {
       Q("bad", "连不上");
@@ -1238,8 +1240,8 @@ function br(i, c) {
       return Q("unset", "未配置"), !1;
     if (t.waiting) return !1;
     try {
-      const a = await b.messages({ recent: j }), o = Array.isArray(a.messages) ? a.messages : [];
-      return f.replaceMessages(
+      const a = await x.messages({ recent: j }), o = Array.isArray(a.messages) ? a.messages : [];
+      return g.replaceMessages(
         o.map(ve).filter((r) => r.text || r.images.length || r.files.length)
       ), t.hydrated = !0, t.booting = !1, t.waiting = !1, t.busy = !1, t.waitingSince = 0, t.running = !!(a && a.running), t.lastEventAge = Number(a && a.lastEventAgeMs) || 0, a && a.instance && (t.instance = String(a.instance)), a && a.meta && (t.meta = a.meta, St()), t.staleShown = !1, a.current && (t.currentSession = String(a.current)), a.title && pt(a.title), R(!0), !0;
     } catch {
@@ -1249,7 +1251,7 @@ function br(i, c) {
   function xn(e) {
     const a = ve(e);
     if (!a.id) return !1;
-    const o = f.upsertMessage(a);
+    const o = g.upsertMessage(a);
     return o && a.who !== "me" && (t.lastReplyAt = Date.now(), window.setTimeout(() => {
       U || R();
     }, 2200)), o;
@@ -1258,15 +1260,15 @@ function br(i, c) {
     if (!(U || Y) && !(!t.url || t.view !== "chat" || document.hidden) && J !== "sse") {
       Y = !0;
       try {
-        const e = t.hydrated ? t.cursor : 0, a = await b.messages({ since: e, recent: j }), o = Array.isArray(a.messages) ? a.messages : [];
+        const e = t.hydrated ? t.cursor : 0, a = await x.messages({ since: e, recent: j }), o = Array.isArray(a.messages) ? a.messages : [];
         t.status !== "ok" && Q("ok", "已连接"), a.current && (t.currentSession = String(a.current)), a.title && pt(a.title), a.meta && (t.meta = a.meta, St());
         const r = String(a.instance || ""), l = Number(a.last) || 0;
         if (!!(r && t.instance && r !== t.instance || e > 0 && l > 0 && l < e)) {
-          t.instance = r || t.instance, f.clear(), t.hydrated = !1, t.running = !1, t.waiting = !1, t.waitingSince = 0, await Pt(!0);
+          t.instance = r || t.instance, g.clear(), t.hydrated = !1, t.running = !1, t.waiting = !1, t.waitingSince = 0, await Pt(!0);
           return;
         }
         r && (t.instance = r);
-        const y = t.running, A = t.staleShown, C = typeof a.running == "boolean";
+        const y = t.running, q = t.staleShown, C = typeof a.running == "boolean";
         C && (t.running = !!a.running, a.running && (t.awaitingReply = !0), !t.running && t.waitingSince && Date.now() - t.waitingSince > 2500 && (t.waiting = !1, t.busy = !1, t.waitingSince = 0));
         const u = t.currentTool, $ = u ? String(u.name) + "|" + String(u.detail || "") + "|" + String(!!u.done) : "";
         t.currentTool = a.tool && a.tool.name ? {
@@ -1278,9 +1280,9 @@ function br(i, c) {
         t.lastEventAge = Number(a.lastEventAgeMs) || 0;
         const F = t.running && t.lastEventAge > 3e5;
         t.staleShown = F;
-        const G = C && (y !== t.running || A !== F);
+        const G = C && (y !== t.running || q !== F);
         if (!t.hydrated) {
-          f.replaceMessages(
+          g.replaceMessages(
             o.map(ve).filter((M) => M.text || M.images.length || M.files.length)
           ), t.hydrated = !0, t.booting = !1, !t.waiting && !t.running && (t.busy = !1), R(!0);
           return;
@@ -1291,7 +1293,7 @@ function br(i, c) {
         }
         let ht = !1;
         for (const M of o)
-          f.cursor = Math.max(f.cursor, Number(M.id) || 0), xn(M) && (ht = !0);
+          g.cursor = Math.max(g.cursor, Number(M.id) || 0), xn(M) && (ht = !0);
         !C && t.waiting && (t.waiting = !1, t.busy = !1, ht = !0), (ht || G || z) && R();
       } catch (e) {
         const a = String(e && e.message || "");
@@ -1313,7 +1315,7 @@ function br(i, c) {
   }
   function yn(e) {
     const a = e && e.session || {}, o = e && Array.isArray(e.events) ? e.events : [];
-    f.replaceEvents(o), t.projections = e && e.projections && typeof e.projections == "object" ? e.projections : {}, t.stream = null, t.hydrated = !0, t.waiting = !1, t.busy = !1, t.waitingSince = 0, t.running = !!a.running, a.running && !Ea(f.timeline()) && (t.awaitingReply = !0, t.runActive = !0), t.lastEventAt = Date.now(), t.currentTool = null, t.lastTool = null, t.lastToolAt = 0, t.running && a.tool && a.tool.name && (t.currentTool = {
+    g.replaceEvents(o), t.projections = e && e.projections && typeof e.projections == "object" ? e.projections : {}, t.stream = null, t.hydrated = !0, t.waiting = !1, t.busy = !1, t.waitingSince = 0, t.running = !!a.running, a.running && !Ea(g.timeline()) && (t.awaitingReply = !0, t.runActive = !0), t.lastEventAt = Date.now(), t.currentTool = null, t.lastTool = null, t.lastToolAt = 0, t.running && a.tool && a.tool.name && (t.currentTool = {
       name: String(a.tool.name),
       detail: String(a.tool.detail || ""),
       done: !!a.tool.done
@@ -1327,7 +1329,7 @@ function br(i, c) {
     }));
   }
   function na() {
-    return f.timeline().filter((e) => e.kind === "message" && e.message && e.message.who === "me").length;
+    return g.timeline().filter((e) => e.kind === "message" && e.message && e.message.who === "me").length;
   }
   function ke(e) {
     let a = -1;
@@ -1339,9 +1341,9 @@ function br(i, c) {
     return a;
   }
   function oa(e = !1) {
-    const a = e ? -1 : ke(f.timeline());
+    const a = e ? -1 : ke(g.timeline());
     let o = !1;
-    for (const r of f.cards.values()) {
+    for (const r of g.cards.values()) {
       if (r.kind !== "tool" || r.status !== "running") continue;
       const l = Number(r.seq);
       !e && Number.isFinite(l) && l <= a || (r.status = "ok", o = !0);
@@ -1373,7 +1375,7 @@ function br(i, c) {
     }
     if (e.type === "session.meta") {
       const r = e.payload && e.payload.session || {};
-      if (r.running !== void 0 && (t.running = !!r.running, r.running && !Ea(f.timeline()) && (t.awaitingReply = !0, t.runActive = !0)), e.payload && e.payload.instance) {
+      if (r.running !== void 0 && (t.running = !!r.running, r.running && !Ea(g.timeline()) && (t.awaitingReply = !0, t.runActive = !0)), e.payload && e.payload.instance) {
         const l = String(e.payload.instance);
         if (t.instance && l !== t.instance) {
           t.instance = l, xt();
@@ -1385,7 +1387,7 @@ function br(i, c) {
       return;
     }
     (e.type === "message.assistant" || e.type === "message.error" || e.type === "turn.end") && (t.stream = null);
-    let a = f.upsertEvent(e);
+    let a = g.upsertEvent(e);
     if (e.type === "turn.start" || e.type === "message.user")
       e.type === "turn.start" && (t.running = !0), t.awaitingReply = !0, t.runActive = !0, t.stopped = !1, a = !0;
     else if (e.type === "turn.end")
@@ -1424,7 +1426,7 @@ function br(i, c) {
       Te();
       return;
     }
-    const e = new EventSource(b.eventsUrl(f.lastSeq, t.currentSession));
+    const e = new EventSource(x.eventsUrl(g.lastSeq, t.currentSession));
     _t = e;
     let a = !1;
     e.onmessage = (o) => {
@@ -1457,7 +1459,7 @@ function br(i, c) {
   async function xt() {
     if (!(U || !t.url) && J !== "legacy")
       try {
-        const e = await b.snapshot(t.currentSession || "", { turns: w });
+        const e = await x.snapshot(t.currentSession || "", { turns: w });
         if (U) return;
         J = "sse", we(), yn(e), ra();
       } catch {
@@ -1474,11 +1476,11 @@ function br(i, c) {
     const a = n.list, o = a ? a.scrollTop : 0, r = a ? a.scrollHeight : 0;
     t.loadingOlder = !0, sa();
     try {
-      const l = await b.snapshot(t.currentSession, {
+      const l = await x.snapshot(t.currentSession, {
         turns: Math.min(j, e),
         before: t.oldestSeq
       }), d = Array.isArray(l && l.events) ? l.events : [];
-      for (const A of d) f.upsertEvent(A);
+      for (const q of d) g.upsertEvent(q);
       t.oldestSeq = Number(l && l.oldestSeq) || t.oldestSeq;
       const y = na() >= H;
       t.turnHasMore = !!(l && l.hasMore) && !y, t.historyLimitReached = y && !!(l && l.hasMore), R(), a && (a.scrollTop = o + Math.max(0, a.scrollHeight - r));
@@ -1492,10 +1494,10 @@ function br(i, c) {
     n.loadSpinner && (n.loadSpinner.hidden = !(t.loadingOlder && t.turnHasMore));
   }
   function ia() {
-    !t.turnHasMore || t.loadingOlder || !n.list || n.list.scrollTop > g || wn();
+    !t.turnHasMore || t.loadingOlder || !n.list || n.list.scrollTop > h || wn();
   }
   function kn() {
-    const e = f.timeline(), a = ke(e);
+    const e = g.timeline(), a = ke(e);
     for (const o of e) {
       const r = Number(o.seq);
       if (!(Number.isFinite(r) && r <= a) && (o.kind === "approval" && !o.decision || o.kind === "input" && o.state === "open"))
@@ -1504,8 +1506,8 @@ function br(i, c) {
     return !1;
   }
   function $e() {
-    const e = ke(f.timeline());
-    for (const a of f.cards.values()) {
+    const e = ke(g.timeline());
+    for (const a of g.cards.values()) {
       if (a.kind !== "tool" || a.status !== "running") continue;
       const o = Number(a.seq);
       if (!Number.isFinite(o) || o > e) return !0;
@@ -1517,7 +1519,7 @@ function br(i, c) {
     t.stuckBusy = !0, t.stuckPrompt = !1, R();
     let a = !1;
     try {
-      await b.stop(), a = !0;
+      await x.stop(), a = !0;
     } catch (o) {
       t.stuckBusy = !1, t.lastProgressAt = Date.now(), R(), P("中断失败：" + (o && o.message || "网络错误"), "error");
       return;
@@ -1525,7 +1527,7 @@ function br(i, c) {
     if (a) {
       t.stopped = !0, t.awaitingReply = !0;
       try {
-        await b.send({ text: h, images: [], files: [] }), P(e ? "长时间无响应，已中断并说明" : "已中断，已让 agent 换方式");
+        await x.send({ text: f, images: [], files: [] }), P(e ? "长时间无响应，已中断并说明" : "已中断，已让 agent 换方式");
       } catch {
         t.awaitingReply = !1, P("已中断，但说明没发出去");
       }
@@ -1535,7 +1537,7 @@ function br(i, c) {
   async function Sn() {
     if (!(U || !t.url || document.hidden) && !(Date.now() - (Number(t.lastProgressAt) || 0) < 2e3))
       try {
-        const e = await b.health();
+        const e = await x.health();
         if (typeof e.running != "boolean") return;
         if (!e.running) {
           t.running = !1, t.awaitingReply && (t.notRunningSince || (t.notRunningSince = Date.now()), !t.currentTool && !$e() && Date.now() - t.notRunningSince >= L ? Se(!0) : R());
@@ -1555,7 +1557,7 @@ function br(i, c) {
       t.stuckPrompt && (t.stuckPrompt = !1, R());
       return;
     }
-    const e = Date.now() - (Number(t.lastProgressAt) || Date.now()), a = $e() ? 1 / 0 : q;
+    const e = Date.now() - (Number(t.lastProgressAt) || Date.now()), a = $e() ? 1 / 0 : A;
     if (e >= a) {
       ca(!0);
       return;
@@ -1582,7 +1584,7 @@ function br(i, c) {
     const l = r.filter((S) => S.kind === "image" && S.ref).map((S) => S.ref), d = r.filter((S) => S.kind === "file" && S.ref).map((S) => S.ref), y = t.messages.reduce((S, z) => {
       const F = z && z.seq;
       return Number.isFinite(Number(F)) ? Math.max(S, Number(F)) : S;
-    }, -1), A = {
+    }, -1), q = {
       who: "me",
       text: o,
       at: Date.now(),
@@ -1599,15 +1601,15 @@ function br(i, c) {
         size: S.size
       }))
     };
-    f.messages.push(A), t.draft = "", n.input && (n.input.value = ""), He(), t.waiting = !0, t.waitingSince = Date.now(), t.busy = !0, t.awaitingReply = !0, t.runActive = !0, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, R(!0), J !== "sse" && Lt();
+    g.messages.push(q), t.draft = "", n.input && (n.input.value = ""), He(), t.waiting = !0, t.waitingSince = Date.now(), t.busy = !0, t.awaitingReply = !0, t.runActive = !0, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, R(!0), J !== "sse" && Lt();
     const C = typeof crypto < "u" && typeof crypto.randomUUID == "function" ? crypto.randomUUID() : "local-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
     let u = null;
     for (let S = 0; S < 3; S += 1)
       try {
-        await b.send({ text: o, images: l, files: d, clientMessageId: C }), u = null, t.pending = [], st(), J !== "sse" ? window.setTimeout(aa, 260) : window.setTimeout(async () => {
+        await x.send({ text: o, images: l, files: d, clientMessageId: C }), u = null, t.pending = [], st(), J !== "sse" ? window.setTimeout(aa, 260) : window.setTimeout(async () => {
           if (!U)
             try {
-              const z = await b.health();
+              const z = await x.health();
               z && z.title && pt(z.title);
             } catch {
             }
@@ -1617,8 +1619,8 @@ function br(i, c) {
         u = z, S < 2 && await Oo(700 * (S + 1));
       }
     t.waiting = !1, t.busy = !1, t.awaitingReply = !1, t.runActive = !1;
-    const $ = f.messages.indexOf(A);
-    $ >= 0 && f.messages.splice($, 1), f.messages.push({
+    const $ = g.messages.indexOf(q);
+    $ >= 0 && g.messages.splice($, 1), g.messages.push({
       who: "error",
       text: "发送失败：" + (u && u.message || "未知错误"),
       at: Date.now(),
@@ -1646,7 +1648,7 @@ function br(i, c) {
   }
   async function qn(e) {
     try {
-      const a = e.kind === "image" ? { data: e.data, mediaType: e.mediaType, name: e.name } : { data: e.data, name: e.name }, o = e.kind === "image" ? await b.uploadImage(a) : await b.uploadFile(a);
+      const a = e.kind === "image" ? { data: e.data, mediaType: e.mediaType, name: e.name } : { data: e.data, name: e.name }, o = e.kind === "image" ? await x.uploadImage(a) : await x.uploadFile(a);
       if (!o || !o.attachment) throw new Error("上传结果不对");
       e.ref = o.attachment, e.status = "ready";
     } catch (a) {
@@ -1712,7 +1714,7 @@ function br(i, c) {
     const e = t.url;
     if (t.waiting = !1, t.busy = !1, R(), !!e)
       try {
-        await b.stop(), t.stopped = !0, Se(!0), R(), P("已停止执行");
+        await x.stop(), t.stopped = !0, Se(!0), R(), P("已停止执行");
       } catch (a) {
         P("停止失败：" + (a && a.message || "网络错误"), "error");
       }
@@ -1724,7 +1726,7 @@ function br(i, c) {
     }
     t.sessionsOpen = !0, t.sessionQuery = "", nt && (window.clearTimeout(nt), nt = 0), Xt("list"), n.sheetBody.innerHTML = '<div class="chat-sheet-tip">正在读取历史对话…</div>', n.scrim.hidden = !1, Ee(!0);
     try {
-      const e = await b.sessions(), a = Array.isArray(e.sessions) ? e.sessions : [], o = e.current || t.currentSession || "";
+      const e = await x.sessions(), a = Array.isArray(e.sessions) ? e.sessions : [], o = e.current || t.currentSession || "";
       o && (t.currentSession = String(o)), t.archivedList = Array.isArray(e.archived) ? e.archived : [], t.showArchived = !1, t.sessionsList = a.filter((r) => !r.blank || r.id === o), n.sessionSearch && (n.sessionSearch.value = "", n.sessionSearch.hidden = !0), n.sheetBody.innerHTML = '<div data-role="session-list"></div>', Qt();
     } catch (e) {
       t.sessionsList = [], n.sheetBody.innerHTML = `<div class="chat-sheet-tip">读取失败：${N(e && e.message || "未知错误")}</div>`;
@@ -1733,14 +1735,14 @@ function br(i, c) {
   function Qt() {
     const e = n.sheetBody && n.sheetBody.querySelector('[data-role="session-list"]');
     if (!e) return;
-    const a = String(t.sessionQuery || "").trim().toLowerCase(), o = (t.sessionsList || []).filter((u) => a ? String(u.title || "").toLowerCase().includes(a) || String(u.id || "").toLowerCase().includes(a) : !0), r = t.currentSession || "", l = o.slice(0, 80).map((u) => cr(u, r)).join(""), d = `<div class="chat-sheet-tip">${a ? "没有匹配的对话" : "还没有历史对话"}</div>`, y = (t.archivedList || []).filter((u) => a ? String(u.title || "").toLowerCase().includes(a) || String(u.id || "").toLowerCase().includes(a) : !0), A = `<button type="button" class="chat-archived-toggle" data-action="toggle-archived">${t.showArchived ? "收起已归档" : "已归档 " + y.length}</button>`;
+    const a = String(t.sessionQuery || "").trim().toLowerCase(), o = (t.sessionsList || []).filter((u) => a ? String(u.title || "").toLowerCase().includes(a) || String(u.id || "").toLowerCase().includes(a) : !0), r = t.currentSession || "", l = o.slice(0, 80).map((u) => cr(u, r)).join(""), d = `<div class="chat-sheet-tip">${a ? "没有匹配的对话" : "还没有历史对话"}</div>`, y = (t.archivedList || []).filter((u) => a ? String(u.title || "").toLowerCase().includes(a) || String(u.id || "").toLowerCase().includes(a) : !0), q = `<button type="button" class="chat-archived-toggle" data-action="toggle-archived">${t.showArchived ? "收起已归档" : "已归档 " + y.length}</button>`;
     let C = "";
     t.showArchived && (C = y.length ? y.slice(0, 80).map(
       (u) => `<div class="chat-session-row is-archived"><button type="button" class="chat-session" data-action="restore-session" data-session="${I(u.id || "")}">
                 <span class="chat-session-label">${N(u.title || "未命名对话")}</span>
                 <span class="chat-session-time">已归档 · 点按恢复</span>
               </button></div>`
-    ).join("") : '<div class="chat-sheet-tip">没有已归档的对话</div>'), e.innerHTML = (o.length ? l : d) + A + C;
+    ).join("") : '<div class="chat-sheet-tip">没有已归档的对话</div>'), e.innerHTML = (o.length ? l : d) + q + C;
   }
   function In(e) {
     return e ? e.eventId ? String(e.eventId) : e.id ? "id" + e.id : Number.isFinite(Number(e.seq)) ? "s" + e.seq : "" : "";
@@ -1764,8 +1766,8 @@ function br(i, c) {
       if (!r) continue;
       const l = r.toLowerCase().indexOf(e);
       if (l < 0) continue;
-      const d = Math.max(0, l - 16), y = l + e.length + 26, A = (d > 0 ? "…" : "") + r.slice(d, y).replace(/\s+/g, " ") + (y < r.length ? "…" : "");
-      if (a.push({ key: In(o), who: o.who, snippet: A, at: o.at }), a.length >= 80) break;
+      const d = Math.max(0, l - 16), y = l + e.length + 26, q = (d > 0 ? "…" : "") + r.slice(d, y).replace(/\s+/g, " ") + (y < r.length ? "…" : "");
+      if (a.push({ key: In(o), who: o.who, snippet: q, at: o.at }), a.length >= 80) break;
     }
     if (a.length === 0) {
       n.searchBody.innerHTML = '<div class="chat-sheet-tip">没有找到包含该关键词的消息</div>';
@@ -1806,7 +1808,7 @@ function br(i, c) {
       return;
     }
     try {
-      const o = await b.renameSession(e, a);
+      const o = await x.renameSession(e, a);
       e === t.currentSession && o && o.title && pt(o.title), Me(), P("已重命名"), t.sessionsOpen && await Yt();
     } catch (o) {
       P("重命名失败：" + (o && o.message || "未知错误"), "error");
@@ -1817,7 +1819,7 @@ function br(i, c) {
     if (zt(), !!e) {
       P("正在分支…");
       try {
-        const a = await b.forkSession(e);
+        const a = await x.forkSession(e);
         a && a.sessionId ? await ua(a.sessionId) : P("分支失败", "error");
       } catch (a) {
         P("分支失败：" + (a && a.message || "未知错误"), "error");
@@ -1847,7 +1849,7 @@ function br(i, c) {
     const e = t.archiveId;
     if (e)
       try {
-        await b.archiveSession(e, t.archiveStop), Jt(), P("已归档"), t.sessionsOpen && await Yt();
+        await x.archiveSession(e, t.archiveStop), Jt(), P("已归档"), t.sessionsOpen && await Yt();
       } catch (a) {
         if (a && a.code === "workspace/session-active" && !t.archiveStop) {
           t.archiveStop = !0, n.archiveText && (n.archiveText.textContent = "这个会话还在执行，停止并归档？");
@@ -1859,7 +1861,7 @@ function br(i, c) {
   async function Dn(e) {
     if (e)
       try {
-        await b.unarchiveSession(e), P("已恢复"), t.sessionsOpen && await Yt();
+        await x.unarchiveSession(e), P("已恢复"), t.sessionsOpen && await Yt();
       } catch (a) {
         P("恢复失败：" + (a && a.message || "未知错误"), "error");
       }
@@ -1873,8 +1875,8 @@ function br(i, c) {
     if (yt(), !!e) {
       P("正在打开对话…");
       try {
-        const a = await b.target(e);
-        rt(), lt(), f.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), a && a.current && (t.currentSession = String(a.current)), t.currentSession && E.clearOthers(t.currentSession).catch(() => {
+        const a = await x.target(e);
+        rt(), lt(), g.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), a && a.current && (t.currentSession = String(a.current)), t.currentSession && E.clearOthers(t.currentSession).catch(() => {
         }), pt(a && a.title || ""), t.view = "chat", n.page && (n.page.hidden = !0), R(!0), J === "sse" ? xt() : await Pt(!0), P("已切换对话");
       } catch (a) {
         P("切换失败：" + (a && a.message || "未知错误"), "error");
@@ -1914,7 +1916,7 @@ function br(i, c) {
   async function pa(e) {
     if (t.options) return t.options;
     try {
-      const a = await b.options();
+      const a = await x.options();
       t.options = {
         presets: Array.isArray(a.presets) ? a.presets : [],
         permissions: Array.isArray(a.permissions) ? a.permissions : [],
@@ -1935,7 +1937,7 @@ function br(i, c) {
     const o = t.formModel || "", r = t.formEffort || "", l = a.map(($) => {
       const S = ($.models || []).map((z) => `<button type="button" class="chat-opt" data-action="pick-model" data-scope="${e}" data-provider="${I($.id)}" data-value="${I(z.id)}" data-on="${z.id === o ? "1" : "0"}">${N(z.name || z.id)}</button>`).join("");
       return e === "new" ? `<div class="chat-chipgroup">${S}</div>` : `<div class="chat-form-block"><p class="chat-sheet-sub">${N($.name || $.id)}</p><div class="chat-chipgroup">${S}</div></div>`;
-    }).join(""), d = e === "new" ? `<div class="chat-form-block"><p class="chat-sheet-sub">模型</p>${l}</div>` : l, y = Bt(t.formProvider, o), A = y && y.model && y.model.reasoning && Array.isArray(y.model.reasoning.efforts) ? y.model.reasoning.efforts : [], C = A.length ? `<div class="chat-form-block"><p class="chat-sheet-sub">推理等级</p><div class="chat-chipgroup">${A.map(($) => `<button type="button" class="chat-opt" data-action="pick-effort" data-scope="${e}" data-value="${I($.id)}" data-on="${$.id === r ? "1" : "0"}">${N($.name || $.id)}</button>`).join("")}</div></div>` : "";
+    }).join(""), d = e === "new" ? `<div class="chat-form-block"><p class="chat-sheet-sub">模型</p>${l}</div>` : l, y = Bt(t.formProvider, o), q = y && y.model && y.model.reasoning && Array.isArray(y.model.reasoning.efforts) ? y.model.reasoning.efforts : [], C = q.length ? `<div class="chat-form-block"><p class="chat-sheet-sub">推理等级</p><div class="chat-chipgroup">${q.map(($) => `<button type="button" class="chat-opt" data-action="pick-effort" data-scope="${e}" data-value="${I($.id)}" data-on="${$.id === r ? "1" : "0"}">${N($.name || $.id)}</button>`).join("")}</div></div>` : "";
     let u = "";
     if (e === "model") {
       const $ = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((S) => ({
@@ -2027,7 +2029,7 @@ function br(i, c) {
     if (e === "model") {
       t.formProvider = o || t.formProvider, t.formModel = a;
       const l = Bt(t.formProvider, a), d = l && l.model && l.model.reasoning && Array.isArray(l.model.reasoning.efforts) ? l.model.reasoning.efforts : [], y = l && l.model && l.model.reasoning && l.model.reasoning.defaultEffort || "";
-      t.formEffort = d.some((A) => A.id === t.formEffort) ? t.formEffort : y || (d[0] ? d[0].id : "");
+      t.formEffort = d.some((q) => q.id === t.formEffort) ? t.formEffort : y || (d[0] ? d[0].id : "");
     } else
       t.formEffort = a;
     r === "new" ? Ct() : Zt();
@@ -2039,10 +2041,10 @@ function br(i, c) {
     try {
       const a = String(t.sessionPermission || "");
       if (a && (!t.meta || a !== t.meta.permission)) {
-        const r = await b.setPermission(a);
+        const r = await x.setPermission(a);
         r && r.meta && (t.meta = r.meta);
       }
-      const o = await b.selectModel(e);
+      const o = await x.selectModel(e);
       o && o.meta && (t.meta = o.meta), St(), te(), P("已应用");
     } catch (a) {
       P("应用失败：" + (a && a.message || "未知错误"), "error");
@@ -2076,7 +2078,7 @@ function br(i, c) {
       } catch {
       }
       try {
-        c.watch && typeof c.watch.stop == "function" && c.watch.stop(x);
+        c.watch && typeof c.watch.stop == "function" && c.watch.stop(m);
       } catch {
       }
       try {
@@ -2093,14 +2095,14 @@ function br(i, c) {
     const e = t.formPreset || Ie(), a = t.formPermission || Ne(), o = String(t.formTitle || "").trim();
     P("正在新建对话…");
     try {
-      const r = await b.createSession({
+      const r = await x.createSession({
         preset: e,
         permission: a,
         ...o ? { title: o } : {}
       }), l = r && r.current ? String(r.current) : "";
       if (l && t.formProvider && t.formModel)
         try {
-          const d = await b.selectModel({
+          const d = await x.selectModel({
             sessionId: l,
             provider: t.formProvider,
             model: t.formModel,
@@ -2109,7 +2111,7 @@ function br(i, c) {
           d && d.meta && (t.meta = d.meta);
         } catch {
         }
-      rt(), lt(), f.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), r && r.current && (t.currentSession = String(r.current)), t.currentSession && E.clearOthers(t.currentSession).catch(() => {
+      rt(), lt(), g.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), r && r.current && (t.currentSession = String(r.current)), t.currentSession && E.clearOthers(t.currentSession).catch(() => {
       }), r && r.meta && (t.meta = r.meta, St()), pt(r && r.title || "新对话"), t.view = "chat", n.page && (n.page.hidden = !0), R(!0), J === "sse" && xt(), n.input && n.input.focus(), yt(), t.formTitle = "", P(r && r.created === !1 ? "已经是新对话" : "新对话已就绪");
     } catch (r) {
       P("新建失败：" + (r && r.message || "未知错误"), "error");
@@ -2154,12 +2156,12 @@ function br(i, c) {
       } catch {
         return { text: "连不上", tone: "bad" };
       }
-    }, [A, C] = await Promise.all([y(e, 4e3), y(a, 6e3)]);
-    l(n.lanState, "· " + A.text, A.tone), l(n.wanState, "· " + C.text, C.tone), d && delete d.dataset.busy;
+    }, [q, C] = await Promise.all([y(e, 4e3), y(a, 6e3)]);
+    l(n.lanState, "· " + q.text, q.tone), l(n.wanState, "· " + C.text, C.tone), d && delete d.dataset.busy;
   }
   function Jn() {
     return tr({
-      appId: x,
+      appId: m,
       base: t.url || ft,
       token: t.token || "",
       notify: t.notify !== !1,
@@ -2169,7 +2171,7 @@ function br(i, c) {
   function Rt() {
     if (!(!c.watch || typeof c.watch.start != "function")) {
       if (t.notify === !1) {
-        c.watch.stop(x).catch(() => {
+        c.watch.stop(m).catch(() => {
         });
         return;
       }
@@ -2200,7 +2202,7 @@ function br(i, c) {
       d || (y = window.setTimeout(() => {
         t.status !== "ok" && Q("busy", "网络连接中…");
       }, 1e3));
-      const A = (G) => G === t.lanUrl ? 1600 : 5e3, C = await Promise.all(l.map((G) => Zn(G, A(G))));
+      const q = (G) => G === t.lanUrl ? 1600 : 5e3, C = await Promise.all(l.map((G) => Zn(G, q(G))));
       if (window.clearTimeout(y), a !== Le) return !1;
       const u = C.findIndex(Boolean), $ = u >= 0 ? l[u] : "";
       if (!$) {
@@ -2214,7 +2216,7 @@ function br(i, c) {
       const z = $ !== t.url;
       t.url = $;
       const F = $ === t.lanUrl ? "家里" : "外部";
-      return Q("ok", "已连接 · " + F), z && S && P("已切换到" + F), (z || e) && (t.hydrated = !1, f.cursor = 0, Kt(), Rt(), lt(), J === "sse" ? xt() : Pt(!0)), ne(), !0;
+      return Q("ok", "已连接 · " + F), z && S && P("已切换到" + F), (z || e) && (t.hydrated = !1, g.cursor = 0, Kt(), Rt(), lt(), J === "sse" ? xt() : Pt(!0)), ne(), !0;
     } finally {
       a === Le && (ae = !1);
     }
@@ -2231,7 +2233,7 @@ function br(i, c) {
       return;
     }
     try {
-      const a = await c.watch.status(x);
+      const a = await c.watch.status(m);
       if (!a) {
         n.relay.textContent = "后台提醒：当前壳不支持", n.relay.dataset.tone = "bad";
         return;
@@ -2273,7 +2275,7 @@ function br(i, c) {
       P("访问令牌不能为空，电脑端「设置 → 手机中转」里可以看到", "error");
       return;
     }
-    t.lanUrl = vt(n.inputUrl.value) || ft, t.wanUrl = n.inputWan ? vt(n.inputWan.value) : "", t.autoPick = t.mode === "auto", t.pick = t.mode === "wan" ? "wan" : "lan", t.url = t.mode === "wan" && t.wanUrl || t.lanUrl, t.token = n.inputToken.value.trim(), Kt(), Rt(), t.hydrated = !1, f.cursor = 0, t.openAcc = "", n.serverBody && (n.serverBody.hidden = !0);
+    t.lanUrl = vt(n.inputUrl.value) || ft, t.wanUrl = n.inputWan ? vt(n.inputWan.value) : "", t.autoPick = t.mode === "auto", t.pick = t.mode === "wan" ? "wan" : "lan", t.url = t.mode === "wan" && t.wanUrl || t.lanUrl, t.token = n.inputToken.value.trim(), Kt(), Rt(), t.hydrated = !1, g.cursor = 0, t.openAcc = "", n.serverBody && (n.serverBody.hidden = !0);
     const e = s && s.querySelector('[data-acc="server"]');
     e && (e.dataset.open = "0"), ne(), P("已保存"), dt(!0);
   }
@@ -2325,8 +2327,8 @@ function br(i, c) {
     if (!e) return;
     const o = a && a.closest(".chat-turn") || a && a.closest(".chat-tool") || a && a.closest(".chat-card") || n.list, r = o ? Array.from(o.querySelectorAll("img.chat-image")) : [], l = [];
     for (const y of r) {
-      const A = Aa(y);
-      A && !l.includes(A) && l.push(A);
+      const q = Aa(y);
+      q && !l.includes(q) && l.push(q);
     }
     l.length === 0 && l.push(e);
     const d = Math.max(0, l.indexOf(e));
@@ -2483,7 +2485,7 @@ function br(i, c) {
   function Ma(e) {
     return e.kind === "deliverable" ? hr(
       e,
-      (a, o, r) => b.presentedFileUrl(a, o, r, t.currentSession)
+      (a, o, r) => x.presentedFileUrl(a, o, r, t.currentSession)
     ) : e.kind === "approval" ? fr(e) : e.kind === "input" ? mr(e, Ft.get(String(e.callId)) || {}, Wt.has(String(e.callId))) : "";
   }
   function lo() {
@@ -2540,7 +2542,7 @@ function br(i, c) {
     const y = (M, Z, ot, X) => {
       ot && M.push({ key: Z, html: ot, ...X || {} });
     };
-    let A = !1, C = !1, u = 0, $ = -1;
+    let q = !1, C = !1, u = 0, $ = -1;
     for (let M = 0; M < e.length; M += 1)
       e[M].kind === "message" && e[M].message && e[M].message.who === "me" && ($ = M);
     const S = Math.max(1, e.filter((M) => M.kind === "message" && M.message && M.message.who === "me").length);
@@ -2561,12 +2563,12 @@ function br(i, c) {
     }, ht = () => {
       G();
       let M = d.find((X) => X.key === "g:" + u);
-      const Z = [...l].reverse().find((X) => X.assistant || X.key === "x:streaming" || X.key === "x:typing"), ot = A || !!l.some((X) => X.key === "x:streaming" || X.key === "x:typing");
+      const Z = [...l].reverse().find((X) => X.assistant || X.key === "x:streaming" || X.key === "x:typing"), ot = q || !!l.some((X) => X.key === "x:streaming" || X.key === "x:typing");
       C && !t.stopped && t.awaitingReply && ot && Z && (M ? M.className = "chat-tool-footer-block" : (M = {
         key: "g:" + u,
         html: ur(),
         className: "chat-tool-footer-block"
-      }, d.push(M))), M && (d = d.filter((X) => X !== M), d.unshift(M)), o.push(...l, ...d), l = [], d = [], A = !1, C = !1, u += 1;
+      }, d.push(M))), M && (d = d.filter((X) => X !== M), d.unshift(M)), o.push(...l, ...d), l = [], d = [], q = !1, C = !1, u += 1;
     };
     return e.forEach((M, Z) => {
       if (M.kind === "message" && M.message.who === "me") {
@@ -2588,7 +2590,7 @@ function br(i, c) {
       }
       if (M.kind === "message") {
         const ot = M.message.id || M.message.eventId || M.message.seq || `at-${M.message.at}-${Z}`;
-        M.message.who === "ai" && (A = !0), y(l, "m:" + ot, sn(M.message, Vt), {
+        M.message.who === "ai" && (q = !0), y(l, "m:" + ot, sn(M.message, Vt), {
           assistant: M.message.who === "ai"
         });
       } else
@@ -2620,7 +2622,7 @@ function br(i, c) {
     if (!s) return;
     const e = s.querySelector('[data-role="tool-sheet"]'), a = s.querySelector('[data-role="tool-sheet-body"]');
     if (!e || !a) return;
-    const o = t.toolDetailId ? f.cards.get(t.toolDetailId) : null;
+    const o = t.toolDetailId ? g.cards.get(t.toolDetailId) : null;
     if (!o) {
       ie();
       return;
@@ -2667,16 +2669,16 @@ function br(i, c) {
     let l = a.firstChild;
     for (const d of e) {
       const y = "chat-block" + (d.className ? " " + d.className : "");
-      let A = o.get(d.key);
-      if (!A)
-        A = document.createElement("div"), A.className = y, A.dataset.block = d.key, A.innerHTML = d.html, A.__html = d.html;
-      else if (A.className !== y && (A.className = y), A.__html !== d.html) {
-        const C = A.querySelector(".chat-tool-group-body"), u = C ? {
+      let q = o.get(d.key);
+      if (!q)
+        q = document.createElement("div"), q.className = y, q.dataset.block = d.key, q.innerHTML = d.html, q.__html = d.html;
+      else if (q.className !== y && (q.className = y), q.__html !== d.html) {
+        const C = q.querySelector(".chat-tool-group-body"), u = C ? {
           top: C.scrollTop,
           atBottom: C.scrollHeight - C.scrollTop - C.clientHeight < 24
         } : null;
-        if (A.innerHTML = d.html, A.__html = d.html, u) {
-          const $ = A.querySelector(".chat-tool-group-body");
+        if (q.innerHTML = d.html, q.__html = d.html, u) {
+          const $ = q.querySelector(".chat-tool-group-body");
           if ($) {
             const S = () => {
               $.scrollTop = u.atBottom ? $.scrollHeight : u.top;
@@ -2685,7 +2687,7 @@ function br(i, c) {
           }
         }
       }
-      r.set(d.key, A), A === l ? l = l.nextSibling : a.insertBefore(A, l);
+      r.set(d.key, q), q === l ? l = l.nextSibling : a.insertBefore(q, l);
     }
     for (; l; ) {
       const d = l.nextSibling;
@@ -2696,7 +2698,7 @@ function br(i, c) {
   function bo() {
     const e = t.projections || {}, a = [], o = Array.isArray(e.todos) ? e.todos : null;
     if (o && o.length > 0) {
-      const d = o.filter((A) => A.status === "completed").length, y = o.map((A) => `<li class="chat-todo-item ${A.status === "completed" ? "is-done" : A.status === "in_progress" ? "is-active" : ""}"><span class="chat-todo-mark" aria-hidden="true"></span><span>${N(A.content || "")}</span></li>`).join("");
+      const d = o.filter((q) => q.status === "completed").length, y = o.map((q) => `<li class="chat-todo-item ${q.status === "completed" ? "is-done" : q.status === "in_progress" ? "is-active" : ""}"><span class="chat-todo-mark" aria-hidden="true"></span><span>${N(q.content || "")}</span></li>`).join("");
       a.push(
         `<div class="chat-card chat-todo"><div class="chat-card-head"><span class="chat-card-icon" aria-hidden="true">☑</span><span class="chat-card-title">待办</span><span class="chat-card-badge">${d}/${o.length}</span></div><ul class="chat-todo-list">${y}</ul></div>`
       );
@@ -2739,7 +2741,7 @@ function br(i, c) {
     e && (ut = je(), e.innerHTML = Na());
   }
   function yo() {
-    ut.length || (ut = je()), !jt && (jt = window.setInterval(xo, m));
+    ut.length || (ut = je()), !jt && (jt = window.setInterval(xo, b));
   }
   function La() {
     jt && (window.clearInterval(jt), jt = 0, ut = []);
@@ -2759,9 +2761,9 @@ function br(i, c) {
   }
   function R(e) {
     if (!n.list) return;
-    const a = n.list ? n.list.scrollTop : 0, o = n.list ? n.list.scrollHeight : 0, r = Be(), l = !e && !t.reading && !t.holdAnswer && r, d = f.timeline(), y = [...d].reverse().find((it) => it.kind === "tool" && it.status === "running"), A = t.lastEventAt ? Date.now() - t.lastEventAt : Number(t.lastEventAge) || 0, C = (t.awaitingReply || t.running || y) && A > 3e5;
+    const a = n.list ? n.list.scrollTop : 0, o = n.list ? n.list.scrollHeight : 0, r = Be(), l = !e && !t.reading && !t.holdAnswer && r, d = g.timeline(), y = [...d].reverse().find((it) => it.kind === "tool" && it.status === "running"), q = t.lastEventAt ? Date.now() - t.lastEventAt : Number(t.lastEventAge) || 0, C = (t.awaitingReply || t.running || y) && q > 3e5;
     t.staleShown = C;
-    const u = t.awaitingReply || t.waiting || t.running || !!(t.currentTool && !t.currentTool.done) || !!y, $ = !t.currentTool && t.lastTool && Date.now() - (t.lastToolAt || 0) < 1e4 ? { ...t.lastTool, done: !0 } : null, S = u ? y || t.currentTool || $ : null, z = S && S.name ? String(S.name) : "", F = u && !z && !C, G = S && (S.summary || S.detail) ? String(S.summary || S.detail) : "", ht = !!(S && S.status !== "running" && S.done), M = C ? "可能已断开" : z ? ht ? "执行完成…" : "执行中…" : "思考中…", Z = C ? "" : z ? z + (G ? "：" + G : "") : "", ot = F ? Pa() : "", X = C ? "" : F ? ot : `<span class="chat-typing-detail">${N(Z)}</span>`, qt = t.stream && t.stream.text ? String(t.stream.text) : "", Fe = t.stream && t.stream.reasoning ? String(t.stream.reasoning) : "", We = !!(Fe && !qt && !C), Po = We ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${Pa()}` : "", Lo = qt || Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${We ? " is-thinking" : ""}">${Po}${qt ? `<div class="chat-stream-text">${dn(qt)}</div>` : ""}${qt ? '<span class="chat-typing-dot"></span>' : ""}</div></div>` : "", zo = u && !qt && !Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${F ? " is-thinking" : ""}${C ? " is-stale" : ""}"><span class="chat-typing-head"><span class="chat-typing-text">${M}</span><span class="chat-typing-dot"></span></span>${X}</div></div>` : "", Va = u && !t.stopped ? Lo || zo : "";
+    const u = t.awaitingReply || t.waiting || t.running || !!(t.currentTool && !t.currentTool.done) || !!y, $ = !t.currentTool && t.lastTool && Date.now() - (t.lastToolAt || 0) < 1e4 ? { ...t.lastTool, done: !0 } : null, S = u ? y || t.currentTool || $ : null, z = S && S.name ? String(S.name) : "", F = u && !z && !C, G = S && (S.summary || S.detail) ? String(S.summary || S.detail) : "", ht = !!(S && S.status !== "running" && S.done), M = C ? "可能已断开" : z ? ht ? "执行完成…" : "执行中…" : "思考中…", Z = C ? "" : z ? z + (G ? "：" + G : "") : "", ot = F ? Pa() : "", X = C ? "" : F ? ot : `<span class="chat-typing-detail">${N(Z)}</span>`, qt = t.stream && t.stream.text ? String(t.stream.text) : "", Fe = t.stream && t.stream.reasoning ? String(t.stream.reasoning) : "", We = !!(Fe && !qt && !C), Po = We ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${Pa()}` : "", Lo = qt || Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${We ? " is-thinking" : ""}">${Po}${qt ? `<div class="chat-stream-text">${dn(qt)}</div>` : ""}${qt ? '<span class="chat-typing-dot"></span>' : ""}</div></div>` : "", zo = u && !qt && !Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${F ? " is-thinking" : ""}${C ? " is-stale" : ""}"><span class="chat-typing-head"><span class="chat-typing-text">${M}</span><span class="chat-typing-dot"></span></span>${X}</div></div>` : "", Va = u && t.runActive && !t.stopped ? Lo || zo : "";
     F || We ? yo() : La();
     const Ya = bo(), Co = uo(d), Bo = !!t.url, Ro = d.length === 0 && !Va && !Ya ? `<div class="chat-sys">${Bo ? "说点什么吧，电脑端的回复会同步过来" : "先在 ⚙ 里填电脑地址，例如 http://192.168.2.6:8788"}</div>` : "", Qa = po(d, {
       tip: Ro,
@@ -2818,7 +2820,7 @@ function br(i, c) {
   }
   function Ba() {
     if (!n.send) return;
-    const e = t.waiting || t.running || t.awaitingReply || $e();
+    const e = $e() || t.runActive && (t.waiting || t.running || t.awaitingReply);
     n.send.textContent = e ? "■" : "↑", n.send.classList.toggle("is-stop", e), n.send.setAttribute("aria-label", e ? "停止等待" : "发送"), n.send.dataset.action = e ? "stop" : "send";
   }
   function Dt() {
@@ -3196,7 +3198,7 @@ function br(i, c) {
   }
   async function qo(e) {
     if (!e || Wt.has(e)) return;
-    const a = f.cards.get("input-" + e);
+    const a = g.cards.get("input-" + e);
     if (!a) return;
     const o = gr(a, Ft.get(e) || {});
     if (!o) {
@@ -3205,7 +3207,7 @@ function br(i, c) {
     }
     Wt.add(e), t.lastProgressAt = Date.now(), R();
     try {
-      await b.respond(e, o, t.currentSession || ""), P("已回答");
+      await x.respond(e, o, t.currentSession || ""), P("已回答");
     } catch (r) {
       Wt.delete(e), R(), P("提交失败：" + (r && r.message || "网络错误"), "error");
     }
@@ -3257,7 +3259,7 @@ function br(i, c) {
         return;
       }
       if (u === "tool-copy") {
-        const $ = String(o.dataset.tool || ""), S = String(o.dataset.copy || ""), z = $ ? f.cards.get($) : null, F = S === "args" ? z && z.args : z && z.preview;
+        const $ = String(o.dataset.tool || ""), S = String(o.dataset.copy || ""), z = $ ? g.cards.get($) : null, F = S === "args" ? z && z.args : z && z.preview;
         F && c.clipboard && typeof c.clipboard.write == "function" && c.clipboard.write(String(F)).then(() => P("已复制")).catch(() => P("复制失败", "error"));
         return;
       }
@@ -3439,11 +3441,11 @@ function br(i, c) {
       Eo(y);
       return;
     }
-    const A = a.closest("[data-retry]");
-    if (A) {
+    const q = a.closest("[data-retry]");
+    if (q) {
       e.preventDefault();
-      const u = decodeURIComponent(A.dataset.retry || ""), $ = A.parentElement ? A.parentElement.querySelector(".chat-bubble.is-error") : null;
-      $ && $.parentElement ? $.parentElement.remove() : A.remove(), Ae(u, !0);
+      const u = decodeURIComponent(q.dataset.retry || ""), $ = q.parentElement ? q.parentElement.querySelector(".chat-bubble.is-error") : null;
+      $ && $.parentElement ? $.parentElement.remove() : q.remove(), Ae(u, !0);
       return;
     }
     const C = a.closest("[data-session]");
@@ -3561,7 +3563,7 @@ function br(i, c) {
   const _e = t.currentSession;
   _e ? E.clearOthers(_e).catch(() => {
   }).then(() => E.get(_e)).then((e) => {
-    U || f.size > 0 || e.length && (f.replaceEvents(e), t.booting = !1, t.hydrated = !1, R(!0));
+    U || g.size > 0 || e.length && (g.replaceEvents(e), t.booting = !1, t.hydrated = !1, R(!0));
   }).catch(() => {
   }) : (t.booting = !1, R(!0)), window.setTimeout(() => {
     U || !t.booting || (t.booting = !1, R(!0));

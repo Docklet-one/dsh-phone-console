@@ -323,6 +323,19 @@ export function createStore() {
       noteSeq(incoming.seq)
       return cardChanged
     }
+    // 同一 seq + 同一角色 + 同一内容视为重复事件
+    if (
+      incoming.seq !== undefined &&
+      messages.some(
+        (message) =>
+          message.seq === incoming.seq &&
+          message.who === incoming.who &&
+          message.text === incoming.text,
+      )
+    ) {
+      noteSeq(incoming.seq)
+      return cardChanged
+    }
     if (incoming.who === 'me') {
       const local = messages.find((message) => message.local && message.text === incoming.text)
       if (local) {
