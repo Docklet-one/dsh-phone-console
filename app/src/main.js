@@ -114,7 +114,6 @@ export default function mount(root, api) {
     /^(127\.0\.0\.1|localhost)$/.test(location.hostname)
   const STUCK_PROMPT_MS = VERIFY_WATCHDOG ? 120 : 5 * 60 * 1000
   const NOT_RUNNING_GRACE_MS = 6000
-const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
   const STUCK_ABORT_MS = VERIFY_WATCHDOG ? 450 : 15 * 60 * 1000
   const STUCK_CHECK_MS = VERIFY_WATCHDOG ? 80 : 10000
   const INITIAL_TURNS = 3
@@ -1053,21 +1052,14 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
       if (!info.running) {
         // 不用单次轮询结果结束本轮；连续确认一段时间后才收尾
         state.running = false
-        if (state.runActive) {
+        if (state.awaitingReply) {
           if (!state.notRunningSince) state.notRunningSince = Date.now()
-          const idleSince = state.notRunningSince
-          const idleFor = Date.now() - idleSince
           const noRunningTool = !state.currentTool && !hasRunningTool()
-          if (noRunningTool && idleFor >= NOT_RUNNING_GRACE_MS) {
-            if (idleFor >= RUN_ACTIVE_TIMEOUT_MS) {
-              clearRunState(true, false)
-            } else {
-              clearRunState(true, true)
-              // clearRunState 会清计时；保留一段“可能已断开”的等待时间
-              state.notRunningSince = idleSince
-            }
+          if (noRunningTool && Date.now() - state.notRunningSince >= NOT_RUNNING_GRACE_MS) {
+            clearRunState(true)
+          } else {
+            paintMessages()
           }
-          paintMessages()
         }
         return
       }
@@ -3238,11 +3230,10 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
     const eventAge = state.lastEventAt
       ? Date.now() - state.lastEventAt
       : Number(state.lastEventAge) || 0
-    const stale = (state.runActive || state.awaitingReply || state.running || runningTool) && (eventAge > RUNNING_STALE_MS || Boolean(state.notRunningSince))
+    const stale = (state.awaitingReply || state.running || runningTool) && eventAge > RUNNING_STALE_MS
     state.staleShown = stale
     // 工具之间有一小段空档：保留上一条 10 秒，避免跳回「思考中」
     const active =
-      state.runActive ||
       state.awaitingReply ||
       state.waiting ||
       state.running ||
@@ -3285,8 +3276,8 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
     const typing = active && !streamText && !streamReasoning
       ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${thinking ? ' is-thinking' : ''}${stale ? ' is-stale' : ''}"><span class="chat-typing-head"><span class="chat-typing-text">${typingLabel}</span><span class="chat-typing-dot"></span></span>${typingDetail}</div></div>`
       : ''
-    // 本轮固定执行容器：只在 turn.end/停止时移除，不跟瞬时 running 状态增删。
-    const execution = state.runActive && !state.stopped ? streaming || typing : ''
+    // 只在真正有输出/执行时显示；没有内容就整块隐藏
+    const execution = active && !state.stopped ? streaming || typing : ''
     if (thinking || streamThinkingOnly) startThinkingMath()
     else stopThinkingMath()
     const projections = projectionHtml()
@@ -3393,7 +3384,7 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
 
   function paintSend() {
     if (!refs.send) return
-    const stop = state.waiting || state.running || state.awaitingReply || state.runActive || hasRunningTool()
+    const stop = state.waiting || state.running || state.awaitingReply || hasRunningTool()
     refs.send.textContent = stop ? '■' : '↑'
     refs.send.classList.toggle('is-stop', stop)
     refs.send.setAttribute('aria-label', stop ? '停止等待' : '发送')
