@@ -290,6 +290,21 @@ window.__ModuleLoader__.load({
           { style: { marginTop: 14, fontSize: 12, opacity: 0.55 } },
           '提示：在家用局域网，在外用虚拟网，手机端会自动切换。',
         ),
+        h(
+          'p',
+          { style: { marginTop: 6, fontSize: 12, opacity: 0.55 } },
+          '官网：',
+          h(
+            'a',
+            {
+              href: 'https://docklet.cn',
+              target: '_blank',
+              rel: 'noreferrer',
+              style: { color: 'inherit', textDecoration: 'underline' },
+            },
+            'https://docklet.cn',
+          ),
+        ),
       )
     }
 
