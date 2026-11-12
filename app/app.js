@@ -1,20 +1,20 @@
-const Ho = '.chat-app,.chat-app *{box-sizing:border-box}.chat-app{--chat-bg: #eef2f6;--chat-text: #2a3038;--chat-muted: #6d7681;--chat-faint: #a8afb8;--chat-primary: #5b7f96;--chat-primary-deep: #4a6b80;--chat-danger: #b05d51;--chat-danger-soft: rgba(176, 93, 81, .13);--chat-line: rgba(40, 50, 60, .08);--chat-glass: rgba(255, 255, 255, .86);--chat-shadow: 0 8px 24px -18px rgba(30, 50, 60, .55);--chat-top: 0px;--chat-bottom: 0px;--chat-ime: 0px;--drawer-w: min(84vw, 340px);--drawer-top: 0px;position:relative;display:flex;flex-direction:column;height:100%;overflow:hidden;font-family:-apple-system,PingFang SC,Noto Sans SC,Microsoft YaHei,system-ui,sans-serif;color:var(--chat-text);background-color:var(--chat-bg);background-image:radial-gradient(120% 55% at 0% 0%,rgba(191,214,228,.55),transparent 62%),radial-gradient(100% 45% at 100% 0%,rgba(228,220,240,.42),transparent 58%),linear-gradient(180deg,#f7f9fb,#e9eef3);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.chat-top{position:relative;z-index:45;display:flex;flex:none;gap:10px;align-items:center;padding:calc(var(--chat-top) + 8px) 12px 8px 14px;background:#ffffffe6;border-bottom:1px solid var(--chat-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.chat-heading{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0}.chat-heading h1{margin:0;overflow:hidden;font-size:17px;font-weight:800;line-height:1.25;text-overflow:ellipsis;white-space:nowrap}.chat-model{align-self:flex-start;max-width:100%;padding:2px 8px;overflow:hidden;font:inherit;font-size:11px;line-height:1.4;color:var(--chat-muted);text-overflow:ellipsis;white-space:nowrap;cursor:pointer;background:#28323c0d;border:0;border-radius:8px}.chat-model[hidden]{display:none}.chat-head-sub{display:flex;gap:8px;align-items:center;min-width:0}.chat-status{display:inline-block;flex:none;width:10px;height:10px;background:var(--chat-faint);border-radius:50%}.chat-status[data-status=ok]{background:#3fae6a;box-shadow:0 0 0 3px #3fae6a2e}.chat-status[data-status=bad]{background:var(--chat-danger);box-shadow:0 0 0 3px #c8505029}.chat-status[data-status=checking]{background:#d0a352;box-shadow:0 0 0 3px #d0a35229}.chat-actions{display:flex;flex:none;gap:6px}.chat-icon{display:grid;width:34px;height:34px;padding:0;font:inherit;font-size:16px;line-height:1;color:var(--chat-muted);cursor:pointer;background:#28323c0b;border:0;border-radius:10px;place-items:center}.chat-icon:active{background:#28323c1a}.chat-icon svg{display:block;width:18px;height:18px}.chat-main{position:relative;display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden;padding-bottom:var(--chat-ime);transition:padding-bottom .16s ease-out}.chat-list{display:flex;flex:1;flex-direction:column;gap:12px;min-height:0;padding:12px 12px 6px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.chat-load-spinner{position:absolute;top:calc(var(--chat-header-h, 64px) + 6px);left:50%;z-index:20;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border:1px solid var(--chat-line, #dfe4e9);border-radius:50%;background:#fffffff0;box-shadow:0 2px 8px -4px #00000059;transform:translate(-50%);pointer-events:none}.chat-load-spinner[hidden]{display:none}.chat-load-spinner span{width:12px;height:12px;border:2px solid #d5dbe1;border-top-color:#6d7681;border-radius:50%;animation:chat-spin .7s linear infinite}@keyframes chat-spin{to{transform:rotate(360deg)}}.chat-stuck{padding:12px 14px;border-color:#e7d8c8;background:#fffaf4}.chat-local-notice{margin:10px 0;padding:12px 14px;border:1px solid #e7d8c8;border-radius:14px;background:#fffaf4}.chat-local-notice.is-offline{border-color:#efd3bf;background:#fff7f1}.chat-local-notice-head{display:flex;align-items:center;gap:7px;color:#8a5a2b;font-size:13px}.chat-local-notice-head b{font-weight:600}.chat-local-notice p{margin:5px 0 0;color:#8a745d;font-size:12px;line-height:1.55}.chat-stuck-title{margin:0;color:#8a5a2b;font-size:13px;font-weight:600}.chat-stuck-text{margin:4px 0 10px;color:#8a745d;font-size:12px;line-height:1.5}.chat-stuck-btn{width:100%;padding:8px 12px;border:0;border-radius:8px;background:#9a6a3a;color:#fff;font:inherit;font-size:13px;cursor:pointer}.chat-stuck-actions{display:flex;gap:8px}.chat-stuck-actions .chat-stuck-btn{flex:1;width:auto}.chat-stuck-btn.is-danger{background:#b05d51}.chat-skeleton{display:flex;flex-direction:column;gap:10px;padding:6px 0}.chat-skeleton-meta,.chat-skeleton-bubble,.chat-skeleton-footer{background:linear-gradient(90deg,#28323c0f,#28323c1f,#28323c0f);background-size:200% 100%;border-radius:10px;animation:chat-skeleton-shimmer 1.4s ease-in-out infinite}.chat-skeleton-meta{width:84px;height:12px}.chat-skeleton-meta.is-right{align-self:flex-end}.chat-skeleton-bubble{width:100%;height:74px}.chat-skeleton-bubble.is-short{width:72%}.chat-skeleton-bubble.is-me{width:58%;height:38px;align-self:flex-end}.chat-skeleton-footer{width:100%;height:40px;border-radius:0 0 14px 14px}@keyframes chat-skeleton-shimmer{0%{background-position:100% 0}to{background-position:-100% 0}}.chat-history-limit{padding:10px 12px;margin:0 0 8px;border-radius:10px;background:#28323c0a;color:#8b7f70;font-size:12px;line-height:1.5;text-align:center}.chat-block{display:flex;flex-direction:column;min-width:0}.chat-turn{display:flex;flex-direction:column;gap:4px;width:100%}.chat-turn.is-me{align-items:flex-end}.chat-turn.is-ai{align-items:flex-start}.chat-meta{display:flex;gap:8px;align-items:center;font-size:10px;line-height:1.2;color:var(--chat-faint)}.chat-turn.is-me .chat-meta{flex-direction:row-reverse}.chat-avatar{display:grid;flex:none;width:36px;height:36px;font-size:19px;background:#ffffffeb;border-radius:11px;box-shadow:var(--chat-shadow);place-items:center}.chat-stamp{white-space:nowrap}.chat-bubble{position:relative;width:100%;max-width:100%;padding:9px 12px;font-size:15px;line-height:1.6;word-break:break-word;white-space:pre-wrap;border-radius:14px;user-select:text;-webkit-user-select:text;-webkit-touch-callout:default}.chat-bubble.is-me{width:fit-content;max-width:86%;color:#fff;background:var(--chat-primary);border-radius:14px;box-shadow:0 8px 18px -14px #2d5064e6}.chat-bubble.is-ai{width:100%;max-width:100%;color:var(--chat-text);background:var(--chat-glass);border-radius:14px;box-shadow:var(--chat-shadow);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.chat-bubble.is-me.has-images{width:86%}.chat-bubble.is-ai.has-images{width:100%}.chat-bubble.is-typing,.chat-bubble.is-streaming{width:100%;max-width:100%}.chat-bubble.is-typing{display:flex;flex-direction:column;justify-content:center;min-height:74px}.chat-bubble.is-typing:not(.is-streaming){box-sizing:border-box;width:100%;height:74px;min-height:74px;overflow:hidden}.chat-bubble.is-typing.is-thinking{box-sizing:border-box;height:74px;min-height:74px;overflow:hidden;align-items:stretch;justify-content:flex-start}.chat-bubble.is-thinking .chat-typing-head{width:100%;justify-content:flex-start}.chat-typing-head{display:flex;align-items:center;width:100%;min-width:0;height:20px;flex:none}.chat-typing-text{display:inline-block;overflow:hidden;font-size:13px;font-weight:600;line-height:20px;color:var(--chat-muted);text-overflow:ellipsis;white-space:nowrap}.chat-typing-detail{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;width:100%;height:34px;margin-top:2px;overflow:hidden;font-size:12px;line-height:17px;opacity:.72;word-break:break-all;flex:none}.chat-math-board{display:flex;flex:none;flex-direction:column;justify-content:space-between;width:100%;height:34px;margin-top:2px;overflow:hidden}.chat-math-row{position:relative;width:100%;height:17px}.chat-math-item{position:absolute;top:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:17px;letter-spacing:.03em;color:var(--chat-muted);opacity:.82;white-space:nowrap;font-variant-numeric:tabular-nums}.chat-typing-dot{display:inline-block;width:9px;height:9px;margin-left:8px;vertical-align:middle;flex:none;background:var(--chat-primary);border-radius:50%;box-shadow:0 0 #5b7f9659;animation:chat-breathe 1.8s ease-in-out infinite}.chat-bubble.is-stale .chat-typing-dot{background:var(--chat-faint);box-shadow:none;animation:none}@keyframes chat-breathe{0%,to{opacity:.5;transform:scale(.78);box-shadow:0 0 #5b7f9659}50%{opacity:1;transform:scale(1.18);box-shadow:0 0 0 7px #5b7f9600}}.chat-bubble.is-error{color:var(--chat-danger);background:var(--chat-danger-soft);border-radius:14px}.chat-retry{padding:5px 12px;font:inherit;font-size:12px;font-weight:700;color:var(--chat-danger);cursor:pointer;background:transparent;border:1px solid rgba(176,93,81,.36);border-radius:999px}.chat-sys{align-self:center;max-width:90%;padding:6px 10px;font-size:12.5px;line-height:1.5;color:var(--chat-muted);text-align:center;background:#ffffff8c;border-radius:10px}.chat-link{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-all}.chat-image{display:block;width:160px;height:120px;margin-bottom:6px;object-fit:cover;background:#28323c0f;border-radius:10px}.chat-image-fallback{display:flex;width:160px;height:120px;margin-bottom:6px;padding:0 10px;font:inherit;font-size:12px;line-height:1.4;color:var(--chat-muted);text-align:center;cursor:pointer;background:#28323c0d;border:1px dashed rgba(40,50,60,.16);border-radius:10px;align-items:center;justify-content:center}.chat-file{display:flex;gap:9px;align-items:center;width:100%;max-width:230px;padding:9px 10px;margin-bottom:6px;color:inherit;text-decoration:none;background:#28323c0f;border-radius:10px}.chat-bubble.is-me .chat-file{background:#ffffff2e}.chat-file-icon{display:grid;flex:none;width:30px;height:30px;font-size:15px;background:#ffffffc7;border-radius:8px;place-items:center}.chat-file-main{display:flex;flex:1;flex-direction:column;gap:1px;min-width:0}.chat-file-name{overflow:hidden;font-size:13px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}.chat-file-size{font-size:11px;color:var(--chat-muted)}.chat-bubble.is-me .chat-file-size{color:#ffffffbf}.chat-composer{display:flex;flex:none;flex-direction:column;gap:8px;align-items:stretch;padding:8px 12px calc(var(--chat-bottom) + 6px);background:#ffffffd6;border-top:1px solid var(--chat-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:padding-bottom .16s ease-out}.chat-input-row{display:flex;gap:8px;align-items:flex-end}.chat-plus{display:grid;flex:none;width:42px;height:42px;padding:0;font:inherit;font-size:24px;font-weight:500;line-height:1;color:var(--chat-muted);cursor:pointer;background:#28323c0f;border:0;border-radius:50%;place-items:center}.chat-plus:active{background:#28323c1f}.chat-attach{display:flex;gap:8px;padding:2px 2px 0;overflow-x:auto}.chat-attach[hidden]{display:none}.chat-chip{position:relative;display:grid;flex:none;width:60px;height:60px;overflow:hidden;background:#28323c0f;border-radius:12px;place-items:center}.chat-chip-thumb{width:100%;height:100%;object-fit:cover}.chat-chip-icon{font-size:24px}.chat-chip-x{position:absolute;top:3px;right:3px;width:20px;height:20px;padding:0;font:inherit;font-size:13px;line-height:20px;color:#fff;cursor:pointer;background:#0000008c;border:0;border-radius:50%}.chat-chip-state{position:absolute;right:0;bottom:0;left:0;padding:2px 0;font-size:10px;color:#fff;text-align:center;background:#0000008c}.chat-chip-state.is-bad{background:var(--chat-danger)}.chat-input{flex:1;min-height:42px;max-height:120px;padding:10px 14px;overflow-y:auto;font:inherit;font-size:15px;line-height:1.5;color:var(--chat-text);resize:none;background:#28323c0d;border:0;border-radius:18px;outline:0;user-select:text;-webkit-user-select:text}.chat-input::placeholder{color:var(--chat-faint)}.chat-send{display:grid;flex:none;width:44px;height:44px;padding:0;font:inherit;font-size:17px;font-weight:700;line-height:1;color:#fff;cursor:pointer;background:var(--chat-primary);border:0;border-radius:50%;place-items:center}.chat-send:active{background:var(--chat-primary-deep)}.chat-send.is-stop{background:var(--chat-danger)}.chat-chipgroup{display:flex;flex-wrap:wrap;gap:6px}.chat-opt{padding:6px 10px;font:inherit;font-size:12.5px;color:var(--chat-text);cursor:pointer;background:#28323c0f;border:0;border-radius:10px}.chat-opt[data-on="1"]{color:#fff;background:var(--chat-primary)}.chat-opt:active{opacity:.82}.chat-opt-desc{margin:0;font-size:12px;line-height:1.5;color:var(--chat-muted)}.chat-form{display:flex;flex-direction:column;gap:14px}.chat-form-block{display:flex;flex-direction:column;gap:7px}.chat-form .chat-sheet-sub,.chat-form .chat-opt-desc{margin:0}.chat-scrim.is-center{align-items:center;padding:0 24px calc(var(--chat-bottom) + var(--chat-ime))}.chat-dialog{width:100%;max-width:320px;padding:20px 16px 14px;background:#fff;border-radius:20px;box-shadow:0 18px 48px -20px #141e288c}.chat-dialog-title{margin:0;font-size:16px;font-weight:800;text-align:center}.chat-dialog-text{margin:8px 0 18px;font-size:13px;line-height:1.6;color:var(--chat-muted);text-align:center}.chat-dialog-actions{display:flex;gap:8px}.chat-dialog-actions .chat-btn{flex:1;height:44px}.chat-btn.is-danger{color:#fff;background:var(--chat-danger)}.chat-acc{overflow:hidden;background:var(--chat-glass);border-radius:16px;box-shadow:var(--chat-shadow)}.chat-acc-head{display:flex;gap:10px;align-items:center;width:100%;padding:15px 16px;font:inherit;color:var(--chat-text);text-align:left;cursor:pointer;background:none;border:0}.chat-acc-title{flex:none;font-size:14px;font-weight:700}.chat-acc-sum{flex:1;overflow:hidden;font-size:12px;color:var(--chat-muted);text-align:right;text-overflow:ellipsis;white-space:nowrap}.chat-acc-chevron{flex:none;font-size:16px;color:var(--chat-faint);transition:transform .15s ease}.chat-acc[data-open="1"] .chat-acc-chevron{transform:rotate(90deg)}.chat-acc-body{display:flex;flex-direction:column;gap:12px;padding:0 16px 16px}.chat-acc-body[hidden]{display:none}.chat-toggle{display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:14px;color:var(--chat-text)}.chat-toggle input{position:relative;flex:none;width:46px;height:26px;cursor:pointer;background:#28323c29;border:0;border-radius:13px;outline:0;transition:background .15s ease;appearance:none;-webkit-appearance:none}.chat-toggle input:after{position:absolute;top:3px;left:3px;width:20px;height:20px;content:"";background:#fff;border-radius:50%;box-shadow:0 1px 3px #00000040;transition:transform .15s ease}.chat-toggle input:checked{background:var(--chat-primary)}.chat-toggle input:checked:after{transform:translate(20px)}.chat-page{position:absolute;top:var(--chat-header-h, 64px);right:0;bottom:0;left:0;z-index:15;display:flex;flex-direction:column;gap:14px;padding:10px 14px calc(var(--chat-bottom) + var(--chat-ime) + 18px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background-color:var(--chat-bg);background-image:radial-gradient(120% 55% at 0% 0%,rgba(191,214,228,.55),transparent 62%),linear-gradient(180deg,#f7f9fb,#e9eef3)}.chat-page[hidden]{display:none}.chat-page>*{flex:none}.chat-back{display:inline-flex;gap:4px;align-items:center;align-self:flex-start;padding:4px 0;font:inherit;font-size:13px;font-weight:600;color:var(--chat-primary-deep);cursor:pointer;background:none;border:0}.chat-back-arrow{font-size:22px;font-weight:400;line-height:1}.chat-page h1{margin:0;font-size:24px;font-weight:800}.chat-sub{margin:-8px 0 0;font-size:13px;line-height:1.55;color:var(--chat-muted)}.chat-card{display:flex;flex-direction:column;gap:12px;padding:16px;background:var(--chat-glass);border-radius:16px;box-shadow:var(--chat-shadow)}.chat-field{display:flex;flex-direction:column;gap:6px}.chat-field>span{font-size:13px;font-weight:600;color:var(--chat-muted)}.chat-field input{height:46px;padding:0 14px;font:inherit;font-size:15px;color:var(--chat-text);background:#28323c0d;border:0;border-radius:12px;outline:0;user-select:text;-webkit-user-select:text}.chat-acc[data-acc=server] .chat-acc-body{gap:10px;padding:0 14px 14px}.chat-acc[data-acc=server] .chat-field>span{font-size:12px}.chat-acc[data-acc=server] .chat-field input{height:40px;padding:0 12px;font-size:13.5px;border-radius:10px}.chat-acc[data-acc=server] .chat-field-state{font-size:11px}.chat-acc[data-acc=server] .chat-field-note{font-size:10px}.chat-acc[data-acc=server] .chat-sheet-sub{font-size:12px;font-weight:600;color:var(--chat-muted)}.chat-acc[data-acc=server] .chat-opt{padding:7px 11px;font-size:12.5px}.chat-acc[data-acc=server] .chat-chipgroup,.chat-acc[data-acc=relay] .chat-chipgroup{gap:10px}.chat-hint{margin:0;font-size:12px;line-height:1.5;color:var(--chat-faint)}.chat-btn{height:46px;padding:0 16px;font:inherit;font-size:14px;font-weight:700;color:var(--chat-text);cursor:pointer;background:#28323c12;border:0;border-radius:12px}.chat-btn.is-primary{color:#fff;background:var(--chat-primary)}.chat-btn.is-block{width:100%}.chat-test{margin:0;font-size:12.5px;line-height:1.5;color:var(--chat-muted)}.chat-test[data-tone=ok]{color:#4f9d7a}.chat-test[data-tone=bad]{color:var(--chat-danger)}.chat-selectable{word-break:break-all;user-select:text;-webkit-user-select:text}.chat-version{margin:4px 0 0;font-size:11px;color:var(--chat-faint);text-align:center}.chat-field-state{margin-left:6px;font-size:13px;font-style:normal;font-weight:700;color:var(--chat-faint)}.chat-net{display:flex;gap:8px;align-items:center;margin:0 0 6px;padding:6px 10px;font-size:12px;line-height:1.4;color:#7a5a12;background:#d98b1c24;border-radius:10px}.chat-net[hidden]{display:none}.chat-net[data-tone=bad]{color:#9a3a30;background:#c640371f}.chat-net-dot{flex:none;width:8px;height:8px;background:currentColor;border-radius:50%;animation:chat-net-pulse 1s ease-in-out infinite}.chat-net-text{flex:1 1 auto;min-width:0}.chat-net-note{flex:none;font-size:12px;opacity:.75}@keyframes chat-net-pulse{0%,to{opacity:1}50%{opacity:.3}}.chat-field-note{margin-left:6px;font-size:10.5px;font-style:normal;font-weight:400;color:var(--chat-faint)}.chat-field-state[data-tone=busy]{color:#d9821a;animation:chat-state-pulse 1.05s ease-in-out infinite}.chat-field-state[data-tone=ok]{color:#1f8a4c}.chat-field-state[data-tone=bad]{color:#c33d31}@keyframes chat-state-pulse{0%,to{opacity:1}50%{opacity:.3}}.chat-opt.is-test{border-style:dashed}.chat-opt.is-test[data-busy="1"]{color:var(--chat-primary-deep);background:#5b7f962e;border-color:var(--chat-primary);border-style:solid}.chat-btn.is-sticky{position:sticky;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:4;margin-top:16px;box-shadow:0 -10px 14px -6px #e9e6e0f2}.chat-scrim[data-role=help] .chat-sheet{max-height:86vh;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));overflow:hidden}.chat-help{flex:1 1 auto;min-height:0;padding-right:2px;overflow-y:auto}.chat-help .chat-sheet-sub{margin:12px 0 4px}.chat-help .chat-sheet-sub:first-child{margin-top:0}.chat-scrim{position:fixed;top:0;right:0;bottom:0;left:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:0 10px calc(var(--chat-bottom) + var(--chat-ime) + 10px);background:#161c185c;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}.chat-scrim[hidden]{display:none}.chat-drawer-scrim{top:var(--drawer-top);align-items:stretch;justify-content:flex-start;padding:0;background:transparent}.chat-drawer{display:flex;flex-direction:column;width:var(--drawer-w);height:100%;overflow:hidden;background:#fff;box-shadow:18px 0 40px -30px #14283c99;transform:translate(-102%);transition:transform .24s cubic-bezier(.22,.8,.3,1)}.chat-app.is-drawer-open .chat-drawer{transform:none}.chat-app.is-drawer-open .chat-list,.chat-app.is-drawer-open .chat-composer,.chat-app.is-drawer-open .chat-jump{transform:translate(var(--drawer-w))}.chat-app.is-drawer-open [data-action=close-app]{visibility:hidden;pointer-events:none}.chat-list,.chat-composer,.chat-jump{transition:transform .24s cubic-bezier(.22,.8,.3,1)}.chat-drawer-pane{display:flex;flex:1;flex-direction:column;min-height:0}.chat-drawer-pane[hidden]{display:none}.chat-drawer-head{display:flex;flex:none;gap:8px;align-items:center;padding:16px 14px 8px}.chat-drawer-head .chat-sheet-title{flex:1;margin:0}.chat-drawer-pane>.chat-new{margin:0 14px 10px}.chat-drawer-tools{display:flex;flex:none;gap:8px;padding:14px 14px 10px}.chat-drawer-tool{display:inline-flex;flex:1;gap:4px;align-items:center;justify-content:center;min-width:0;padding:8px 4px;border:0;border-radius:10px;background:#5b7f9614;color:var(--chat-primary-deep);font:inherit;font-size:12.5px;white-space:nowrap}.chat-drawer-tool-icon{font-size:16px;line-height:1}.chat-drawer-tool-icon.is-search{font-size:20px}.chat-drawer .chat-drawer-search{flex:none;width:calc(100% - 40px);margin:0 20px 12px}.chat-drawer-pane [data-role=sheet-body]{flex:1;min-height:0;padding:0 14px;overflow-y:auto}.chat-drawer-pane .chat-sheet-list{max-height:none}.chat-drawer-foot,.chat-drawer-actions{flex:none;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--chat-line)}.chat-drawer-pane .chat-form{flex:1;min-height:0;padding:0 14px;overflow-y:auto}@keyframes chat-drawer-in{0%{transform:translate(-100%)}to{transform:none}}.chat-sheet{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px;max-height:68vh;padding:14px;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 -16px 48px -24px #141e2899}.chat-sheet-title{margin:0 0 2px;font-size:15px;font-weight:800;text-align:center}.chat-scrim[data-role=new-scrim] .chat-sheet{max-height:86vh;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));overflow:hidden}.chat-scrim[data-role=new-scrim] .chat-form{flex:1 1 auto;min-height:0;padding-right:2px;overflow-y:auto}.chat-new{display:flex;flex:none;align-items:center;justify-content:center;width:100%;height:44px;padding:0 14px;font:inherit;font-size:14px;font-weight:700;color:var(--chat-primary-deep);cursor:pointer;background:#5b7f9624;border:0;border-radius:12px}.chat-new:active{background:#5b7f963d}.chat-session{display:flex;gap:10px;align-items:center;width:100%;padding:11px 12px;font:inherit;font-size:14px;color:var(--chat-text);text-align:left;cursor:pointer;background:transparent;border:0;border-radius:12px}.chat-session[data-current="1"]{background:transparent}.chat-session[data-current="1"] .chat-session-label{font-weight:700;color:#3d5c6f}.chat-session-row{display:flex;align-items:stretch;gap:6px}.chat-session-row .chat-session{flex:1;min-width:0}.chat-session-more{flex:none;width:32px;border:0;border-radius:10px;background:transparent;color:var(--chat-muted);font:inherit;font-size:16px}.chat-archived-toggle{width:100%;margin:10px 0 4px;padding:8px;border:1px dashed var(--chat-line);border-radius:10px;background:transparent;color:var(--chat-muted);font:inherit;font-size:12px}.chat-session-row.is-archived .chat-session{opacity:.72}.chat-session-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chat-session-time{flex:none;font-size:11px;color:var(--chat-faint)}.chat-sheet-tip{padding:10px 4px;font-size:13px;color:var(--chat-muted);text-align:center}.chat-viewer{position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;display:flex;padding:16px;background:#000000e6;align-items:center;justify-content:center}.chat-viewer[hidden]{display:none}.chat-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}.chat-to-top{position:absolute;right:6px;bottom:6px;z-index:2;width:30px;height:30px;padding:0;font:inherit;font-size:14px;line-height:1;color:var(--chat-muted);cursor:pointer;background:#ffffffdb;border:0;border-radius:50%;box-shadow:0 4px 12px -6px #141e2859}.chat-toast{position:absolute;bottom:calc(var(--chat-ime) + 84px);left:50%;z-index:30;max-width:82%;padding:8px 14px;overflow:hidden;font-size:13px;color:#fff;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;background:#1e2830e0;border-radius:999px;opacity:0;transform:translate(-50%) translateY(6px);transition:opacity .18s ease,transform .18s ease}.chat-toast.is-on{opacity:1;transform:translate(-50%) translateY(0)}.chat-tool{flex:0 0 auto;align-self:stretch;margin:0;border:1px solid var(--chat-line);border-radius:10px;background:#ffffffa8;overflow:hidden}.chat-tool-head{display:flex;align-items:center;gap:6px;width:100%;padding:6px 9px;border:0;background:none;color:var(--chat-text);font:inherit;text-align:left}.chat-tool-group{flex:0 0 auto;align-self:stretch;border:1px solid var(--chat-line);border-radius:10px;background:#ffffffa8;overflow:hidden}.chat-tool-footer-block{margin-top:-12px}.chat-tool-footer-block .chat-tool-group,.chat-tool-footer-block .chat-tool-group.is-empty{margin-top:0;border:0;border-radius:0 0 14px 14px;background:var(--chat-glass);box-shadow:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.chat-block:has(+.chat-tool-footer-block) .chat-bubble.is-ai{border-bottom-left-radius:0;border-bottom-right-radius:0}.chat-tool-footer-block .chat-tool-group-head,.chat-tool-footer-block .chat-tool-group.is-empty .chat-tool-group-head{padding:6px 12px 8px;border-top:1px solid var(--chat-line)}.chat-tool-footer-block .chat-tool-group-title{font-weight:500}.chat-tool-footer-block .chat-tool-group-badge{padding:0;background:none;color:var(--chat-muted);font-size:11px}.chat-tool-footer-block .chat-tool-group-badge.is-failed{color:var(--chat-danger)}.chat-tool-footer-block .chat-tool-group.is-empty .chat-tool-group-head{color:var(--chat-faint);cursor:default}.chat-tool-group-head.is-static{cursor:default}.chat-tool-group-head{display:flex;align-items:center;gap:7px;width:100%;padding:7px 9px;border:0;background:none;color:var(--chat-text);font:inherit;font-size:12px;text-align:left}.chat-tool-group-icon{flex:none;font-size:13px}.chat-tool-group-title{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-tool-group-badge{flex:none;padding:1px 6px;font-size:10.5px;color:var(--chat-muted);background:#28323c0f;border-radius:999px}.chat-tool-group-badge.is-failed{color:var(--chat-danger);background:var(--chat-danger-soft)}.chat-tool-group.is-open .chat-tool-chevron{transform:rotate(90deg)}.chat-tool-group-body{display:flex;flex-direction:column;gap:6px;padding:0 8px 8px}.chat-tool-group.is-open .chat-tool-group-body{max-height:300px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--chat-faint) transparent}.chat-tool-group-body::-webkit-scrollbar{width:4px}.chat-tool-group-body::-webkit-scrollbar-track{background:transparent}.chat-tool-group-body::-webkit-scrollbar-thumb{background:var(--chat-faint);border-radius:999px}.chat-tool-group-body[hidden]{display:none}.chat-tool-group-collapse{display:flex;width:100%;padding:8px;align-items:center;justify-content:center;border:0;border-top:1px solid var(--chat-line);background:#28323c08;color:var(--chat-muted);font:inherit;font-size:11.5px}.chat-tool-group-body .chat-tool{background:#ffffff80}.chat-tool-dot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--chat-faint)}.chat-tool-index{flex:none;min-width:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10.5px;line-height:1;text-align:center;color:var(--chat-muted)}.chat-tool-index.is-ok{color:#4f9d7a}.chat-tool-index.is-failed{color:var(--chat-danger)}.chat-tool-index.is-running{color:var(--chat-primary)}.chat-tool.is-running .chat-tool-dot{background:var(--chat-primary);animation:chat-card-pulse 1.1s ease-in-out infinite}.chat-tool.is-ok .chat-tool-dot{background:#5f9a72}.chat-tool.is-failed .chat-tool-dot{background:var(--chat-danger)}.chat-tool-name{flex:none;font-size:12px;font-weight:600}.chat-tool-sum{flex:1;min-width:0;font-size:11.5px;color:var(--chat-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-tool-chevron{flex:none;color:var(--chat-faint);transition:transform .15s ease}.chat-tool.is-open .chat-tool-chevron{transform:rotate(90deg)}.chat-tool-group-body .chat-tool.is-open{border-color:#5b7f968c;background:#5b7f9614}.chat-tool.is-active,.chat-tool-group-body .chat-tool.is-active{position:relative;border-color:var(--chat-primary);background:#5b7f9624}.chat-tool.is-active:before,.chat-tool-group-body .chat-tool.is-active:before{position:absolute;top:0;bottom:0;left:0;width:3px;content:"";background:var(--chat-primary)}.chat-tool.is-active .chat-tool-name,.chat-tool-group-body .chat-tool.is-active .chat-tool-name{color:var(--chat-primary-deep);font-weight:700}.chat-tool-sheet{width:100%;max-width:520px;height:min(82vh,720px);max-height:82vh;gap:0;padding:0;overflow:hidden}.chat-tool-sheet-head{display:flex;flex:none;gap:8px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--chat-line)}.chat-tool-sheet-head .chat-sheet-title{flex:1;margin:0;text-align:left}.chat-tool-sheet-body{flex:1;min-height:0;padding:12px 14px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--chat-faint) transparent}.chat-tool-sheet-body::-webkit-scrollbar{width:4px}.chat-tool-sheet-body::-webkit-scrollbar-thumb{background:var(--chat-faint);border-radius:999px}.chat-tool-sheet>.chat-btn{flex:none;margin:10px 14px calc(14px + env(safe-area-inset-bottom,0px))}.chat-tool-detail-head{display:flex;gap:7px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--chat-line)}.chat-tool-detail-head .chat-tool-name{font-size:13px}.chat-tool-detail .chat-tool-pre{max-height:none;overflow:visible;white-space:pre-wrap;word-break:break-word}.chat-tool-detail .chat-tool-preview{max-height:none;margin:0;padding:8px;overflow:visible;background:#28323c0a;border-radius:8px;white-space:pre-wrap;word-break:break-word}.chat-tool-code-head{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:10px 0 6px;color:var(--chat-muted);font-size:11px}.chat-tool-copy{padding:2px 7px;border:1px solid var(--chat-line);border-radius:6px;background:transparent;color:var(--chat-muted);font:inherit;font-size:10.5px}.chat-tool-copy:active{color:var(--chat-text);background:#28323c0f}.chat-tool-body{padding:0 10px 10px;border-top:1px solid var(--chat-line)}.chat-tool-label{margin:8px 0 4px;font-size:10.5px;letter-spacing:.04em;color:var(--chat-muted)}.chat-tool-pre{margin:0;padding:8px;border-radius:8px;background:#28323c0b;font-size:11px;line-height:1.5;white-space:pre-wrap;word-break:break-all;max-height:180px;overflow:auto}.chat-tool-preview{margin:0;font-size:12px;line-height:1.55}.chat-tool-error{margin:6px 0 0;font-size:11.5px;color:var(--chat-danger)}.chat-card{align-self:stretch;margin:2px 0;padding:12px;border:1px solid var(--chat-line);border-radius:12px;background:var(--chat-glass);box-shadow:var(--chat-shadow)}.chat-approval.is-pending{border-color:#b05d5159}.chat-card-head{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.chat-card-icon{flex:none;font-size:13px}.chat-card-title{flex:1;min-width:0}.chat-card-badge{flex:none;padding:2px 7px;border-radius:999px;background:#28323c0f;font-size:10.5px;font-weight:600;color:var(--chat-muted)}.chat-deliverable-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}.chat-deliverable .chat-file{max-width:none;margin:0}.chat-deliverable-media{display:flex;gap:10px;align-items:center}.chat-deliverable-media .chat-file{flex:1;min-width:0}.chat-deliverable-thumb{flex:none;width:76px;height:76px;margin:0;object-fit:cover;border-radius:8px}.chat-deliverable-download{flex:none;margin-left:auto;font-size:11px;color:var(--chat-primary-deep)}.chat-todo-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 0;padding:0;list-style:none}.chat-todo-item{display:flex;gap:8px;align-items:flex-start;color:var(--chat-muted);font-size:12.5px;line-height:1.5}.chat-todo-mark{flex:none;width:14px;height:14px;margin-top:1px;border:1.5px solid var(--chat-line);border-radius:5px}.chat-todo-item.is-done{color:var(--chat-faint);text-decoration:line-through}.chat-todo-item.is-done .chat-todo-mark{border-color:#5f9a72;background:#5f9a72}.chat-todo-item.is-active{color:var(--chat-text)}.chat-todo-item.is-active .chat-todo-mark{border-color:var(--chat-primary);box-shadow:inset 0 0 0 3px #5b7f9638}.chat-plan-chip{align-self:flex-start;margin:4px 0;padding:4px 10px;border-radius:999px;background:#5b7f961f;color:var(--chat-primary-deep);font-size:11.5px}.chat-thinking{margin:0 0 6px;padding:6px 8px;border-radius:8px;background:#28323c0a;color:var(--chat-muted);font-size:11.5px}.chat-thinking summary{color:var(--chat-faint);font-size:11px;cursor:pointer}.chat-thinking-text{max-height:180px;margin-top:4px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}.chat-card-badge.is-pending{background:var(--chat-danger-soft);color:var(--chat-danger)}.chat-card-badge.is-ok{background:#5f9a7229;color:#4d7f5d}.chat-card-badge.is-failed{background:var(--chat-danger-soft);color:var(--chat-danger)}.chat-card-time{flex:none;font-size:10.5px;color:var(--chat-faint)}.chat-card-sub{margin:6px 0 0;font-size:11.5px;color:var(--chat-muted)}.chat-card-text{margin:8px 0 0;font-size:12.5px;line-height:1.6}.chat-card-actions{display:flex;gap:8px;margin-top:12px}.chat-card-actions .chat-btn{flex:1}.chat-q+.chat-q{margin-top:12px;padding-top:12px;border-top:1px dashed var(--chat-line)}.chat-q-header{margin:0 0 4px;font-size:10.5px;letter-spacing:.04em;color:var(--chat-faint)}.chat-q-text{margin:0;font-size:13px;line-height:1.55}.chat-q-sub{margin:4px 0 0;font-size:11.5px;color:var(--chat-muted)}.chat-q-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chat-q-opt{display:flex;flex-direction:column;gap:2px;padding:7px 10px;border:1px solid var(--chat-line);border-radius:9px;background:#fff;color:var(--chat-text);font:inherit;font-size:12px;text-align:left}.chat-q-opt.is-on{border-color:var(--chat-primary);background:#5b7f961a}.chat-q-opt:disabled{opacity:.75}.chat-q-opt-desc{font-size:10.5px;color:var(--chat-muted)}.chat-q-custom{width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--chat-line);border-radius:9px;background:#fff;color:var(--chat-text);font:inherit;font-size:12px}.chat-q-custom-text{margin:8px 0 0;font-size:12px}.chat-jump{position:absolute;right:14px;bottom:calc(var(--chat-bottom) + var(--chat-ime) + 92px);z-index:3;width:34px;height:34px;border:1px solid var(--chat-line);border-radius:50%;background:var(--chat-glass);color:var(--chat-muted);box-shadow:var(--chat-shadow);font-size:15px}@keyframes chat-card-pulse{0%,to{opacity:1}50%{opacity:.35}}.chat-stream-text{white-space:pre-wrap;word-break:break-word}.chat-bubble.is-streaming .chat-typing-dot{display:inline-block;margin-left:5px;vertical-align:middle}.chat-sheet-search{width:100%;margin:4px 0 10px;padding:10px 12px;border:0;border-radius:10px;background:#28323c0d;color:var(--chat-text);font:inherit;font-size:13px;outline:none}.chat-sheet-search:focus,.chat-sheet-search:focus-visible{outline:none;box-shadow:none}.chat-sheet-list{max-height:46vh;overflow-y:auto;overscroll-behavior:contain}.chat-search-body{display:flex;flex-direction:column;gap:6px;max-height:44vh;overflow-y:auto;overscroll-behavior:contain}.chat-search-hit{display:flex;flex-direction:column;gap:3px;width:100%;padding:9px 10px;border:1px solid var(--chat-line);border-radius:10px;background:#fff;color:var(--chat-text);font:inherit;text-align:left}.chat-search-hit-head{font-size:10.5px;color:var(--chat-faint)}.chat-search-hit-text{font-size:12.5px;line-height:1.5;word-break:break-word}.chat-viewer{overflow:hidden;touch-action:none}.chat-viewer img{transition:transform .15s ease-out;will-change:transform}.chat-viewer-nav{position:absolute;top:50%;width:40px;height:40px;border:0;border-radius:50%;background:#ffffff24;color:#fff;font-size:24px;line-height:1;transform:translateY(-50%)}.chat-viewer-nav.is-prev{left:14px}.chat-viewer-nav.is-next{right:14px}.chat-viewer-count{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));padding:3px 10px;border-radius:999px;background:#00000059;color:#fff;font-size:11.5px;transform:translate(-50%)}.chat-bubble p{margin:0 0 8px}.chat-bubble p:last-child{margin-bottom:0}.chat-bubble h1,.chat-bubble h2,.chat-bubble h3,.chat-bubble h4{margin:4px 0 6px;font-size:14px;line-height:1.4}.chat-bubble ul,.chat-bubble ol{margin:0 0 8px;padding-left:20px}.chat-bubble li{margin:2px 0}.chat-bubble blockquote{margin:6px 0;padding:2px 10px;border-left:3px solid var(--chat-line);color:var(--chat-muted)}.chat-bubble hr{margin:10px 0;border:0;border-top:1px solid var(--chat-line)}.chat-inline-code{padding:1px 4px;border-radius:5px;background:#1e283012;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px}.chat-code{margin:6px 0;overflow:hidden;border:1px solid var(--chat-line);border-radius:10px;background:#fff}.chat-code-head{display:flex;align-items:center;justify-content:space-between;padding:3px 8px;background:#1e28300b;color:var(--chat-faint);font-size:10.5px}.chat-code-lang{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.chat-code-copy{padding:3px 6px;border:0;border-radius:6px;background:transparent;color:var(--chat-muted);font:inherit}.chat-code-copy:active{background:#1e28301a}.chat-code pre{margin:0;padding:10px;overflow-x:auto}.chat-code code{color:#24292f;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.55;white-space:pre}.tk-k{color:#8250df}.tk-s{color:#0a7d32}.tk-c{color:#8b949e}.tk-n{color:#0550ae}.chat-table-wrap{margin:6px 0;overflow-x:auto}.chat-bubble table{border-collapse:collapse;font-size:12px}.chat-bubble th,.chat-bubble td{padding:4px 8px;border:1px solid var(--chat-line);text-align:left}.chat-bubble th{background:#1e28300a}.chat-copy{margin-left:6px;padding:2px 4px;border:0;background:transparent;color:var(--chat-faint);font-size:10.5px}.chat-copy:active{color:var(--chat-text)}.chat-md-image{display:block;max-width:100%;max-height:420px;margin:6px 0;border-radius:10px;background:#00000008;object-fit:contain}.chat-md-gallery{display:grid;gap:6px;margin:6px 0}.chat-md-gallery .chat-md-image{width:100%;max-width:none;max-height:none;height:auto;margin:0;border-radius:10px;object-fit:cover}.chat-md-gallery.is-one{grid-template-columns:1fr}.chat-md-gallery.is-one .chat-md-image{width:auto;max-width:100%;max-height:360px;object-fit:contain}.chat-md-gallery.is-two{grid-template-columns:repeat(2,minmax(0,1fr))}.chat-md-gallery.is-two .chat-md-image{height:150px}.chat-md-gallery.is-few{grid-template-columns:repeat(2,minmax(0,1fr))}.chat-md-gallery.is-few .chat-md-image{height:120px}.chat-md-gallery.is-many{grid-template-columns:repeat(3,minmax(0,1fr))}.chat-md-gallery.is-many .chat-md-image{height:96px}', ft = "http://192.168.2.6:8788";
-const Ye = "prefs.v1", Xa = "history.v1";
+const _o = '.chat-app,.chat-app *{box-sizing:border-box}.chat-app{--chat-bg: #eef2f6;--chat-text: #2a3038;--chat-muted: #6d7681;--chat-faint: #a8afb8;--chat-primary: #5b7f96;--chat-primary-deep: #4a6b80;--chat-danger: #b05d51;--chat-danger-soft: rgba(176, 93, 81, .13);--chat-line: rgba(40, 50, 60, .08);--chat-glass: rgba(255, 255, 255, .86);--chat-shadow: 0 8px 24px -18px rgba(30, 50, 60, .55);--chat-top: 0px;--chat-bottom: 0px;--chat-ime: 0px;--drawer-w: min(84vw, 340px);--drawer-top: 0px;position:relative;display:flex;flex-direction:column;height:100%;overflow:hidden;font-family:-apple-system,PingFang SC,Noto Sans SC,Microsoft YaHei,system-ui,sans-serif;color:var(--chat-text);background-color:var(--chat-bg);background-image:radial-gradient(120% 55% at 0% 0%,rgba(191,214,228,.55),transparent 62%),radial-gradient(100% 45% at 100% 0%,rgba(228,220,240,.42),transparent 58%),linear-gradient(180deg,#f7f9fb,#e9eef3);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.chat-top{position:relative;z-index:45;display:flex;flex:none;gap:10px;align-items:center;padding:calc(var(--chat-top) + 8px) 12px 8px 14px;background:#ffffffe6;border-bottom:1px solid var(--chat-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.chat-heading{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0}.chat-heading h1{margin:0;overflow:hidden;font-size:17px;font-weight:800;line-height:1.25;text-overflow:ellipsis;white-space:nowrap}.chat-model{align-self:flex-start;max-width:100%;padding:2px 8px;overflow:hidden;font:inherit;font-size:11px;line-height:1.4;color:var(--chat-muted);text-overflow:ellipsis;white-space:nowrap;cursor:pointer;background:#28323c0d;border:0;border-radius:8px}.chat-model[hidden]{display:none}.chat-head-sub{display:flex;gap:8px;align-items:center;min-width:0}.chat-status{display:inline-block;flex:none;width:10px;height:10px;background:var(--chat-faint);border-radius:50%}.chat-status[data-status=ok]{background:#3fae6a;box-shadow:0 0 0 3px #3fae6a2e}.chat-status[data-status=bad]{background:var(--chat-danger);box-shadow:0 0 0 3px #c8505029}.chat-status[data-status=checking]{background:#d0a352;box-shadow:0 0 0 3px #d0a35229}.chat-actions{display:flex;flex:none;gap:6px}.chat-icon{display:grid;width:34px;height:34px;padding:0;font:inherit;font-size:16px;line-height:1;color:var(--chat-muted);cursor:pointer;background:#28323c0b;border:0;border-radius:10px;place-items:center}.chat-icon:active{background:#28323c1a}.chat-icon svg{display:block;width:18px;height:18px}.chat-main{position:relative;display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden;padding-bottom:var(--chat-ime);transition:padding-bottom .16s ease-out}.chat-list{display:flex;flex:1;flex-direction:column;gap:12px;min-height:0;padding:12px 12px 6px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.chat-load-spinner{position:absolute;top:calc(var(--chat-header-h, 64px) + 6px);left:50%;z-index:20;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border:1px solid var(--chat-line, #dfe4e9);border-radius:50%;background:#fffffff0;box-shadow:0 2px 8px -4px #00000059;transform:translate(-50%);pointer-events:none}.chat-load-spinner[hidden]{display:none}.chat-load-spinner span{width:12px;height:12px;border:2px solid #d5dbe1;border-top-color:#6d7681;border-radius:50%;animation:chat-spin .7s linear infinite}@keyframes chat-spin{to{transform:rotate(360deg)}}.chat-stuck{padding:12px 14px;border-color:#e7d8c8;background:#fffaf4}.chat-local-notice{margin:10px 0;padding:12px 14px;border:1px solid #e7d8c8;border-radius:14px;background:#fffaf4}.chat-local-notice.is-offline{border-color:#efd3bf;background:#fff7f1}.chat-local-notice-head{display:flex;align-items:center;gap:7px;color:#8a5a2b;font-size:13px}.chat-local-notice-head b{font-weight:600}.chat-local-notice p{margin:5px 0 0;color:#8a745d;font-size:12px;line-height:1.55}.chat-stuck-title{margin:0;color:#8a5a2b;font-size:13px;font-weight:600}.chat-stuck-text{margin:4px 0 10px;color:#8a745d;font-size:12px;line-height:1.5}.chat-stuck-btn{width:100%;padding:8px 12px;border:0;border-radius:8px;background:#9a6a3a;color:#fff;font:inherit;font-size:13px;cursor:pointer}.chat-stuck-actions{display:flex;gap:8px}.chat-stuck-actions .chat-stuck-btn{flex:1;width:auto}.chat-stuck-btn.is-danger{background:#b05d51}.chat-skeleton{display:flex;flex-direction:column;gap:10px;padding:6px 0}.chat-skeleton-meta,.chat-skeleton-bubble,.chat-skeleton-footer{background:linear-gradient(90deg,#28323c0f,#28323c1f,#28323c0f);background-size:200% 100%;border-radius:10px;animation:chat-skeleton-shimmer 1.4s ease-in-out infinite}.chat-skeleton-meta{width:84px;height:12px}.chat-skeleton-meta.is-right{align-self:flex-end}.chat-skeleton-bubble{width:100%;height:74px}.chat-skeleton-bubble.is-short{width:72%}.chat-skeleton-bubble.is-me{width:58%;height:38px;align-self:flex-end}.chat-skeleton-footer{width:100%;height:40px;border-radius:0 0 14px 14px}@keyframes chat-skeleton-shimmer{0%{background-position:100% 0}to{background-position:-100% 0}}.chat-history-limit{padding:10px 12px;margin:0 0 8px;border-radius:10px;background:#28323c0a;color:#8b7f70;font-size:12px;line-height:1.5;text-align:center}.chat-block{display:flex;flex-direction:column;min-width:0}.chat-turn{display:flex;flex-direction:column;gap:4px;width:100%}.chat-turn.is-me{align-items:flex-end}.chat-turn.is-ai{align-items:flex-start}.chat-meta{display:flex;gap:8px;align-items:center;font-size:10px;line-height:1.2;color:var(--chat-faint)}.chat-turn.is-me .chat-meta{flex-direction:row-reverse}.chat-avatar{display:grid;flex:none;width:36px;height:36px;font-size:19px;background:#ffffffeb;border-radius:11px;box-shadow:var(--chat-shadow);place-items:center}.chat-stamp{white-space:nowrap}.chat-bubble{position:relative;width:100%;max-width:100%;padding:9px 12px;font-size:15px;line-height:1.6;word-break:break-word;white-space:pre-wrap;border-radius:14px;user-select:text;-webkit-user-select:text;-webkit-touch-callout:default}.chat-bubble.is-me{width:fit-content;max-width:86%;color:#fff;background:var(--chat-primary);border-radius:14px;box-shadow:0 8px 18px -14px #2d5064e6}.chat-bubble.is-ai{width:100%;max-width:100%;color:var(--chat-text);background:var(--chat-glass);border-radius:14px;box-shadow:var(--chat-shadow);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.chat-bubble.is-me.has-images{width:86%}.chat-bubble.is-ai.has-images{width:100%}.chat-bubble.is-typing,.chat-bubble.is-streaming{width:100%;max-width:100%}.chat-bubble.is-typing{display:flex;flex-direction:column;justify-content:center;min-height:74px}.chat-bubble.is-typing:not(.is-streaming){box-sizing:border-box;width:100%;height:74px;min-height:74px;overflow:hidden}.chat-bubble.is-typing.is-thinking{box-sizing:border-box;height:74px;min-height:74px;overflow:hidden;align-items:stretch;justify-content:flex-start}.chat-bubble.is-thinking .chat-typing-head{width:100%;justify-content:flex-start}.chat-typing-head{display:flex;align-items:center;width:100%;min-width:0;height:20px;flex:none}.chat-typing-text{display:inline-block;overflow:hidden;font-size:13px;font-weight:600;line-height:20px;color:var(--chat-muted);text-overflow:ellipsis;white-space:nowrap}.chat-typing-detail{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;width:100%;height:34px;margin-top:2px;overflow:hidden;font-size:12px;line-height:17px;opacity:.72;word-break:break-all;flex:none}.chat-math-board{display:flex;flex:none;flex-direction:column;justify-content:space-between;width:100%;height:34px;margin-top:2px;overflow:hidden}.chat-math-row{position:relative;width:100%;height:17px}.chat-math-item{position:absolute;top:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:17px;letter-spacing:.03em;color:var(--chat-muted);opacity:.82;white-space:nowrap;font-variant-numeric:tabular-nums}.chat-typing-dot{display:inline-block;width:9px;height:9px;margin-left:8px;vertical-align:middle;flex:none;background:var(--chat-primary);border-radius:50%;box-shadow:0 0 #5b7f9659;animation:chat-breathe 1.8s ease-in-out infinite}.chat-bubble.is-stale .chat-typing-dot{background:var(--chat-faint);box-shadow:none;animation:none}@keyframes chat-breathe{0%,to{opacity:.5;transform:scale(.78);box-shadow:0 0 #5b7f9659}50%{opacity:1;transform:scale(1.18);box-shadow:0 0 0 7px #5b7f9600}}.chat-bubble.is-error{color:var(--chat-danger);background:var(--chat-danger-soft);border-radius:14px}.chat-retry{padding:5px 12px;font:inherit;font-size:12px;font-weight:700;color:var(--chat-danger);cursor:pointer;background:transparent;border:1px solid rgba(176,93,81,.36);border-radius:999px}.chat-sys{align-self:center;max-width:90%;padding:6px 10px;font-size:12.5px;line-height:1.5;color:var(--chat-muted);text-align:center;background:#ffffff8c;border-radius:10px}.chat-link{color:inherit;text-decoration:underline;text-underline-offset:2px;word-break:break-all}.chat-image{display:block;width:160px;height:120px;margin-bottom:6px;object-fit:cover;background:#28323c0f;border-radius:10px}.chat-image-fallback{display:flex;width:160px;height:120px;margin-bottom:6px;padding:0 10px;font:inherit;font-size:12px;line-height:1.4;color:var(--chat-muted);text-align:center;cursor:pointer;background:#28323c0d;border:1px dashed rgba(40,50,60,.16);border-radius:10px;align-items:center;justify-content:center}.chat-file{display:flex;gap:9px;align-items:center;width:100%;max-width:230px;padding:9px 10px;margin-bottom:6px;color:inherit;text-decoration:none;background:#28323c0f;border-radius:10px}.chat-bubble.is-me .chat-file{background:#ffffff2e}.chat-file-icon{display:grid;flex:none;width:30px;height:30px;font-size:15px;background:#ffffffc7;border-radius:8px;place-items:center}.chat-file-main{display:flex;flex:1;flex-direction:column;gap:1px;min-width:0}.chat-file-name{overflow:hidden;font-size:13px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}.chat-file-size{font-size:11px;color:var(--chat-muted)}.chat-bubble.is-me .chat-file-size{color:#ffffffbf}.chat-composer{display:flex;flex:none;flex-direction:column;gap:8px;align-items:stretch;padding:8px 12px calc(var(--chat-bottom) + 6px);background:#ffffffd6;border-top:1px solid var(--chat-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:padding-bottom .16s ease-out}.chat-input-row{display:flex;gap:8px;align-items:flex-end}.chat-plus{display:grid;flex:none;width:42px;height:42px;padding:0;font:inherit;font-size:24px;font-weight:500;line-height:1;color:var(--chat-muted);cursor:pointer;background:#28323c0f;border:0;border-radius:50%;place-items:center}.chat-plus:active{background:#28323c1f}.chat-attach{display:flex;gap:8px;padding:2px 2px 0;overflow-x:auto}.chat-attach[hidden]{display:none}.chat-chip{position:relative;display:grid;flex:none;width:60px;height:60px;overflow:hidden;background:#28323c0f;border-radius:12px;place-items:center}.chat-chip-thumb{width:100%;height:100%;object-fit:cover}.chat-chip-icon{font-size:24px}.chat-chip-x{position:absolute;top:3px;right:3px;width:20px;height:20px;padding:0;font:inherit;font-size:13px;line-height:20px;color:#fff;cursor:pointer;background:#0000008c;border:0;border-radius:50%}.chat-chip-state{position:absolute;right:0;bottom:0;left:0;padding:2px 0;font-size:10px;color:#fff;text-align:center;background:#0000008c}.chat-chip-state.is-bad{background:var(--chat-danger)}.chat-input{flex:1;min-height:42px;max-height:120px;padding:10px 14px;overflow-y:auto;font:inherit;font-size:15px;line-height:1.5;color:var(--chat-text);resize:none;background:#28323c0d;border:0;border-radius:18px;outline:0;user-select:text;-webkit-user-select:text}.chat-input::placeholder{color:var(--chat-faint)}.chat-send{display:grid;flex:none;width:44px;height:44px;padding:0;font:inherit;font-size:17px;font-weight:700;line-height:1;color:#fff;cursor:pointer;background:var(--chat-primary);border:0;border-radius:50%;place-items:center}.chat-send:active{background:var(--chat-primary-deep)}.chat-send.is-stop{background:var(--chat-danger)}.chat-chipgroup{display:flex;flex-wrap:wrap;gap:6px}.chat-opt{padding:6px 10px;font:inherit;font-size:12.5px;color:var(--chat-text);cursor:pointer;background:#28323c0f;border:0;border-radius:10px}.chat-opt[data-on="1"]{color:#fff;background:var(--chat-primary)}.chat-opt:active{opacity:.82}.chat-opt-desc{margin:0;font-size:12px;line-height:1.5;color:var(--chat-muted)}.chat-form{display:flex;flex-direction:column;gap:14px}.chat-form-block{display:flex;flex-direction:column;gap:7px}.chat-form .chat-sheet-sub,.chat-form .chat-opt-desc{margin:0}.chat-scrim.is-center{align-items:center;padding:0 24px calc(var(--chat-bottom) + var(--chat-ime))}.chat-dialog{width:100%;max-width:320px;padding:20px 16px 14px;background:#fff;border-radius:20px;box-shadow:0 18px 48px -20px #141e288c}.chat-dialog-title{margin:0;font-size:16px;font-weight:800;text-align:center}.chat-dialog-text{margin:8px 0 18px;font-size:13px;line-height:1.6;color:var(--chat-muted);text-align:center}.chat-dialog-actions{display:flex;gap:8px}.chat-dialog-actions .chat-btn{flex:1;height:44px}.chat-btn.is-danger{color:#fff;background:var(--chat-danger)}.chat-acc{overflow:hidden;background:var(--chat-glass);border-radius:16px;box-shadow:var(--chat-shadow)}.chat-acc-head{display:flex;gap:10px;align-items:center;width:100%;padding:15px 16px;font:inherit;color:var(--chat-text);text-align:left;cursor:pointer;background:none;border:0}.chat-acc-title{flex:none;font-size:14px;font-weight:700}.chat-acc-sum{flex:1;overflow:hidden;font-size:12px;color:var(--chat-muted);text-align:right;text-overflow:ellipsis;white-space:nowrap}.chat-acc-chevron{flex:none;font-size:16px;color:var(--chat-faint);transition:transform .15s ease}.chat-acc[data-open="1"] .chat-acc-chevron{transform:rotate(90deg)}.chat-acc-body{display:flex;flex-direction:column;gap:12px;padding:0 16px 16px}.chat-acc-body[hidden]{display:none}.chat-toggle{display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:14px;color:var(--chat-text)}.chat-toggle input{position:relative;flex:none;width:46px;height:26px;cursor:pointer;background:#28323c29;border:0;border-radius:13px;outline:0;transition:background .15s ease;appearance:none;-webkit-appearance:none}.chat-toggle input:after{position:absolute;top:3px;left:3px;width:20px;height:20px;content:"";background:#fff;border-radius:50%;box-shadow:0 1px 3px #00000040;transition:transform .15s ease}.chat-toggle input:checked{background:var(--chat-primary)}.chat-toggle input:checked:after{transform:translate(20px)}.chat-page{position:absolute;top:var(--chat-header-h, 64px);right:0;bottom:0;left:0;z-index:15;display:flex;flex-direction:column;gap:14px;padding:10px 14px calc(var(--chat-bottom) + var(--chat-ime) + 18px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background-color:var(--chat-bg);background-image:radial-gradient(120% 55% at 0% 0%,rgba(191,214,228,.55),transparent 62%),linear-gradient(180deg,#f7f9fb,#e9eef3)}.chat-page[hidden]{display:none}.chat-page>*{flex:none}.chat-back{display:inline-flex;gap:4px;align-items:center;align-self:flex-start;padding:4px 0;font:inherit;font-size:13px;font-weight:600;color:var(--chat-primary-deep);cursor:pointer;background:none;border:0}.chat-back-arrow{font-size:22px;font-weight:400;line-height:1}.chat-page h1{margin:0;font-size:24px;font-weight:800}.chat-sub{margin:-8px 0 0;font-size:13px;line-height:1.55;color:var(--chat-muted)}.chat-card{display:flex;flex-direction:column;gap:12px;padding:16px;background:var(--chat-glass);border-radius:16px;box-shadow:var(--chat-shadow)}.chat-field{display:flex;flex-direction:column;gap:6px}.chat-field>span{font-size:13px;font-weight:600;color:var(--chat-muted)}.chat-field input{height:46px;padding:0 14px;font:inherit;font-size:15px;color:var(--chat-text);background:#28323c0d;border:0;border-radius:12px;outline:0;user-select:text;-webkit-user-select:text}.chat-acc[data-acc=server] .chat-acc-body{gap:10px;padding:0 14px 14px}.chat-acc[data-acc=server] .chat-field>span{font-size:12px}.chat-acc[data-acc=server] .chat-field input{height:40px;padding:0 12px;font-size:13.5px;border-radius:10px}.chat-acc[data-acc=server] .chat-field-state{font-size:11px}.chat-acc[data-acc=server] .chat-field-note{font-size:10px}.chat-acc[data-acc=server] .chat-sheet-sub{font-size:12px;font-weight:600;color:var(--chat-muted)}.chat-acc[data-acc=server] .chat-opt{padding:7px 11px;font-size:12.5px}.chat-acc[data-acc=server] .chat-chipgroup,.chat-acc[data-acc=relay] .chat-chipgroup{gap:10px}.chat-hint{margin:0;font-size:12px;line-height:1.5;color:var(--chat-faint)}.chat-btn{height:46px;padding:0 16px;font:inherit;font-size:14px;font-weight:700;color:var(--chat-text);cursor:pointer;background:#28323c12;border:0;border-radius:12px}.chat-btn.is-primary{color:#fff;background:var(--chat-primary)}.chat-btn.is-block{width:100%}.chat-test{margin:0;font-size:12.5px;line-height:1.5;color:var(--chat-muted)}.chat-test[data-tone=ok]{color:#4f9d7a}.chat-test[data-tone=bad]{color:var(--chat-danger)}.chat-selectable{word-break:break-all;user-select:text;-webkit-user-select:text}.chat-version{margin:4px 0 0;font-size:11px;color:var(--chat-faint);text-align:center}.chat-field-state{margin-left:6px;font-size:13px;font-style:normal;font-weight:700;color:var(--chat-faint)}.chat-net{display:flex;gap:8px;align-items:center;margin:0 0 6px;padding:6px 10px;font-size:12px;line-height:1.4;color:#7a5a12;background:#d98b1c24;border-radius:10px}.chat-net[hidden]{display:none}.chat-net[data-tone=bad]{color:#9a3a30;background:#c640371f}.chat-net-dot{flex:none;width:8px;height:8px;background:currentColor;border-radius:50%;animation:chat-net-pulse 1s ease-in-out infinite}.chat-net-text{flex:1 1 auto;min-width:0}.chat-net-note{flex:none;font-size:12px;opacity:.75}@keyframes chat-net-pulse{0%,to{opacity:1}50%{opacity:.3}}.chat-field-note{margin-left:6px;font-size:10.5px;font-style:normal;font-weight:400;color:var(--chat-faint)}.chat-field-state[data-tone=busy]{color:#d9821a;animation:chat-state-pulse 1.05s ease-in-out infinite}.chat-field-state[data-tone=ok]{color:#1f8a4c}.chat-field-state[data-tone=bad]{color:#c33d31}@keyframes chat-state-pulse{0%,to{opacity:1}50%{opacity:.3}}.chat-opt.is-test{border-style:dashed}.chat-opt.is-test[data-busy="1"]{color:var(--chat-primary-deep);background:#5b7f962e;border-color:var(--chat-primary);border-style:solid}.chat-btn.is-sticky{position:sticky;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:4;margin-top:16px;box-shadow:0 -10px 14px -6px #e9e6e0f2}.chat-scrim[data-role=help] .chat-sheet{max-height:86vh;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));overflow:hidden}.chat-help{flex:1 1 auto;min-height:0;padding-right:2px;overflow-y:auto}.chat-help .chat-sheet-sub{margin:12px 0 4px}.chat-help .chat-sheet-sub:first-child{margin-top:0}.chat-scrim{position:fixed;top:0;right:0;bottom:0;left:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding:0 10px calc(var(--chat-bottom) + var(--chat-ime) + 10px);background:#161c185c;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}.chat-scrim[hidden]{display:none}.chat-drawer-scrim{top:var(--drawer-top);align-items:stretch;justify-content:flex-start;padding:0;background:transparent}.chat-drawer{display:flex;flex-direction:column;width:var(--drawer-w);height:100%;overflow:hidden;background:#fff;box-shadow:18px 0 40px -30px #14283c99;transform:translate(-102%);transition:transform .24s cubic-bezier(.22,.8,.3,1)}.chat-app.is-drawer-open .chat-drawer{transform:none}.chat-app.is-drawer-open .chat-list,.chat-app.is-drawer-open .chat-composer,.chat-app.is-drawer-open .chat-jump{transform:translate(var(--drawer-w))}.chat-app.is-drawer-open [data-action=close-app]{visibility:hidden;pointer-events:none}.chat-list,.chat-composer,.chat-jump{transition:transform .24s cubic-bezier(.22,.8,.3,1)}.chat-drawer-pane{display:flex;flex:1;flex-direction:column;min-height:0}.chat-drawer-pane[hidden]{display:none}.chat-drawer-head{display:flex;flex:none;gap:8px;align-items:center;padding:16px 14px 8px}.chat-drawer-head .chat-sheet-title{flex:1;margin:0}.chat-drawer-pane>.chat-new{margin:0 14px 10px}.chat-drawer-tools{display:flex;flex:none;gap:8px;padding:14px 14px 10px}.chat-drawer-tool{display:inline-flex;flex:1;gap:4px;align-items:center;justify-content:center;min-width:0;padding:8px 4px;border:0;border-radius:10px;background:#5b7f9614;color:var(--chat-primary-deep);font:inherit;font-size:12.5px;white-space:nowrap}.chat-drawer-tool-icon{font-size:16px;line-height:1}.chat-drawer-tool-icon.is-search{font-size:20px}.chat-drawer .chat-drawer-search{flex:none;width:calc(100% - 40px);margin:0 20px 12px}.chat-drawer-pane [data-role=sheet-body]{flex:1;min-height:0;padding:0 14px;overflow-y:auto}.chat-drawer-pane .chat-sheet-list{max-height:none}.chat-drawer-foot,.chat-drawer-actions{flex:none;padding:10px 14px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--chat-line)}.chat-drawer-pane .chat-form{flex:1;min-height:0;padding:0 14px;overflow-y:auto}@keyframes chat-drawer-in{0%{transform:translate(-100%)}to{transform:none}}.chat-sheet{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px;max-height:68vh;padding:14px;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 -16px 48px -24px #141e2899}.chat-sheet-title{margin:0 0 2px;font-size:15px;font-weight:800;text-align:center}.chat-scrim[data-role=new-scrim] .chat-sheet{max-height:86vh;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));overflow:hidden}.chat-scrim[data-role=new-scrim] .chat-form{flex:1 1 auto;min-height:0;padding-right:2px;overflow-y:auto}.chat-new{display:flex;flex:none;align-items:center;justify-content:center;width:100%;height:44px;padding:0 14px;font:inherit;font-size:14px;font-weight:700;color:var(--chat-primary-deep);cursor:pointer;background:#5b7f9624;border:0;border-radius:12px}.chat-new:active{background:#5b7f963d}.chat-session{display:flex;gap:10px;align-items:center;width:100%;padding:11px 12px;font:inherit;font-size:14px;color:var(--chat-text);text-align:left;cursor:pointer;background:transparent;border:0;border-radius:12px}.chat-session[data-current="1"]{background:transparent}.chat-session[data-current="1"] .chat-session-label{font-weight:700;color:#3d5c6f}.chat-session-row{display:flex;align-items:stretch;gap:6px}.chat-session-row .chat-session{flex:1;min-width:0}.chat-session-more{flex:none;width:32px;border:0;border-radius:10px;background:transparent;color:var(--chat-muted);font:inherit;font-size:16px}.chat-archived-toggle{width:100%;margin:10px 0 4px;padding:8px;border:1px dashed var(--chat-line);border-radius:10px;background:transparent;color:var(--chat-muted);font:inherit;font-size:12px}.chat-session-row.is-archived .chat-session{opacity:.72}.chat-session-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chat-session-time{flex:none;font-size:11px;color:var(--chat-faint)}.chat-sheet-tip{padding:10px 4px;font-size:13px;color:var(--chat-muted);text-align:center}.chat-viewer{position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;display:flex;padding:16px;background:#000000e6;align-items:center;justify-content:center}.chat-viewer[hidden]{display:none}.chat-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}.chat-to-top{position:absolute;right:6px;bottom:6px;z-index:2;width:30px;height:30px;padding:0;font:inherit;font-size:14px;line-height:1;color:var(--chat-muted);cursor:pointer;background:#ffffffdb;border:0;border-radius:50%;box-shadow:0 4px 12px -6px #141e2859}.chat-toast{position:absolute;bottom:calc(var(--chat-ime) + 84px);left:50%;z-index:30;max-width:82%;padding:8px 14px;overflow:hidden;font-size:13px;color:#fff;text-overflow:ellipsis;white-space:nowrap;pointer-events:none;background:#1e2830e0;border-radius:999px;opacity:0;transform:translate(-50%) translateY(6px);transition:opacity .18s ease,transform .18s ease}.chat-toast.is-on{opacity:1;transform:translate(-50%) translateY(0)}.chat-tool{flex:0 0 auto;align-self:stretch;margin:0;border:1px solid var(--chat-line);border-radius:10px;background:#ffffffa8;overflow:hidden}.chat-tool-head{display:flex;align-items:center;gap:6px;width:100%;padding:6px 9px;border:0;background:none;color:var(--chat-text);font:inherit;text-align:left}.chat-tool-group{flex:0 0 auto;align-self:stretch;border:1px solid var(--chat-line);border-radius:10px;background:#ffffffa8;overflow:hidden}.chat-tool-footer-block{margin-top:-12px}.chat-tool-footer-block .chat-tool-group,.chat-tool-footer-block .chat-tool-group.is-empty{margin-top:0;border:0;border-radius:0 0 14px 14px;background:var(--chat-glass);box-shadow:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.chat-block:has(+.chat-tool-footer-block) .chat-bubble.is-ai{border-bottom-left-radius:0;border-bottom-right-radius:0}.chat-tool-footer-block .chat-tool-group-head,.chat-tool-footer-block .chat-tool-group.is-empty .chat-tool-group-head{padding:6px 12px 8px;border-top:1px solid var(--chat-line)}.chat-tool-footer-block .chat-tool-group-title{font-weight:500}.chat-tool-footer-block .chat-tool-group-badge{padding:0;background:none;color:var(--chat-muted);font-size:11px}.chat-tool-footer-block .chat-tool-group-badge.is-failed{color:var(--chat-danger)}.chat-tool-footer-block .chat-tool-group.is-empty .chat-tool-group-head{color:var(--chat-faint);cursor:default}.chat-tool-group-head.is-static{cursor:default}.chat-tool-group-head{display:flex;align-items:center;gap:7px;width:100%;padding:7px 9px;border:0;background:none;color:var(--chat-text);font:inherit;font-size:12px;text-align:left}.chat-tool-group-icon{flex:none;font-size:13px}.chat-tool-group-title{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-tool-group-badge{flex:none;padding:1px 6px;font-size:10.5px;color:var(--chat-muted);background:#28323c0f;border-radius:999px}.chat-tool-group-badge.is-failed{color:var(--chat-danger);background:var(--chat-danger-soft)}.chat-tool-group.is-open .chat-tool-chevron{transform:rotate(90deg)}.chat-tool-group-body{display:flex;flex-direction:column;gap:6px;padding:0 8px 8px}.chat-tool-group.is-open .chat-tool-group-body{max-height:300px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--chat-faint) transparent}.chat-tool-group-body::-webkit-scrollbar{width:4px}.chat-tool-group-body::-webkit-scrollbar-track{background:transparent}.chat-tool-group-body::-webkit-scrollbar-thumb{background:var(--chat-faint);border-radius:999px}.chat-tool-group-body[hidden]{display:none}.chat-tool-group-collapse{display:flex;width:100%;padding:8px;align-items:center;justify-content:center;border:0;border-top:1px solid var(--chat-line);background:#28323c08;color:var(--chat-muted);font:inherit;font-size:11.5px}.chat-tool-group-body .chat-tool{background:#ffffff80}.chat-tool-dot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--chat-faint)}.chat-tool-index{flex:none;min-width:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10.5px;line-height:1;text-align:center;color:var(--chat-muted)}.chat-tool-index.is-ok{color:#4f9d7a}.chat-tool-index.is-failed{color:var(--chat-danger)}.chat-tool-index.is-running{color:var(--chat-primary)}.chat-tool.is-running .chat-tool-dot{background:var(--chat-primary);animation:chat-card-pulse 1.1s ease-in-out infinite}.chat-tool.is-ok .chat-tool-dot{background:#5f9a72}.chat-tool.is-failed .chat-tool-dot{background:var(--chat-danger)}.chat-tool-name{flex:none;font-size:12px;font-weight:600}.chat-tool-sum{flex:1;min-width:0;font-size:11.5px;color:var(--chat-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-tool-chevron{flex:none;color:var(--chat-faint);transition:transform .15s ease}.chat-tool.is-open .chat-tool-chevron{transform:rotate(90deg)}.chat-tool-group-body .chat-tool.is-open{border-color:#5b7f968c;background:#5b7f9614}.chat-tool.is-active,.chat-tool-group-body .chat-tool.is-active{position:relative;border-color:var(--chat-primary);background:#5b7f9624}.chat-tool.is-active:before,.chat-tool-group-body .chat-tool.is-active:before{position:absolute;top:0;bottom:0;left:0;width:3px;content:"";background:var(--chat-primary)}.chat-tool.is-active .chat-tool-name,.chat-tool-group-body .chat-tool.is-active .chat-tool-name{color:var(--chat-primary-deep);font-weight:700}.chat-tool-sheet{width:100%;max-width:520px;height:min(82vh,720px);max-height:82vh;gap:0;padding:0;overflow:hidden}.chat-tool-sheet-head{display:flex;flex:none;gap:8px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--chat-line)}.chat-tool-sheet-head .chat-sheet-title{flex:1;margin:0;text-align:left}.chat-tool-sheet-body{flex:1;min-height:0;padding:12px 14px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--chat-faint) transparent}.chat-tool-sheet-body::-webkit-scrollbar{width:4px}.chat-tool-sheet-body::-webkit-scrollbar-thumb{background:var(--chat-faint);border-radius:999px}.chat-tool-sheet>.chat-btn{flex:none;margin:10px 14px calc(14px + env(safe-area-inset-bottom,0px))}.chat-tool-detail-head{display:flex;gap:7px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--chat-line)}.chat-tool-detail-head .chat-tool-name{font-size:13px}.chat-tool-detail .chat-tool-pre{max-height:none;overflow:visible;white-space:pre-wrap;word-break:break-word}.chat-tool-detail .chat-tool-preview{max-height:none;margin:0;padding:8px;overflow:visible;background:#28323c0a;border-radius:8px;white-space:pre-wrap;word-break:break-word}.chat-tool-code-head{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:10px 0 6px;color:var(--chat-muted);font-size:11px}.chat-tool-copy{padding:2px 7px;border:1px solid var(--chat-line);border-radius:6px;background:transparent;color:var(--chat-muted);font:inherit;font-size:10.5px}.chat-tool-copy:active{color:var(--chat-text);background:#28323c0f}.chat-tool-body{padding:0 10px 10px;border-top:1px solid var(--chat-line)}.chat-tool-label{margin:8px 0 4px;font-size:10.5px;letter-spacing:.04em;color:var(--chat-muted)}.chat-tool-pre{margin:0;padding:8px;border-radius:8px;background:#28323c0b;font-size:11px;line-height:1.5;white-space:pre-wrap;word-break:break-all;max-height:180px;overflow:auto}.chat-tool-preview{margin:0;font-size:12px;line-height:1.55}.chat-tool-error{margin:6px 0 0;font-size:11.5px;color:var(--chat-danger)}.chat-card{align-self:stretch;margin:2px 0;padding:12px;border:1px solid var(--chat-line);border-radius:12px;background:var(--chat-glass);box-shadow:var(--chat-shadow)}.chat-approval.is-pending{border-color:#b05d5159}.chat-card-head{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}.chat-card-icon{flex:none;font-size:13px}.chat-card-title{flex:1;min-width:0}.chat-card-badge{flex:none;padding:2px 7px;border-radius:999px;background:#28323c0f;font-size:10.5px;font-weight:600;color:var(--chat-muted)}.chat-deliverable-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}.chat-deliverable .chat-file{max-width:none;margin:0}.chat-deliverable-media{display:flex;gap:10px;align-items:center}.chat-deliverable-media .chat-file{flex:1;min-width:0}.chat-deliverable-thumb{flex:none;width:76px;height:76px;margin:0;object-fit:cover;border-radius:8px}.chat-deliverable-download{flex:none;margin-left:auto;font-size:11px;color:var(--chat-primary-deep)}.chat-todo-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 0;padding:0;list-style:none}.chat-todo-item{display:flex;gap:8px;align-items:flex-start;color:var(--chat-muted);font-size:12.5px;line-height:1.5}.chat-todo-mark{flex:none;width:14px;height:14px;margin-top:1px;border:1.5px solid var(--chat-line);border-radius:5px}.chat-todo-item.is-done{color:var(--chat-faint);text-decoration:line-through}.chat-todo-item.is-done .chat-todo-mark{border-color:#5f9a72;background:#5f9a72}.chat-todo-item.is-active{color:var(--chat-text)}.chat-todo-item.is-active .chat-todo-mark{border-color:var(--chat-primary);box-shadow:inset 0 0 0 3px #5b7f9638}.chat-plan-chip{align-self:flex-start;margin:4px 0;padding:4px 10px;border-radius:999px;background:#5b7f961f;color:var(--chat-primary-deep);font-size:11.5px}.chat-thinking{margin:0 0 6px;padding:6px 8px;border-radius:8px;background:#28323c0a;color:var(--chat-muted);font-size:11.5px}.chat-thinking summary{color:var(--chat-faint);font-size:11px;cursor:pointer}.chat-thinking-text{max-height:180px;margin-top:4px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}.chat-card-badge.is-pending{background:var(--chat-danger-soft);color:var(--chat-danger)}.chat-card-badge.is-ok{background:#5f9a7229;color:#4d7f5d}.chat-card-badge.is-failed{background:var(--chat-danger-soft);color:var(--chat-danger)}.chat-card-time{flex:none;font-size:10.5px;color:var(--chat-faint)}.chat-card-sub{margin:6px 0 0;font-size:11.5px;color:var(--chat-muted)}.chat-card-text{margin:8px 0 0;font-size:12.5px;line-height:1.6}.chat-card-actions{display:flex;gap:8px;margin-top:12px}.chat-card-actions .chat-btn{flex:1}.chat-q+.chat-q{margin-top:12px;padding-top:12px;border-top:1px dashed var(--chat-line)}.chat-q-header{margin:0 0 4px;font-size:10.5px;letter-spacing:.04em;color:var(--chat-faint)}.chat-q-text{margin:0;font-size:13px;line-height:1.55}.chat-q-sub{margin:4px 0 0;font-size:11.5px;color:var(--chat-muted)}.chat-q-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chat-q-opt{display:flex;flex-direction:column;gap:2px;padding:7px 10px;border:1px solid var(--chat-line);border-radius:9px;background:#fff;color:var(--chat-text);font:inherit;font-size:12px;text-align:left}.chat-q-opt.is-on{border-color:var(--chat-primary);background:#5b7f961a}.chat-q-opt:disabled{opacity:.75}.chat-q-opt-desc{font-size:10.5px;color:var(--chat-muted)}.chat-q-custom{width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--chat-line);border-radius:9px;background:#fff;color:var(--chat-text);font:inherit;font-size:12px}.chat-q-custom-text{margin:8px 0 0;font-size:12px}.chat-jump{position:absolute;right:14px;bottom:calc(var(--chat-bottom) + var(--chat-ime) + 92px);z-index:3;width:34px;height:34px;border:1px solid var(--chat-line);border-radius:50%;background:var(--chat-glass);color:var(--chat-muted);box-shadow:var(--chat-shadow);font-size:15px}@keyframes chat-card-pulse{0%,to{opacity:1}50%{opacity:.35}}.chat-stream-text{white-space:pre-wrap;word-break:break-word}.chat-bubble.is-streaming .chat-typing-dot{display:inline-block;margin-left:5px;vertical-align:middle}.chat-sheet-search{width:100%;margin:4px 0 10px;padding:10px 12px;border:0;border-radius:10px;background:#28323c0d;color:var(--chat-text);font:inherit;font-size:13px;outline:none}.chat-sheet-search:focus,.chat-sheet-search:focus-visible{outline:none;box-shadow:none}.chat-sheet-list{max-height:46vh;overflow-y:auto;overscroll-behavior:contain}.chat-search-body{display:flex;flex-direction:column;gap:6px;max-height:44vh;overflow-y:auto;overscroll-behavior:contain}.chat-search-hit{display:flex;flex-direction:column;gap:3px;width:100%;padding:9px 10px;border:1px solid var(--chat-line);border-radius:10px;background:#fff;color:var(--chat-text);font:inherit;text-align:left}.chat-search-hit-head{font-size:10.5px;color:var(--chat-faint)}.chat-search-hit-text{font-size:12.5px;line-height:1.5;word-break:break-word}.chat-viewer{overflow:hidden;touch-action:none}.chat-viewer img{transition:transform .15s ease-out;will-change:transform}.chat-viewer-nav{position:absolute;top:50%;width:40px;height:40px;border:0;border-radius:50%;background:#ffffff24;color:#fff;font-size:24px;line-height:1;transform:translateY(-50%)}.chat-viewer-nav.is-prev{left:14px}.chat-viewer-nav.is-next{right:14px}.chat-viewer-count{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));padding:3px 10px;border-radius:999px;background:#00000059;color:#fff;font-size:11.5px;transform:translate(-50%)}.chat-bubble p{margin:0 0 8px}.chat-bubble p:last-child{margin-bottom:0}.chat-bubble h1,.chat-bubble h2,.chat-bubble h3,.chat-bubble h4{margin:4px 0 6px;font-size:14px;line-height:1.4}.chat-bubble ul,.chat-bubble ol{margin:0 0 8px;padding-left:20px}.chat-bubble li{margin:2px 0}.chat-bubble blockquote{margin:6px 0;padding:2px 10px;border-left:3px solid var(--chat-line);color:var(--chat-muted)}.chat-bubble hr{margin:10px 0;border:0;border-top:1px solid var(--chat-line)}.chat-inline-code{padding:1px 4px;border-radius:5px;background:#1e283012;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px}.chat-code{margin:6px 0;overflow:hidden;border:1px solid var(--chat-line);border-radius:10px;background:#fff}.chat-code-head{display:flex;align-items:center;justify-content:space-between;padding:3px 8px;background:#1e28300b;color:var(--chat-faint);font-size:10.5px}.chat-code-lang{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.chat-code-copy{padding:3px 6px;border:0;border-radius:6px;background:transparent;color:var(--chat-muted);font:inherit}.chat-code-copy:active{background:#1e28301a}.chat-code pre{margin:0;padding:10px;overflow-x:auto}.chat-code code{color:#24292f;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.55;white-space:pre}.tk-k{color:#8250df}.tk-s{color:#0a7d32}.tk-c{color:#8b949e}.tk-n{color:#0550ae}.chat-table-wrap{margin:6px 0;overflow-x:auto}.chat-bubble table{border-collapse:collapse;font-size:12px}.chat-bubble th,.chat-bubble td{padding:4px 8px;border:1px solid var(--chat-line);text-align:left}.chat-bubble th{background:#1e28300a}.chat-copy{margin-left:6px;padding:2px 4px;border:0;background:transparent;color:var(--chat-faint);font-size:10.5px}.chat-copy:active{color:var(--chat-text)}.chat-md-image{display:block;max-width:100%;max-height:420px;margin:6px 0;border-radius:10px;background:#00000008;object-fit:contain}.chat-md-gallery{display:grid;gap:6px;margin:6px 0}.chat-md-gallery .chat-md-image{width:100%;max-width:none;max-height:none;height:auto;margin:0;border-radius:10px;object-fit:cover}.chat-md-gallery.is-one{grid-template-columns:1fr}.chat-md-gallery.is-one .chat-md-image{width:auto;max-width:100%;max-height:360px;object-fit:contain}.chat-md-gallery.is-two{grid-template-columns:repeat(2,minmax(0,1fr))}.chat-md-gallery.is-two .chat-md-image{height:150px}.chat-md-gallery.is-few{grid-template-columns:repeat(2,minmax(0,1fr))}.chat-md-gallery.is-few .chat-md-image{height:120px}.chat-md-gallery.is-many{grid-template-columns:repeat(3,minmax(0,1fr))}.chat-md-gallery.is-many .chat-md-image{height:96px}', ft = "http://192.168.2.6:8788";
+const Ye = "prefs.v1", Ja = "history.v1";
 const _t = {
   standard: { name: "标准模式", description: "处理代码、文件和数据，适合大多数任务。" },
   ptc: { name: "创造模式", description: "用对话产出界面或插件，工具会以卡片呈现。" },
   minimal: { name: "极简模式", description: "只带文件和终端，轻量、省 token。" },
   cordis: { name: "编排模式", description: "直接编辑 DSH 组合与插件，开发者用。" }
-}, Ja = "docklet-chat-style", Za = {
+}, Za = "docklet-chat-style", tn = {
   "read-only": "仅可查看",
   "workspace-write": "工作区内修改",
   "danger-full-access": "完全权限"
-}, _o = {
+}, Oo = {
   "read-only": "只能查看和检索，不能修改文件；需要写入时会请求授权。",
   "workspace-write": "可以在工作区内修改文件；工作区之外的操作会请求授权。",
   "danger-full-access": "不再询问，直接执行命令和文件操作。"
 };
-function Oo(s) {
+function Fo(s) {
   return new Promise((i) => setTimeout(i, s));
 }
 function P(s) {
@@ -26,13 +26,13 @@ function N(s) {
 function he(s) {
   return String(s ?? "").replace(/```[\s\S]*?```/g, (i) => i.replace(/```[a-z]*\n?/gi, "")).replace(/`([^`]+)`/g, "$1").replace(/\*\*([^*]+)\*\*/g, "$1").replace(/__([^_]+)__/g, "$1").replace(/^#{1,6}\s+/gm, "").replace(/^\s*[-*]\s+/gm, "• ").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 }
-function Fo(s) {
+function Wo(s) {
   return s.replace(/(https?:\/\/[^\s<>"'`\u3000-\u303f\u4e00-\u9fff\uff00-\uffef]+)/gu, (i) => {
     const t = i.replace(/[).,;:!?'"”’）】》]+$/gu, ""), S = i.slice(t.length);
     return `<a class="chat-link" href="${N(t)}" data-href="${N(t)}" target="_blank" rel="noreferrer noopener">${t}</a>${S}`;
   });
 }
-function tn(s) {
+function en(s) {
   const i = Number(s) || 0;
   return i >= 1024 * 1024 ? (i / 1024 / 1024).toFixed(1) + " MB" : i >= 1024 ? Math.round(i / 1024) + " KB" : i + " B";
 }
@@ -43,11 +43,11 @@ function It(s) {
 function vt(s) {
   return String(s || "").replace(/：/g, ":").replace(/[\u3000\s]+/g, "").replace(/\/+$/, "");
 }
-function Wo(s) {
+function Ko(s) {
   return String(s || "").replace(/\/+$/, "");
 }
-function Ko({ base: s, token: i }) {
-  const t = () => Wo(s()) || ft, S = () => String(i() || "").trim();
+function Go({ base: s, token: i }) {
+  const t = () => Ko(s()) || ft, S = () => String(i() || "").trim();
   function p($) {
     const m = Object.assign({}, $ || {}), f = S();
     return f && (m.Authorization = "Bearer " + f), m;
@@ -129,11 +129,11 @@ function Ko({ base: s, token: i }) {
     }
   };
 }
-function Go(s) {
+function Vo(s) {
   const i = s || {}, t = i.code ? "（" + i.code + (i.status ? " " + i.status : "") + "）" : "", S = i.message ? "：" + i.message : "";
   return (i.hint || "执行失败") + t + S;
 }
-function Vo(s) {
+function Yo(s) {
   if (!s || !s.type) return null;
   const i = s.payload || {}, t = Number(s.seq), p = {
     who: "ai",
@@ -148,12 +148,12 @@ function Vo(s) {
   else if (s.type === "message.assistant")
     p.text = String(i.text || ""), p.reasoning = String(i.reasoning || ""), p.images = Array.isArray(i.images) ? i.images : [], p.files = Array.isArray(i.files) ? i.files : [];
   else if (s.type === "message.error")
-    p.who = "error", p.text = Go(i);
+    p.who = "error", p.text = Vo(i);
   else
     return null;
   return !p.text && p.images.length === 0 && p.files.length === 0 ? null : p;
 }
-function Yo() {
+function Qo() {
   const s = [], i = /* @__PURE__ */ new Map();
   let t = 0, S = -1;
   function p() {
@@ -324,7 +324,7 @@ function Yo() {
     return s.push(m), E(m.seq), z(), !0;
   }
   function D(m) {
-    const f = v(m), g = Vo(m);
+    const f = v(m), g = Yo(m);
     if (!g)
       return E(m && m.seq), f;
     if (g.eventId && s.some((x) => x.eventId === g.eventId))
@@ -378,28 +378,28 @@ function Yo() {
     replaceEvents: H
   };
 }
-const en = "docklet-chat-cache", Et = "events", fe = "meta", an = "schema", Qo = 2, Qe = 1, Xo = 600, ge = 3;
-function Jo() {
+const an = "docklet-chat-cache", Et = "events", fe = "meta", nn = "schema", Xo = 2, Qe = 1, Jo = 600, ge = 3;
+function Zo() {
   try {
     return typeof indexedDB < "u" && indexedDB !== null;
   } catch {
     return !1;
   }
 }
-function Zo({ limit: s = Xo } = {}) {
+function tr({ limit: s = Jo } = {}) {
   let i = null, t = 0;
   function S(g) {
     return new Promise((x, A) => {
-      const b = g.transaction([fe, Et], "readwrite"), w = b.objectStore(fe), d = w.get(an);
+      const b = g.transaction([fe, Et], "readwrite"), w = b.objectStore(fe), d = w.get(nn);
       d.onsuccess = () => {
         const c = d.result ? Number(d.result.value) : 0;
-        c !== Qe && (c && c !== Qe && b.objectStore(Et).clear(), w.put({ key: an, value: Qe }));
+        c !== Qe && (c && c !== Qe && b.objectStore(Et).clear(), w.put({ key: nn, value: Qe }));
       }, b.oncomplete = () => x(), b.onerror = () => A(b.error || new Error("indexedDB schema failed"));
     });
   }
   function p() {
-    return Jo() ? i || (i = new Promise((g, x) => {
-      const A = indexedDB.open(en, Qo);
+    return Zo() ? i || (i = new Promise((g, x) => {
+      const A = indexedDB.open(an, Xo);
       A.onupgradeneeded = () => {
         const b = A.result;
         b.objectStoreNames.contains(Et) || b.createObjectStore(Et, { keyPath: "key" }).createIndex("session", "session", { unique: !1 }), b.objectStoreNames.contains(fe) || b.createObjectStore(fe, { keyPath: "key" });
@@ -536,7 +536,7 @@ function Zo({ limit: s = Xo } = {}) {
     })().then(
       () => new Promise((x) => {
         try {
-          const A = indexedDB.deleteDatabase(en);
+          const A = indexedDB.deleteDatabase(an);
           A.onsuccess = A.onerror = A.onblocked = () => x(!0);
         } catch {
           x(!1);
@@ -546,7 +546,7 @@ function Zo({ limit: s = Xo } = {}) {
   }
   return { put: R, get: H, clear: $, clearAll: m, clearOthers: D, destroy: f };
 }
-function tr({ appId: s, base: i, token: t, notify: S, mode: p = "turn" }) {
+function er({ appId: s, base: i, token: t, notify: S, mode: p = "turn" }) {
   const v = {
     id: s,
     endpoint: String(i) + "/health",
@@ -573,12 +573,12 @@ function tr({ appId: s, base: i, token: t, notify: S, mode: p = "turn" }) {
     failText: "指令执行失败"
   };
 }
-const er = /^(https?:\/\/|mailto:)/i, nn = {
+const ar = /^(https?:\/\/|mailto:)/i, on = {
   js: "const let var function return if else for while do break continue class new typeof instanceof in of this super import from export default async await try catch finally throw switch case extends static get set yield void delete",
   ts: "const let var function return if else for while do break continue class new typeof instanceof in of this super import from export export default async await try catch finally throw switch case extends static get set yield void delete interface type enum implements private public protected readonly namespace declare abstract as satisfies keyof infer",
   py: "def class return if elif else for while import from as pass break continue with try except finally raise lambda yield global nonlocal assert del in is not and or None True False async await print",
   bash: "if then else elif fi for while do done case esac function in return exit export local echo cd ls grep sed awk cat test"
-}, ar = {
+}, nr = {
   js: "js",
   javascript: "js",
   jsx: "js",
@@ -595,7 +595,7 @@ const er = /^(https?:\/\/|mailto:)/i, nn = {
   zsh: "bash",
   json: "json"
 };
-function cn(s, i) {
+function ln(s, i) {
   return /^https?:\/\//i.test(i) ? /^https:/i.test(i) ? `<img class="chat-image chat-md-image" src="${N(i)}" alt="${N(s)}" loading="lazy" referrerpolicy="no-referrer" />` : `<img class="chat-image chat-md-image" data-remote="${N(i)}" alt="${N(s)}" />` : P(s);
 }
 function wt(s) {
@@ -605,7 +605,7 @@ function wt(s) {
   let v;
   for (; v = p.exec(i); ) {
     if (t += P(i.slice(S, v.index)), S = v.index + v[0].length, v[1] !== void 0) {
-      t += cn(v[1], v[2]);
+      t += ln(v[1], v[2]);
       continue;
     }
     if (v[3] !== void 0) {
@@ -630,7 +630,7 @@ function wt(s) {
     }
     if (v[8] !== void 0) {
       const k = v[8], D = v[9];
-      t += er.test(D) ? `<a class="chat-link" href="${N(D)}" data-href="${N(D)}" target="_blank" rel="noreferrer noopener">${P(k)}</a>` : P(k);
+      t += ar.test(D) ? `<a class="chat-link" href="${N(D)}" data-href="${N(D)}" target="_blank" rel="noreferrer noopener">${P(k)}</a>` : P(k);
       continue;
     }
     const z = v[10], E = z.replace(/[).,;:!?'"”’）】》]+$/gu, ""), R = z.slice(E.length);
@@ -638,9 +638,9 @@ function wt(s) {
   }
   return t += P(i.slice(S)), t;
 }
-function nr(s, i) {
-  const t = ar[String(i || "").toLowerCase()] || "", S = String(s ?? "");
-  if (t === "json" || !nn[t])
+function or(s, i) {
+  const t = nr[String(i || "").toLowerCase()] || "", S = String(s ?? "");
+  if (t === "json" || !on[t])
     return { html: P(S), lang: t || String(i || "").toLowerCase() };
   const p = t === "js" || t === "ts" ? String.raw`(\/\*[\s\S]*?\*\/|\/\/[^\n]*)` : String.raw`(#[^\n]*)`, v = new RegExp(
     p + String.raw`|("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|` + "`(?:\\\\[\\s\\S]|[^`\\\\])*`)",
@@ -648,7 +648,7 @@ function nr(s, i) {
   ), z = [];
   let E = S.replace(v, (k) => (z.push(k), `\0${"z".repeat(z.length)}\0`));
   E = P(E);
-  const R = nn[t].split(/\s+/);
+  const R = on[t].split(/\s+/);
   return E = E.replace(
     /\b([A-Za-z_$][\w$]*)\b/g,
     (k) => R.includes(k) ? `<span class="tk-k">${k}</span>` : k
@@ -657,23 +657,23 @@ function nr(s, i) {
     return `<span class="${H.startsWith("/") || H.startsWith("#") ? "tk-c" : "tk-s"}">${P(H)}</span>`;
   }), { html: E, lang: t };
 }
-function or(s, i) {
-  const t = nr(s, i), S = t.lang || "code";
+function rr(s, i) {
+  const t = or(s, i), S = t.lang || "code";
   return `<div class="chat-code"><div class="chat-code-head"><span class="chat-code-lang">${P(S)}</span><button type="button" class="chat-code-copy" data-action="copy-code" data-code="${N(encodeURIComponent(s))}">复制</button></div><pre><code>${t.html}</code></pre></div>`;
 }
-function ln(s, i) {
+function dn(s, i) {
   if (i + 1 >= s.length || !/^\s*\|.*\|\s*$/.test(s[i])) return !1;
   const t = s[i + 1];
   return /^\s*\|?[\s:|-]+\|?\s*$/.test(t) && t.includes("-");
 }
-function on(s) {
+function rn(s) {
   return s.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((t) => t.trim());
 }
-function rr(s, i) {
+function sr(s, i) {
   const t = s[i];
-  return /^\s*```/.test(t) || /^(#{1,6})\s+/.test(t) || /^\s*>\s?/.test(t) || /^\s*[-*+]\s+/.test(t) || /^\s*\d+[.)]\s+/.test(t) || /^\s*([-*_])(?:\s*\1){2,}\s*$/.test(t) || ln(s, i);
+  return /^\s*```/.test(t) || /^(#{1,6})\s+/.test(t) || /^\s*>\s?/.test(t) || /^\s*[-*+]\s+/.test(t) || /^\s*\d+[.)]\s+/.test(t) || /^\s*([-*_])(?:\s*\1){2,}\s*$/.test(t) || dn(s, i);
 }
-function rn(s, i, t) {
+function sn(s, i, t) {
   const S = [], p = t ? /^\s*\d+[.)]\s+(.*)$/ : /^\s*[-*+]\s+(.*)$/;
   let v = i;
   for (; v < s.length; ) {
@@ -690,11 +690,11 @@ function rn(s, i, t) {
   return { items: S, next: v };
 }
 const Xe = /^\s*!\[([^\]]*)\]\(((?:[^()\s]+|\([^()\s]*\))+)\)\s*$/;
-function sr(s) {
+function ir(s) {
   const i = s.length;
-  return `<div class="chat-md-gallery ${i === 1 ? "is-one" : i === 2 ? "is-two" : i >= 5 ? "is-many" : "is-few"}" data-count="${i}">${s.map((S) => cn(S.alt, S.src)).join("")}</div>`;
+  return `<div class="chat-md-gallery ${i === 1 ? "is-one" : i === 2 ? "is-two" : i >= 5 ? "is-many" : "is-few"}" data-count="${i}">${s.map((S) => ln(S.alt, S.src)).join("")}</div>`;
 }
-function dn(s) {
+function un(s) {
   const t = String(s ?? "").replace(/\r\n?/g, `
 `).split(`
 `), S = [];
@@ -710,7 +710,7 @@ function dn(s) {
       const k = z[1].trim().split(/\s+/)[0] || "", D = [];
       for (p += 1; p < t.length && !/^\s*```\s*$/.test(t[p]); )
         D.push(t[p]), p += 1;
-      p < t.length && (p += 1), S.push(or(D.join(`
+      p < t.length && (p += 1), S.push(rr(D.join(`
 `), k));
       continue;
     }
@@ -732,21 +732,21 @@ function dn(s) {
       continue;
     }
     if (/^\s*[-*+]\s+/.test(v)) {
-      const k = rn(t, p, !1);
+      const k = sn(t, p, !1);
       S.push(`<ul>${k.items.map((D) => `<li>${wt(D)}</li>`).join("")}</ul>`), p = k.next;
       continue;
     }
     if (/^\s*\d+[.)]\s+/.test(v)) {
-      const k = rn(t, p, !0);
+      const k = sn(t, p, !0);
       S.push(`<ol>${k.items.map((D) => `<li>${wt(D)}</li>`).join("")}</ol>`), p = k.next;
       continue;
     }
-    if (ln(t, p)) {
-      const k = on(t[p]);
+    if (dn(t, p)) {
+      const k = rn(t[p]);
       p += 2;
       const D = [];
       for (; p < t.length && /^\s*\|.*\|\s*$/.test(t[p]); )
-        D.push(on(t[p])), p += 1;
+        D.push(rn(t[p])), p += 1;
       S.push(
         `<div class="chat-table-wrap"><table><thead><tr>${k.map((H) => `<th>${wt(H)}</th>`).join("")}</tr></thead><tbody>${D.map((H) => `<tr>${H.map(($) => `<td>${wt($)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
       );
@@ -771,24 +771,24 @@ function dn(s) {
         break;
       }
       if (k.length > 0) {
-        S.push(sr(k));
+        S.push(ir(k));
         continue;
       }
     }
     const R = [];
-    for (; p < t.length && t[p].trim() && !rr(t, p); )
+    for (; p < t.length && t[p].trim() && !sr(t, p); )
       R.push(t[p]), p += 1;
     R.length === 0 && (R.push(t[p]), p += 1), S.push(`<p>${R.map(wt).join("<br />")}</p>`);
   }
   return S.join("");
 }
-function ir(s) {
+function cr(s) {
   return s ? s.eventId ? String(s.eventId) : s.id ? "id" + s.id : Number.isFinite(Number(s.seq)) ? "s" + s.seq : "" : "";
 }
-function sn(s, i) {
-  const t = ir(s), S = t ? ` data-mid="${N(t)}"` : "";
+function cn(s, i) {
+  const t = cr(s), S = t ? ` data-mid="${N(t)}"` : "";
   if (s.who === "sys")
-    return `<div class="chat-sys">${Fo(P(he(s.text)))}</div>`;
+    return `<div class="chat-sys">${Wo(P(he(s.text)))}</div>`;
   if (s.who === "error") {
     const x = s.retryText ? `<button type="button" class="chat-retry" data-retry="${N(encodeURIComponent(s.retryText))}">点按重试</button>` : "";
     return `<div class="chat-turn is-ai"${S}>${x}<div class="chat-bubble is-error" data-copy="${N(encodeURIComponent(he(s.text)))}">${P(he(s.text))}</div></div>`;
@@ -801,19 +801,19 @@ function sn(s, i) {
   }).join("")}</div>` : "", R = z.map((x) => {
     const A = x.name || "文件";
     if (String(x.id || "").startsWith("local:"))
-      return `<div class="chat-file"><span class="chat-file-icon">📦</span><span class="chat-file-main"><span class="chat-file-name">${P(A)}</span><span class="chat-file-size">${tn(x.size)} · 发送中</span></span></div>`;
+      return `<div class="chat-file"><span class="chat-file-icon">📦</span><span class="chat-file-main"><span class="chat-file-name">${P(A)}</span><span class="chat-file-size">${en(x.size)} · 发送中</span></span></div>`;
     const b = i("file", x.id, A);
     return `<a class="chat-file" href="${N(b)}" data-file-url="${N(b)}" data-file-name="${N(A)}" download="${N(A)}">
           <span class="chat-file-icon">📦</span>
           <span class="chat-file-main">
             <span class="chat-file-name">${P(A)}</span>
-            <span class="chat-file-size">${tn(x.size)} · 点按下载</span>
+            <span class="chat-file-size">${en(x.size)} · 点按下载</span>
           </span>
         </a>`;
-  }).join(""), k = s.text ? dn(s.text) : "", D = s.reasoning ? `<details class="chat-thinking"><summary>思考过程</summary><div class="chat-thinking-text">${P(s.reasoning)}</div></details>` : "", H = s.pending ? " is-typing" : "", $ = `<div class="chat-bubble ${p ? "is-me" : "is-ai"}${H}${v.length ? " has-images" : ""}" data-copy="${N(encodeURIComponent(he(s.text || "")))}">${E}${R}${D}${k}</div>`, m = !s.pending && s.text ? '<button type="button" class="chat-copy" data-action="copy-message" aria-label="复制这条消息">复制</button>' : "", f = p && !s.pending && s.text ? '<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>' : "", g = `<div class="chat-meta"><span class="chat-avatar">${p ? "🙂" : "🤖"}</span><span class="chat-stamp">${It(s.at)}</span>${m}${f}</div>`;
+  }).join(""), k = s.text ? un(s.text) : "", D = s.reasoning ? `<details class="chat-thinking"><summary>思考过程</summary><div class="chat-thinking-text">${P(s.reasoning)}</div></details>` : "", H = s.pending ? " is-typing" : "", $ = `<div class="chat-bubble ${p ? "is-me" : "is-ai"}${H}${v.length ? " has-images" : ""}" data-copy="${N(encodeURIComponent(he(s.text || "")))}">${E}${R}${D}${k}</div>`, m = !s.pending && s.text ? '<button type="button" class="chat-copy" data-action="copy-message" aria-label="复制这条消息">复制</button>' : "", f = p && !s.pending && s.text ? '<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>' : "", g = `<div class="chat-meta"><span class="chat-avatar">${p ? "🙂" : "🤖"}</span><span class="chat-stamp">${It(s.at)}</span>${m}${f}</div>`;
   return `<div class="chat-turn ${p ? "is-me" : "is-ai"}"${S}>${g}${$}</div>`;
 }
-function cr(s, i) {
+function lr(s, i) {
   const t = N(s.id || ""), S = s.title || (s.blank ? "新对话" : "未命名对话"), p = P(S), v = s.id === i ? "✓ " : "", z = s.running ? "运行中" : s.online ? "在线" : "", E = It(s.at);
   return `<div class="chat-session-row">
             <button type="button" class="chat-session" data-session="${t}" data-current="${s.id === i ? "1" : "0"}">
@@ -826,7 +826,7 @@ function cr(s, i) {
 function Je(s) {
   return s ? `<span class="chat-card-time">${It(s)}</span>` : "";
 }
-function lr(s, i, t = null, S = 0, p = !1) {
+function dr(s, i, t = null, S = 0, p = !1) {
   const v = s.status === "failed" ? "is-failed" : s.status === "ok" ? "is-ok" : "is-running", z = s.name || "工具", E = s.summary || "", R = Number(S) || 0, k = R ? `<span class="chat-tool-index ${v}">${R}</span>` : '<span class="chat-tool-dot" aria-hidden="true"></span>';
   return `<div class="chat-tool ${v}${p ? " is-active" : ""}" data-tool="${N(s.id)}">
     <button type="button" class="chat-tool-head" data-action="tool-open" data-tool="${N(s.id)}">
@@ -837,7 +837,7 @@ function lr(s, i, t = null, S = 0, p = !1) {
     </button>
   </div>`;
 }
-function dr(s, i = null) {
+function ur(s, i = null) {
   const t = s.status === "failed" ? "is-failed" : s.status === "ok" ? "is-ok" : "is-running", S = s.name || "工具", p = s.summary || "", v = !!(s.preview || s.error), z = (k) => `<button type="button" class="chat-tool-copy" data-action="tool-copy" data-tool="${N(s.id)}" data-copy="${k}">复制</button>`, E = [
     s.preview ? `<div class="chat-tool-code-head"><span>结果</span>${z("preview")}</div><pre class="chat-tool-preview">${P(s.preview)}</pre>` : "",
     s.error ? `<p class="chat-tool-label">错误</p><p class="chat-tool-error">${P([s.error.name, s.error.code, s.error.reason].filter(Boolean).join(" · "))}</p>` : "",
@@ -853,7 +853,7 @@ function dr(s, i = null) {
     ${R}
   </div>`;
 }
-function ur() {
+function pr() {
   return `<div class="chat-tool-group is-empty">
     <div class="chat-tool-group-head">
       <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
@@ -861,8 +861,8 @@ function ur() {
     </div>
   </div>`;
 }
-function pr(s, i, t, S = null, p = {}) {
-  const v = Number.isFinite(Number(p.total)) ? Number(p.total) : s.length, z = s.filter((m) => m.status === "failed").length, E = Number(p.running) || 0, R = z > 0 ? `${z} 次失败` : E > 0 ? "执行中" : "已完成", k = "group-" + (s[0] ? s[0].id : "current"), D = s.map((m, f) => lr(m, !1, S, f + 1, m.id === p.activeId)).join(""), H = i && v > 3 ? `<button type="button" class="chat-tool-group-collapse" data-action="tool-group-toggle" data-group="${N(k)}">收起工具列表</button>` : "", $ = s.length ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${N(k)}" aria-expanded="${i ? "true" : "false"}">
+function hr(s, i, t, S = null, p = {}) {
+  const v = Number.isFinite(Number(p.total)) ? Number(p.total) : s.length, z = s.filter((m) => m.status === "failed").length, E = Number(p.running) || 0, R = z > 0 ? `${z} 次失败` : E > 0 ? "执行中" : "已完成", k = "group-" + (s[0] ? s[0].id : "current"), D = s.map((m, f) => dr(m, !1, S, f + 1, m.id === p.activeId)).join(""), H = i && v > 3 ? `<button type="button" class="chat-tool-group-collapse" data-action="tool-group-toggle" data-group="${N(k)}">收起工具列表</button>` : "", $ = s.length ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${N(k)}" aria-expanded="${i ? "true" : "false"}">
         <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
         <span class="chat-tool-group-title">本轮 ${v} 次工具调用</span>
         <span class="chat-tool-group-badge${z > 0 ? " is-failed" : ""}">${R}</span>
@@ -878,7 +878,7 @@ function pr(s, i, t, S = null, p = {}) {
     ${H}
   </div>`;
 }
-function hr(s, i) {
+function fr(s, i) {
   const t = Array.isArray(s.files) ? s.files : [], S = t.map((p, v) => {
     const z = String(p.path || "").split(/[\\/]/).pop() || "文件", E = typeof i == "function" ? i(s.seq, v, z) : "", R = /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(z), k = `<a class="chat-file chat-deliverable-file" href="${N(E)}" data-file-url="${N(E)}" data-file-name="${N(z)}" download="${N(z)}">
         <span class="chat-file-icon">${R ? "🖼" : "📄"}</span>
@@ -903,7 +903,7 @@ function hr(s, i) {
     <div class="chat-deliverable-list">${S}</div>
   </div>`;
 }
-function fr(s) {
+function gr(s) {
   const i = !s.decision, t = s.decision === "allow", S = s.title || "等待你授权", p = s.reason || "需要你确认后才能继续。", v = i ? `<div class="chat-card-actions">
         <button type="button" class="chat-btn is-danger" data-action="approval-deny" data-approval="${N(s.id)}">拒绝</button>
         <button type="button" class="chat-btn is-primary" data-action="approval-allow" data-approval="${N(s.id)}">允许</button>
@@ -920,7 +920,7 @@ function fr(s) {
     ${v}
   </div>`;
 }
-function gr(s, i) {
+function mr(s, i) {
   const t = i && i.selected || {}, S = i && i.custom || {}, p = [];
   for (const v of s.questions || []) {
     const z = Array.isArray(t[v.id]) ? t[v.id] : [], E = String(S[v.id] || "").trim();
@@ -930,7 +930,7 @@ function gr(s, i) {
   }
   return p.length ? p : null;
 }
-function mr(s, i, t) {
+function br(s, i, t) {
   const S = s.state !== "answered" && !t, p = s.state === "answered", v = i && i.selected || {}, z = i && i.custom || {}, E = (s.questions || []).map((k) => {
     const D = Array.isArray(v[k.id]) ? v[k.id] : [], H = Array.isArray(k.options) ? k.options : [], $ = p && Array.isArray(s.answers) ? s.answers.find((x) => x.id === k.id) : null, m = H.length ? `<div class="chat-q-opts">${H.map((x) => {
       const A = D.includes(x.label), b = $ && Array.isArray($.selected) && $.selected.includes(x.label);
@@ -957,7 +957,7 @@ function mr(s, i, t) {
     ${R}
   </div>`;
 }
-function br(s, i) {
+function xr(s, i) {
   const t = {
     url: "",
     token: "",
@@ -1073,11 +1073,11 @@ function br(s, i) {
     "11 + 4 = 15",
     "7 × 7 = 49",
     "24 ÷ 6 = 4"
-  ], f = 1e3, g = "我这边在手机上处理不了刚才的确认，已经中断当前回合。请改用不需要电脑端弹窗的方式继续；如果必须用电脑操作，请先告诉我需要做什么。", x = 180, A = String(i.manifest && i.manifest.id || "dsh-console"), b = Ko({ base: () => t.url, token: () => t.token }), w = Yo(), d = Zo();
+  ], f = 1e3, g = "我这边在手机上处理不了刚才的确认，已经中断当前回合。请改用不需要电脑端弹窗的方式继续；如果必须用电脑操作，请先告诉我需要做什么。", x = 180, A = String(i.manifest && i.manifest.id || "dsh-console"), b = Go({ base: () => t.url, token: () => t.token }), w = Qo(), d = tr();
   t.messages = w.messages;
   let c = null, n = {}, F = null, K = 0, Z = !1, U = !1, _ = 0, V = 0, kt = [], gt = null, Ze = 0, me = null, be = null, xe = null, Nt = null, O = { list: [], index: 0, scale: 1, x: 0, y: 0 }, at = null, tt = /* @__PURE__ */ new Map(), mt = null, et = !1, bt = 0, ct = 0, X = "unknown", Ot = null, ta = 0;
   const Ft = /* @__PURE__ */ new Set(), Wt = /* @__PURE__ */ new Map(), Kt = /* @__PURE__ */ new Set();
-  function un() {
+  function pn() {
     let e = "", a = "", o = !0, r = "turn", l = "", u = "", y = !0, M = "lan";
     try {
       const B = i.storage.get(Ye);
@@ -1105,7 +1105,7 @@ function br(s, i) {
     }));
   }
   const ye = "ui.v1";
-  function pn() {
+  function hn() {
     try {
       const e = i.storage.get(ye);
       if (!e) return;
@@ -1133,11 +1133,11 @@ function br(s, i) {
   }
   function ea() {
     try {
-      i.storage.remove(Xa);
+      i.storage.remove(Ja);
     } catch {
     }
   }
-  async function hn() {
+  async function fn() {
     rt();
     try {
       await d.clearAll();
@@ -1154,7 +1154,7 @@ function br(s, i) {
     } catch {
     }
   }
-  async function fn() {
+  async function gn() {
     rt();
     try {
       await d.destroy();
@@ -1171,7 +1171,7 @@ function br(s, i) {
         await e.removeEntry(a, { recursive: !0 });
     } catch {
     }
-    i.storage.remove(Ye), i.storage.remove(ye), i.storage.remove(Xa), w.clear(), j(!0), L("正在恢复初始化…"), window.setTimeout(() => {
+    i.storage.remove(Ye), i.storage.remove(ye), i.storage.remove(Ja), w.clear(), j(!0), L("正在恢复初始化…"), window.setTimeout(() => {
       i.shell && typeof i.shell.exit == "function" ? i.shell.exit() : location.reload();
     }, 400);
   }
@@ -1182,7 +1182,7 @@ function br(s, i) {
     Vt = [], St = "", d.put(e, a).catch(() => {
     });
   }
-  function gn(e, a) {
+  function mn(e, a) {
     !e || !a || !a.id || (St && St !== e && rt(), St = e, Vt.push(a), !Pt && (Pt = window.setTimeout(rt, 180)));
   }
   async function we(e) {
@@ -1192,7 +1192,7 @@ function br(s, i) {
       } catch {
       }
   }
-  async function mn(e, a) {
+  async function bn(e, a) {
     if (!e) {
       L("这条审批已经失效", "error");
       return;
@@ -1205,7 +1205,7 @@ function br(s, i) {
     }
   }
   const Yt = (e, a, o) => b.assetUrl(e, a, o), aa = (e, a, o) => b.fetchWithTimeout(e, a, o);
-  async function bn() {
+  async function xn() {
     if (!t.url) {
       Y("unset", "未配置");
       return;
@@ -1219,7 +1219,7 @@ function br(s, i) {
     }
   }
   function Y(e, a) {
-    t.status = e, t.statusText = a, za(), ve();
+    t.status = e, t.statusText = a, Ca(), ve();
   }
   function ke(e) {
     const a = Number(e && e.seq);
@@ -1246,7 +1246,7 @@ function br(s, i) {
       return t.hydrated = !1, !1;
     }
   }
-  function xn(e) {
+  function yn(e) {
     const a = ke(e);
     if (!a.id) return !1;
     const o = w.upsertMessage(a);
@@ -1291,7 +1291,7 @@ function br(s, i) {
         }
         let ht = !1;
         for (const I of o)
-          w.cursor = Math.max(w.cursor, Number(I.id) || 0), xn(I) && (ht = !0);
+          w.cursor = Math.max(w.cursor, Number(I.id) || 0), yn(I) && (ht = !0);
         !B && t.waiting && (t.waiting = !1, t.busy = !1, ht = !0), (ht || G || C) && j();
       } catch (e) {
         const a = String(e && e.message || "");
@@ -1311,9 +1311,9 @@ function br(s, i) {
   function Se() {
     K && (window.clearInterval(K), K = 0);
   }
-  function yn(e) {
+  function vn(e) {
     const a = e && e.session || {}, o = e && Array.isArray(e.events) ? e.events : [];
-    w.replaceEvents(o), t.projections = e && e.projections && typeof e.projections == "object" ? e.projections : {}, t.stream = null, t.hydrated = !0, t.waiting = !1, t.busy = !1, t.waitingSince = 0, t.running = !!a.running, a.running && (t.awaitingReply = !0, t.runActive = !0), t.lastEventAt = Date.now(), t.currentTool = null, t.lastTool = null, t.lastToolAt = 0, t.running && a.tool && a.tool.name && (t.currentTool = {
+    w.replaceEvents(o), t.projections = e && e.projections && typeof e.projections == "object" ? e.projections : {}, t.stream = null, t.hydrated = !0, t.waiting = !1, t.busy = !1, t.waitingSince = 0, t.running = !!a.running, a.running && !Ia(w.timeline()) && (t.awaitingReply = !0, t.runActive = !0), t.lastEventAt = Date.now(), t.currentTool = null, t.lastTool = null, t.lastToolAt = 0, t.running && a.tool && a.tool.name && (t.currentTool = {
       name: String(a.tool.name),
       detail: String(a.tool.detail || ""),
       done: !!a.tool.done
@@ -1354,7 +1354,7 @@ function br(s, i) {
     const r = ra(e);
     return o || r;
   }
-  function vn(e) {
+  function wn(e) {
     if (!e || typeof e != "object" || !e.type) return;
     if (t.lastEventAt = Date.now(), t.lastProgressAt = Date.now(), t.notRunningSince = 0, t.stuckPrompt && (t.stuckPrompt = !1), e.type === "projection") {
       const r = e.payload && e.payload.values;
@@ -1373,7 +1373,7 @@ function br(s, i) {
     }
     if (e.type === "session.meta") {
       const r = e.payload && e.payload.session || {};
-      if (r.running !== void 0 && (t.running = !!r.running, r.running && (t.awaitingReply = !0, t.runActive = !0)), e.payload && e.payload.instance) {
+      if (r.running !== void 0 && (t.running = !!r.running, r.running && !Ia(w.timeline()) && (t.awaitingReply = !0, t.runActive = !0)), e.payload && e.payload.instance) {
         const l = String(e.payload.instance);
         if (t.instance && l !== t.instance) {
           t.instance = l, xt();
@@ -1391,7 +1391,7 @@ function br(s, i) {
     else if (e.type === "turn.end")
       Qt(), a = !0;
     else if (e.type === "message.assistant")
-      t.lastReplyAt = Date.now(), t.waiting = !1, t.busy = !1;
+      t.lastReplyAt = Date.now(), t.runActive = !1, t.waiting = !1, t.busy = !1;
     else if (e.type === "message.error")
       t.awaitingReply = !1, t.runActive = !1;
     else if (e.type === "input.result")
@@ -1407,7 +1407,7 @@ function br(s, i) {
     if (!a) return;
     (e.type === "message.assistant" || e.type === "message.error") && (t.focusLastAssistant = !0);
     const o = e.type === "approval.request" || e.type === "approval.result" || e.type === "input.request";
-    t.currentSession && e.id && gn(t.currentSession, e), de(o);
+    t.currentSession && e.id && mn(t.currentSession, e), de(o);
   }
   function lt() {
     if (Ot) {
@@ -1431,7 +1431,7 @@ function br(s, i) {
       if (!U) {
         a = !0;
         try {
-          vn(JSON.parse(o.data));
+          wn(JSON.parse(o.data));
         } catch {
         }
       }
@@ -1459,12 +1459,12 @@ function br(s, i) {
       try {
         const e = await b.snapshot(t.currentSession || "", { turns: D });
         if (U) return;
-        X = "sse", Se(), yn(e), sa();
+        X = "sse", Se(), vn(e), sa();
       } catch {
         $e();
       }
   }
-  async function wn() {
+  async function kn() {
     if (U || !t.url || !t.currentSession || t.loadingOlder || !t.turnHasMore || !t.oldestSeq) return;
     const e = $ - oa();
     if (e <= 0) {
@@ -1492,9 +1492,9 @@ function br(s, i) {
     n.loadSpinner && (n.loadSpinner.hidden = !(t.loadingOlder && t.turnHasMore));
   }
   function ca() {
-    !t.turnHasMore || t.loadingOlder || !n.list || n.list.scrollTop > x || wn();
+    !t.turnHasMore || t.loadingOlder || !n.list || n.list.scrollTop > x || kn();
   }
-  function kn() {
+  function Sn() {
     const e = w.timeline(), a = Te(e);
     for (const o of e) {
       const r = Number(o.seq);
@@ -1532,7 +1532,7 @@ function br(s, i) {
     }
     t.stuckBusy = !1, t.lastProgressAt = Date.now(), j();
   }
-  async function Sn() {
+  async function Tn() {
     if (!(U || !t.url || document.hidden) && !(Date.now() - (Number(t.lastProgressAt) || 0) < 2e3))
       try {
         const e = await b.health();
@@ -1549,13 +1549,13 @@ function br(s, i) {
       } catch {
       }
   }
-  function Tn() {
+  function $n() {
     if (U || t.stuckBusy) return;
     if (!t.running) {
       t.stuckPrompt && (t.stuckPrompt = !1, j());
       return;
     }
-    if (kn()) {
+    if (Sn()) {
       t.stuckPrompt && (t.stuckPrompt = !1, j());
       return;
     }
@@ -1618,7 +1618,7 @@ function br(s, i) {
         }, 700), Y("ok", "已连接");
         return;
       } catch (C) {
-        h = C, T < 2 && await Oo(700 * (T + 1));
+        h = C, T < 2 && await Fo(700 * (T + 1));
       }
     t.waiting = !1, t.busy = !1, t.awaitingReply = !1, t.runActive = !1;
     const q = w.messages.indexOf(M);
@@ -1636,10 +1636,10 @@ function br(s, i) {
       return `<div class="chat-chip" data-key="${N(a.key)}"><button type="button" class="chat-chip-x" data-action="remove-attach" data-key="${N(a.key)}" aria-label="移除">×</button>${o}${r}</div>`;
     }).join(""));
   }
-  function $n(e) {
+  function An(e) {
     t.pending = (t.pending || []).filter((a) => a.key !== e), st();
   }
-  function An(e) {
+  function qn(e) {
     return new Promise((a, o) => {
       const r = new FileReader();
       r.onload = () => {
@@ -1648,7 +1648,7 @@ function br(s, i) {
       }, r.onerror = () => o(r.error || new Error("读不到文件")), r.readAsDataURL(e);
     });
   }
-  async function qn(e) {
+  async function Mn(e) {
     try {
       const a = e.kind === "image" ? { data: e.data, mediaType: e.mediaType, name: e.name } : { data: e.data, name: e.name }, o = e.kind === "image" ? await b.uploadImage(a) : await b.uploadFile(a);
       if (!o || !o.attachment) throw new Error("上传结果不对");
@@ -1658,7 +1658,7 @@ function br(s, i) {
     }
     st();
   }
-  async function Mn(e) {
+  async function En(e) {
     const a = Array.from(e || []);
     if (a.length !== 0) {
       if (!t.url) {
@@ -1688,12 +1688,12 @@ function br(s, i) {
         };
         t.pending.push(u), st();
         try {
-          u.data = await An(o);
+          u.data = await qn(o);
         } catch {
           u.status = "error", u.error = "读不到这个文件", st();
           continue;
         }
-        r && (u.preview = "data:" + u.mediaType + ";base64," + u.data), st(), qn(u);
+        r && (u.preview = "data:" + u.mediaType + ";base64," + u.data), st(), Mn(u);
       }
     }
   }
@@ -1710,9 +1710,9 @@ function br(s, i) {
     }
     if (!(a instanceof HTMLInputElement) || a !== n.pick) return;
     const o = a.files ? Array.from(a.files) : [];
-    a.value = "", Mn(o);
+    a.value = "", En(o);
   }
-  async function En() {
+  async function In() {
     const e = t.url;
     if (t.waiting = !1, t.busy = !1, j(), !!e)
       try {
@@ -1737,7 +1737,7 @@ function br(s, i) {
   function Jt() {
     const e = n.sheetBody && n.sheetBody.querySelector('[data-role="session-list"]');
     if (!e) return;
-    const a = String(t.sessionQuery || "").trim().toLowerCase(), o = (t.sessionsList || []).filter((h) => a ? String(h.title || "").toLowerCase().includes(a) || String(h.id || "").toLowerCase().includes(a) : !0), r = t.currentSession || "", l = o.slice(0, 80).map((h) => cr(h, r)).join(""), u = `<div class="chat-sheet-tip">${a ? "没有匹配的对话" : "还没有历史对话"}</div>`, y = (t.archivedList || []).filter((h) => a ? String(h.title || "").toLowerCase().includes(a) || String(h.id || "").toLowerCase().includes(a) : !0), M = `<button type="button" class="chat-archived-toggle" data-action="toggle-archived">${t.showArchived ? "收起已归档" : "已归档 " + y.length}</button>`;
+    const a = String(t.sessionQuery || "").trim().toLowerCase(), o = (t.sessionsList || []).filter((h) => a ? String(h.title || "").toLowerCase().includes(a) || String(h.id || "").toLowerCase().includes(a) : !0), r = t.currentSession || "", l = o.slice(0, 80).map((h) => lr(h, r)).join(""), u = `<div class="chat-sheet-tip">${a ? "没有匹配的对话" : "还没有历史对话"}</div>`, y = (t.archivedList || []).filter((h) => a ? String(h.title || "").toLowerCase().includes(a) || String(h.id || "").toLowerCase().includes(a) : !0), M = `<button type="button" class="chat-archived-toggle" data-action="toggle-archived">${t.showArchived ? "收起已归档" : "已归档 " + y.length}</button>`;
     let B = "";
     t.showArchived && (B = y.length ? y.slice(0, 80).map(
       (h) => `<div class="chat-session-row is-archived"><button type="button" class="chat-session" data-action="restore-session" data-session="${N(h.id || "")}">
@@ -1746,10 +1746,10 @@ function br(s, i) {
               </button></div>`
     ).join("") : '<div class="chat-sheet-tip">没有已归档的对话</div>'), e.innerHTML = (o.length ? l : u) + M + B;
   }
-  function In(e) {
+  function Nn(e) {
     return e ? e.eventId ? String(e.eventId) : e.id ? "id" + e.id : Number.isFinite(Number(e.seq)) ? "s" + e.seq : "" : "";
   }
-  function Nn() {
+  function Pn() {
     t.searchQuery = "", n.searchScrim && (n.searchScrim.hidden = !1), n.searchInput && (n.searchInput.value = "", n.searchInput.focus()), ua();
   }
   function Me() {
@@ -1769,7 +1769,7 @@ function br(s, i) {
       const l = r.toLowerCase().indexOf(e);
       if (l < 0) continue;
       const u = Math.max(0, l - 16), y = l + e.length + 26, M = (u > 0 ? "…" : "") + r.slice(u, y).replace(/\s+/g, " ") + (y < r.length ? "…" : "");
-      if (a.push({ key: In(o), who: o.who, snippet: M, at: o.at }), a.length >= 80) break;
+      if (a.push({ key: Nn(o), who: o.who, snippet: M, at: o.at }), a.length >= 80) break;
     }
     if (a.length === 0) {
       n.searchBody.innerHTML = '<div class="chat-sheet-tip">没有找到包含该关键词的消息</div>';
@@ -1782,7 +1782,7 @@ function br(s, i) {
         </button>`
     ).join("");
   }
-  function Pn(e) {
+  function Ln(e) {
     if (Me(), !e || !n.list) return;
     const a = n.list.querySelector('[data-mid="' + e.replace(/["\\]/g, "\\$&") + '"]');
     if (!a) {
@@ -1791,19 +1791,19 @@ function br(s, i) {
     }
     a.scrollIntoView({ block: "center", behavior: "smooth" });
   }
-  function Ln(e, a) {
+  function zn(e, a) {
     t.sessionMenuId = String(e || ""), t.sessionMenuTitle = String(a || ""), n.sessionMenu && (n.sessionMenu.hidden = !1);
   }
   function Ct() {
     n.sessionMenu && (n.sessionMenu.hidden = !0);
   }
-  function zn() {
+  function Cn() {
     t.renameId = t.sessionMenuId, Ct(), n.renameInput && (n.renameInput.value = t.sessionMenuTitle || "", n.renameInput.focus()), n.renameScrim && (n.renameScrim.hidden = !1);
   }
   function Ee() {
     n.renameScrim && (n.renameScrim.hidden = !0);
   }
-  async function Cn() {
+  async function Bn() {
     const e = t.renameId, a = String(n.renameInput && n.renameInput.value || "").trim();
     if (!e || !a) {
       L("标题不能为空", "error");
@@ -1816,7 +1816,7 @@ function br(s, i) {
       L("重命名失败：" + (o && o.message || "未知错误"), "error");
     }
   }
-  async function Bn() {
+  async function Rn() {
     const e = t.sessionMenuId;
     if (Ct(), !!e) {
       L("正在分支…");
@@ -1841,13 +1841,13 @@ function br(s, i) {
   function Zt(e) {
     t.drawerMode = e === "create" ? "create" : "list", n.drawerList && (n.drawerList.hidden = t.drawerMode !== "list"), n.drawerCreate && (n.drawerCreate.hidden = t.drawerMode !== "create");
   }
-  function Rn(e, a) {
+  function jn(e, a) {
     t.archiveId = String(e || ""), t.archiveStop = !1, Ct(), n.archiveText && (n.archiveText.textContent = `「${a || "这个会话"}」将从列表移除，可在「已归档」里恢复。`), n.archiveScrim && (n.archiveScrim.hidden = !1);
   }
   function te() {
     n.archiveScrim && (n.archiveScrim.hidden = !0), t.archiveId = "", t.archiveStop = !1;
   }
-  async function jn() {
+  async function Dn() {
     const e = t.archiveId;
     if (e)
       try {
@@ -1860,7 +1860,7 @@ function br(s, i) {
         L("归档失败：" + (a && a.message || "未知错误"), "error");
       }
   }
-  async function Dn(e) {
+  async function Un(e) {
     if (e)
       try {
         await b.unarchiveSession(e), L("已恢复"), t.sessionsOpen && await Xt();
@@ -1885,7 +1885,7 @@ function br(s, i) {
       }
     }
   }
-  function Un() {
+  function Hn() {
     const e = t.options && Array.isArray(t.options.presets) ? t.options.presets : [];
     return e.length ? e.map((a) => {
       const o = String(a.id), r = _t[o];
@@ -1944,7 +1944,7 @@ function br(s, i) {
     if (e === "model") {
       const q = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((T) => ({
         value: String(T.value),
-        name: Za[String(T.value)] || T.name || String(T.value)
+        name: tn[String(T.value)] || T.name || String(T.value)
       }));
       if (q.length > 0) {
         const T = t.sessionPermission || t.meta && t.meta.permission || "";
@@ -1959,10 +1959,10 @@ function br(s, i) {
   }
   function Bt() {
     if (!n.newBody) return;
-    const e = Un(), a = e.find((y) => y.value === t.formPreset) || e.find((y) => y.value === Ne()), o = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((y) => ({
+    const e = Hn(), a = e.find((y) => y.value === t.formPreset) || e.find((y) => y.value === Ne()), o = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((y) => ({
       value: String(y.value),
-      name: Za[String(y.value)] || y.name || String(y.value),
-      description: _o[String(y.value)] || y.description || ""
+      name: tn[String(y.value)] || y.name || String(y.value),
+      description: Oo[String(y.value)] || y.description || ""
     })), r = t.formPermission || Pe(), l = o.find((y) => y.value === r), u = l && l.description ? l.description : r === "danger-full-access" ? "完全权限：不再询问，直接执行。" : "非完全权限时，需要授权的操作会先弹到手机确认。";
     n.newBody.innerHTML = `
       <div class="chat-form-block">
@@ -1993,11 +1993,11 @@ function br(s, i) {
       }
     return null;
   }
-  function Hn(e, a) {
+  function _n(e, a) {
     const o = Rt(e, a);
     return o && o.model && o.model.name ? String(o.model.name) : String(a || "");
   }
-  function _n(e, a, o) {
+  function On(e, a, o) {
     const r = Rt(e, a), u = (r && r.model && r.model.reasoning && Array.isArray(r.model.reasoning.efforts) ? r.model.reasoning.efforts : []).find((y) => y && y.id === o);
     return u && u.name ? String(u.name) : String(o || "");
   }
@@ -2008,8 +2008,8 @@ function br(s, i) {
       n.modelChip.hidden = !0, n.modelChip.textContent = "";
       return;
     }
-    const a = [Hn(e.provider, e.model)];
-    e.reasoningEffort && a.push(_n(e.provider, e.model, e.reasoningEffort)), n.modelChip.hidden = !1, n.modelChip.textContent = a.join(" · "), ve();
+    const a = [_n(e.provider, e.model)];
+    e.reasoningEffort && a.push(On(e.provider, e.model, e.reasoningEffort)), n.modelChip.hidden = !1, n.modelChip.textContent = a.join(" · "), ve();
   }
   function ee() {
     if (!n.modelBody) return;
@@ -2019,7 +2019,7 @@ function br(s, i) {
     }
     n.modelBody.innerHTML = ga("model");
   }
-  async function On() {
+  async function Fn() {
     if (!t.url) return;
     const e = t.meta && t.meta.model ? t.meta.model : null;
     t.formProvider = e ? e.provider : "", t.formModel = e ? e.model : "", t.formEffort = e ? e.reasoningEffort : "", t.sessionPermission = t.meta && t.meta.permission || t.options && t.options.defaultPermission || "", n.modelScrim && (n.modelScrim.hidden = !1), t.options ? ee() : (n.modelBody && (n.modelBody.innerHTML = '<div class="chat-sheet-tip">正在读取模型…</div>'), ha().then(() => ee()));
@@ -2027,7 +2027,7 @@ function br(s, i) {
   function ae() {
     n.modelScrim && (n.modelScrim.hidden = !0);
   }
-  function Fn(e, a, o, r) {
+  function Wn(e, a, o, r) {
     if (e === "model") {
       t.formProvider = o || t.formProvider, t.formModel = a;
       const l = Rt(t.formProvider, a), u = l && l.model && l.model.reasoning && Array.isArray(l.model.reasoning.efforts) ? l.model.reasoning.efforts : [], y = l && l.model && l.model.reasoning && l.model.reasoning.defaultEffort || "";
@@ -2036,7 +2036,7 @@ function br(s, i) {
       t.formEffort = a;
     r === "new" ? Bt() : ee();
   }
-  async function Wn() {
+  async function Kn() {
     if (!t.url || !t.formProvider || !t.formModel) return;
     const e = { provider: t.formProvider, model: t.formModel };
     t.formEffort && (e.reasoningEffort = t.formEffort);
@@ -2052,7 +2052,7 @@ function br(s, i) {
       L("应用失败：" + (a && a.message || "未知错误"), "error");
     }
   }
-  function Kn() {
+  function Gn() {
     if (!t.url) {
       $t();
       return;
@@ -2064,16 +2064,16 @@ function br(s, i) {
   function Le() {
     Zt("list");
   }
-  function Gn(e, a, o) {
+  function Vn(e, a, o) {
     a === "new" && (t.formPreset = o, Bt());
   }
-  function Vn() {
+  function Yn() {
     n.confirmScrim && (n.confirmScrim.hidden = !1);
   }
   function ne() {
     n.confirmScrim && (n.confirmScrim.hidden = !0);
   }
-  function Yn() {
+  function Qn() {
     (async () => {
       try {
         await we(!1);
@@ -2089,7 +2089,7 @@ function br(s, i) {
       }
     })();
   }
-  async function Qn() {
+  async function Xn() {
     if (!t.url) {
       $t();
       return;
@@ -2137,7 +2137,7 @@ function br(s, i) {
   function ya() {
     t.view = "chat", n.page.hidden = !0, j();
   }
-  async function Xn() {
+  async function Jn() {
     const e = vt(n.inputUrl.value), a = n.inputWan ? vt(n.inputWan.value) : "", o = n.inputToken.value.trim(), r = o ? { Authorization: "Bearer " + o } : {}, l = (h, q, T) => {
       h && (h.textContent = q, h.dataset.tone = T || "");
     };
@@ -2161,8 +2161,8 @@ function br(s, i) {
     }, [M, B] = await Promise.all([y(e, 4e3), y(a, 6e3)]);
     l(n.lanState, "· " + M.text, M.tone), l(n.wanState, "· " + B.text, B.tone), u && delete u.dataset.busy;
   }
-  function Jn() {
-    return tr({
+  function Zn() {
+    return er({
       appId: A,
       base: t.url || ft,
       token: t.token || "",
@@ -2177,12 +2177,12 @@ function br(s, i) {
         });
         return;
       }
-      i.watch.start(Jn()).catch(() => {
+      i.watch.start(Zn()).catch(() => {
       });
     }
   }
   let oe = !1, ze = 0, Ce = 0, va = 0, wa = 0, ka = 0, Sa = 0;
-  async function Zn(e, a) {
+  async function to(e, a) {
     if (!e) return !1;
     try {
       return (await aa(e + "/health", {}, a || 1200)).ok;
@@ -2204,7 +2204,7 @@ function br(s, i) {
       u || (y = window.setTimeout(() => {
         t.status !== "ok" && Y("busy", "网络连接中…");
       }, 1e3));
-      const M = (G) => G === t.lanUrl ? 1600 : 5e3, B = await Promise.all(l.map((G) => Zn(G, M(G))));
+      const M = (G) => G === t.lanUrl ? 1600 : 5e3, B = await Promise.all(l.map((G) => to(G, M(G))));
       if (window.clearTimeout(y), a !== ze) return !1;
       const h = B.findIndex(Boolean), q = h >= 0 ? l[h] : "";
       if (!q) {
@@ -2257,7 +2257,7 @@ function br(s, i) {
     const e = t.url || ft, a = t.mode || "auto", o = a === "wan" ? "手动外部" : a === "lan" ? "手动家里" : e === t.lanUrl ? "自动·家里" : "自动·外部";
     n.serverSum.textContent = e + " · " + o;
   }
-  async function to() {
+  async function eo() {
     if (!i.watch || typeof i.watch.test != "function") {
       L("当前壳不支持测试提醒", "error");
       return;
@@ -2272,7 +2272,7 @@ function br(s, i) {
       L("发送失败：" + (e && e.message || "未知错误"), "error");
     }
   }
-  function eo() {
+  function ao() {
     if (!n.inputToken.value.trim()) {
       L("访问令牌不能为空，电脑端「设置 → 手机中转」里可以看到", "error");
       return;
@@ -2294,7 +2294,7 @@ function br(s, i) {
     }
     return !1;
   }
-  function ao(e) {
+  function no(e) {
     if (e) {
       if (i.openExternal && typeof i.openExternal == "function") {
         i.openExternal(e).catch(() => L("打不开链接", "error"));
@@ -2303,7 +2303,7 @@ function br(s, i) {
       window.open(e, "_blank", "noopener,noreferrer");
     }
   }
-  async function no(e, a) {
+  async function oo(e, a) {
     try {
       if (i.download && typeof i.download == "function")
         await i.download(e, a);
@@ -2325,7 +2325,7 @@ function br(s, i) {
     const o = e.list.length > 1;
     n.viewerCount && (n.viewerCount.hidden = !o, n.viewerCount.textContent = e.index + 1 + " / " + e.list.length), n.viewerPrev && (n.viewerPrev.hidden = !o), n.viewerNext && (n.viewerNext.hidden = !o);
   }
-  function oo(e, a) {
+  function ro(e, a) {
     if (!e) return;
     const o = a && a.closest(".chat-turn") || a && a.closest(".chat-tool") || a && a.closest(".chat-card") || n.list, r = o ? Array.from(o.querySelectorAll("img.chat-image")) : [], l = [];
     for (const y of r) {
@@ -2343,10 +2343,10 @@ function br(s, i) {
     const a = O.list.length;
     a < 2 || (O.index = (O.index + e + a) % a, O.scale = 1, O.x = 0, O.y = 0, At());
   }
-  function ro() {
+  function so() {
     O.scale > 1 ? (O.scale = 1, O.x = 0, O.y = 0) : O.scale = 2, At();
   }
-  function so(e) {
+  function io(e) {
     if (!(!n.viewer || n.viewer.hidden) && !(e.target instanceof Element && e.target.closest("[data-action]"))) {
       if (tt.set(e.pointerId, { x: e.clientX, y: e.clientY }), tt.size === 2) {
         const [a, o] = [...tt.values()];
@@ -2366,7 +2366,7 @@ function br(s, i) {
       }, et = !1;
     }
   }
-  function io(e) {
+  function co(e) {
     if (!tt.has(e.pointerId)) return;
     if (tt.set(e.pointerId, { x: e.clientX, y: e.clientY }), mt && tt.size === 2) {
       const [r, l] = [...tt.values()], u = Math.hypot(r.x - l.x, r.y - l.y) || 1;
@@ -2399,7 +2399,7 @@ function br(s, i) {
     }
     const l = Date.now();
     if (l - bt < 300) {
-      bt = 0, window.clearTimeout(ct), ct = 0, ro(), et = !0;
+      bt = 0, window.clearTimeout(ct), ct = 0, so(), et = !0;
       return;
     }
     bt = l, window.clearTimeout(ct), ct = window.setTimeout(() => {
@@ -2412,7 +2412,7 @@ function br(s, i) {
     }, 2200));
   }
   const ie = /* @__PURE__ */ new Map();
-  function co(e, a, o) {
+  function lo(e, a, o) {
     const r = document.createElement("button");
     r.type = "button", r.className = "chat-image-fallback", r.dataset.src = a, r.textContent = o, e.replaceWith(r);
   }
@@ -2468,7 +2468,7 @@ function br(s, i) {
           e.dataset.retried = "1", e.dataset.bound = "", setTimeout(ce, 900);
           return;
         }
-        co(e, a, "外链图片打不开 · 点按重试");
+        lo(e, a, "外链图片打不开 · 点按重试");
       });
     }));
   }
@@ -2485,12 +2485,12 @@ function br(s, i) {
     o && r ? (t.reading = !0, t.holdAnswer = !1) : a && (t.reading = !1, t.holdAnswer = !1), n.jump.hidden = a, a && !t.reading && t.pendingPaint && (t.pendingPaint = !1, j(!0));
   }
   function Ea(e) {
-    return e.kind === "deliverable" ? hr(
+    return e.kind === "deliverable" ? fr(
       e,
       (a, o, r) => b.presentedFileUrl(a, o, r, t.currentSession)
-    ) : e.kind === "approval" ? fr(e) : e.kind === "input" ? mr(e, Wt.get(String(e.callId)) || {}, Kt.has(String(e.callId))) : "";
+    ) : e.kind === "approval" ? gr(e) : e.kind === "input" ? br(e, Wt.get(String(e.callId)) || {}, Kt.has(String(e.callId))) : "";
   }
-  function lo() {
+  function uo() {
     return `<div class="chat-skeleton" aria-hidden="true">
       <div class="chat-skeleton-meta"></div>
       <div class="chat-skeleton-bubble is-short"></div>
@@ -2501,7 +2501,20 @@ function br(s, i) {
       <div class="chat-skeleton-footer"></div>
     </div>`;
   }
-  function uo(e) {
+  function Ia(e) {
+    let a = -1;
+    for (let o = 0; o < e.length; o += 1) {
+      const r = e[o];
+      r.kind === "message" && r.message && r.message.who === "me" && (a = o);
+    }
+    if (a < 0) return !1;
+    for (let o = a + 1; o < e.length; o += 1) {
+      const r = e[o];
+      if (r.kind === "message" && r.message && r.message.who === "ai") return !0;
+    }
+    return !1;
+  }
+  function po(e) {
     let a = -1;
     for (let u = 0; u < e.length; u += 1) {
       const y = e[u];
@@ -2523,9 +2536,9 @@ function br(s, i) {
       text: "电脑端没有返回最终内容，结果未知。"
     } : null;
   }
-  function po(e, a) {
+  function ho(e, a) {
     if (t.booting && e.length === 0 && !a.streaming && !a.typing)
-      return [{ key: "x:skeleton", html: lo() }];
+      return [{ key: "x:skeleton", html: uo() }];
     const o = [];
     let r = [], l = [], u = [];
     const y = (I, J, ot, Q) => {
@@ -2542,7 +2555,7 @@ function br(s, i) {
       I && y(
         u,
         "g:" + h,
-        pr(r, Ft.has(J), null, Yt, {
+        hr(r, Ft.has(J), null, Yt, {
           total: C,
           running: W,
           activeId: t.toolActiveId
@@ -2555,7 +2568,7 @@ function br(s, i) {
       const J = [...l].reverse().find((Q) => Q.assistant || Q.key === "x:streaming" || Q.key === "x:typing"), ot = M || !!l.some((Q) => Q.key === "x:streaming" || Q.key === "x:typing");
       B && !t.stopped && t.awaitingReply && ot && J && (I ? I.className = "chat-tool-footer-block" : (I = {
         key: "g:" + h,
-        html: ur(),
+        html: pr(),
         className: "chat-tool-footer-block"
       }, u.push(I))), I && (u = u.filter((Q) => Q !== I), u.unshift(I)), o.push(...l, ...u), l = [], u = [], M = !1, B = !1, h += 1;
     };
@@ -2563,7 +2576,7 @@ function br(s, i) {
       if (I.kind === "message" && I.message.who === "me") {
         ht(), B = J === q;
         const ot = I.message.id || I.message.eventId || I.message.seq || `at-${I.message.at}-${J}`;
-        y(o, "m:" + ot, sn(I.message, Yt));
+        y(o, "m:" + ot, cn(I.message, Yt));
         return;
       }
       if (I.kind === "tool") {
@@ -2579,7 +2592,7 @@ function br(s, i) {
       }
       if (I.kind === "message") {
         const ot = I.message.id || I.message.eventId || I.message.seq || `at-${I.message.at}-${J}`;
-        I.message.who === "ai" && (M = !0), y(l, "m:" + ot, sn(I.message, Yt), {
+        I.message.who === "ai" && (M = !0), y(l, "m:" + ot, cn(I.message, Yt), {
           assistant: I.message.who === "ai"
         });
       } else
@@ -2607,7 +2620,7 @@ function br(s, i) {
         </div>`
     ), o;
   }
-  function Ia() {
+  function Na() {
     if (!c) return;
     const e = c.querySelector('[data-role="tool-sheet"]'), a = c.querySelector('[data-role="tool-sheet-body"]');
     if (!e || !a) return;
@@ -2616,9 +2629,9 @@ function br(s, i) {
       le();
       return;
     }
-    a.innerHTML = dr(o, Yt), e.hidden = !1, ce();
+    a.innerHTML = ur(o, Yt), e.hidden = !1, ce();
   }
-  function ho() {
+  function fo() {
     if (n.list) {
       for (const e of n.list.querySelectorAll(".chat-tool.is-active")) e.classList.remove("is-active");
       if (t.toolActiveId) {
@@ -2630,7 +2643,7 @@ function br(s, i) {
       }
     }
   }
-  function fo() {
+  function go() {
     if (!n.list || !t.toolActiveId) return;
     let e = null;
     for (const l of n.list.querySelectorAll(".chat-tool"))
@@ -2643,15 +2656,15 @@ function br(s, i) {
     const o = a.getBoundingClientRect(), r = e.getBoundingClientRect();
     r.top < o.top ? a.scrollTop -= o.top - r.top + 4 : r.bottom > o.bottom && (a.scrollTop += r.bottom - o.bottom + 4);
   }
-  function go(e) {
-    t.toolDetailId = String(e || ""), t.toolActiveId = t.toolDetailId, Ia(), ho(), fo();
+  function mo(e) {
+    t.toolDetailId = String(e || ""), t.toolActiveId = t.toolDetailId, Na(), fo(), go();
   }
   function le() {
     if (t.toolDetailId = "", !c) return;
     const e = c.querySelector('[data-role="tool-sheet"]');
     e && (e.hidden = !0);
   }
-  function mo(e) {
+  function bo(e) {
     const a = n.list, o = /* @__PURE__ */ new Map(), r = /* @__PURE__ */ new Map();
     for (const u of Array.from(a.children))
       u.dataset && u.dataset.block ? o.set(u.dataset.block, u) : u.remove();
@@ -2684,7 +2697,7 @@ function br(s, i) {
     }
     return r;
   }
-  function bo() {
+  function xo() {
     const e = t.projections || {}, a = [], o = Array.isArray(e.todos) ? e.todos : null;
     if (o && o.length > 0) {
       const u = o.filter((M) => M.status === "completed").length, y = o.map((M) => `<li class="chat-todo-item ${M.status === "completed" ? "is-done" : M.status === "in_progress" ? "is-active" : ""}"><span class="chat-todo-mark" aria-hidden="true"></span><span>${P(M.content || "")}</span></li>`).join("");
@@ -2714,25 +2727,25 @@ function br(s, i) {
       { text: e.pop() || "2 + 2 = ?", left: 22 }
     ];
   }
-  function Na() {
+  function Pa() {
     return [ut.slice(0, 1), ut.slice(1, 2)].map(
       (a) => `<div class="chat-math-row">${a.map(
         (o) => `<span class="chat-math-item" style="left:${o.left}px">${P(o.text)}</span>`
       ).join("")}</div>`
     ).join("");
   }
-  function Pa() {
-    return ut.length || (ut = De()), `<div class="chat-math-board">${Na()}</div>`;
-  }
-  function xo() {
-    if (!n.list) return;
-    const e = n.list.querySelector(".chat-math-board");
-    e && (ut = De(), e.innerHTML = Na());
+  function La() {
+    return ut.length || (ut = De()), `<div class="chat-math-board">${Pa()}</div>`;
   }
   function yo() {
-    ut.length || (ut = De()), !Dt && (Dt = window.setInterval(xo, f));
+    if (!n.list) return;
+    const e = n.list.querySelector(".chat-math-board");
+    e && (ut = De(), e.innerHTML = Pa());
   }
-  function La() {
+  function vo() {
+    ut.length || (ut = De()), !Dt && (Dt = window.setInterval(yo, f));
+  }
+  function za() {
     Dt && (window.clearInterval(Dt), Dt = 0, ut = []);
   }
   function de(e = !1) {
@@ -2752,23 +2765,23 @@ function br(s, i) {
     if (!n.list) return;
     const a = n.list ? n.list.scrollTop : 0, o = n.list ? n.list.scrollHeight : 0, r = Re(), l = !e && !t.reading && !t.holdAnswer && r, u = w.timeline(), y = [...u].reverse().find((it) => it.kind === "tool" && it.status === "running"), M = t.lastEventAt ? Date.now() - t.lastEventAt : Number(t.lastEventAge) || 0, B = (t.runActive || t.awaitingReply || t.running || y) && (M > 3e5 || !!t.notRunningSince);
     t.staleShown = B;
-    const h = t.runActive || t.awaitingReply || t.waiting || t.running || !!(t.currentTool && !t.currentTool.done) || !!y, q = !t.currentTool && t.lastTool && Date.now() - (t.lastToolAt || 0) < 1e4 ? { ...t.lastTool, done: !0 } : null, T = h ? y || t.currentTool || q : null, C = T && T.name ? String(T.name) : "", W = h && !C && !B, G = T && (T.summary || T.detail) ? String(T.summary || T.detail) : "", ht = !!(T && T.status !== "running" && T.done), I = B ? "可能已断开" : C ? ht ? "执行完成…" : "执行中…" : "思考中…", J = B ? "" : C ? C + (G ? "：" + G : "") : "", ot = W ? Pa() : "", Q = B ? "" : W ? ot : `<span class="chat-typing-detail">${P(J)}</span>`, Mt = t.stream && t.stream.text ? String(t.stream.text) : "", We = t.stream && t.stream.reasoning ? String(t.stream.reasoning) : "", Ke = !!(We && !Mt && !B), Po = Ke ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${Pa()}` : "", Lo = Mt || We ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${It(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${Ke ? " is-thinking" : ""}">${Po}${Mt ? `<div class="chat-stream-text">${dn(Mt)}</div>` : ""}${Mt ? '<span class="chat-typing-dot"></span>' : ""}</div></div>` : "", zo = h && !Mt && !We ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${It(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${W ? " is-thinking" : ""}${B ? " is-stale" : ""}"><span class="chat-typing-head"><span class="chat-typing-text">${I}</span><span class="chat-typing-dot"></span></span>${Q}</div></div>` : "", Va = t.runActive && !t.stopped ? Lo || zo : "";
-    W || Ke ? yo() : La();
-    const Ya = bo(), Co = uo(u), Bo = !!t.url, Ro = u.length === 0 && !Va && !Ya ? `<div class="chat-sys">${Bo ? "说点什么吧，电脑端的回复会同步过来" : "先在 ⚙ 里填电脑地址，例如 http://192.168.2.6:8788"}</div>` : "", Qa = po(u, {
-      tip: Ro,
-      projections: Ya,
-      execution: Va,
-      localNotice: Co
-    }), jo = mo(Qa);
+    const h = t.runActive || t.awaitingReply || t.waiting || t.running || !!(t.currentTool && !t.currentTool.done) || !!y, q = !t.currentTool && t.lastTool && Date.now() - (t.lastToolAt || 0) < 1e4 ? { ...t.lastTool, done: !0 } : null, T = h ? y || t.currentTool || q : null, C = T && T.name ? String(T.name) : "", W = h && !C && !B, G = T && (T.summary || T.detail) ? String(T.summary || T.detail) : "", ht = !!(T && T.status !== "running" && T.done), I = B ? "可能已断开" : C ? ht ? "执行完成…" : "执行中…" : "思考中…", J = B ? "" : C ? C + (G ? "：" + G : "") : "", ot = W ? La() : "", Q = B ? "" : W ? ot : `<span class="chat-typing-detail">${P(J)}</span>`, Mt = t.stream && t.stream.text ? String(t.stream.text) : "", We = t.stream && t.stream.reasoning ? String(t.stream.reasoning) : "", Ke = !!(We && !Mt && !B), Lo = Ke ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${La()}` : "", zo = Mt || We ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${It(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${Ke ? " is-thinking" : ""}">${Lo}${Mt ? `<div class="chat-stream-text">${un(Mt)}</div>` : ""}${Mt ? '<span class="chat-typing-dot"></span>' : ""}</div></div>` : "", Co = h && !Mt && !We ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${It(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${W ? " is-thinking" : ""}${B ? " is-stale" : ""}"><span class="chat-typing-head"><span class="chat-typing-text">${I}</span><span class="chat-typing-dot"></span></span>${Q}</div></div>` : "", Ya = t.runActive && !t.stopped ? zo || Co : "";
+    W || Ke ? vo() : za();
+    const Qa = xo(), Bo = po(u), Ro = !!t.url, jo = u.length === 0 && !Ya && !Qa ? `<div class="chat-sys">${Ro ? "说点什么吧，电脑端的回复会同步过来" : "先在 ⚙ 里填电脑地址，例如 http://192.168.2.6:8788"}</div>` : "", Xa = ho(u, {
+      tip: jo,
+      projections: Qa,
+      execution: Ya,
+      localNotice: Bo
+    }), Do = bo(Xa);
     let Ge = !1;
     if (t.focusLastAssistant) {
       if (!t.reading && r) {
-        const it = [...Qa].reverse().find((Ve) => Ve.assistant), pe = it ? jo.get(it.key) : null;
+        const it = [...Xa].reverse().find((Ve) => Ve.assistant), pe = it ? Do.get(it.key) : null;
         if (pe) {
-          for (const Uo of kt) window.clearTimeout(Uo);
+          for (const Ho of kt) window.clearTimeout(Ho);
           kt = [];
-          const Ve = n.list.getBoundingClientRect(), Do = pe.getBoundingClientRect();
-          n.list.scrollTop = Math.max(0, n.list.scrollTop + Do.top - Ve.top - 8), t.lastListTop = n.list.scrollTop, t.holdAnswer = !Re(), Ge = !0;
+          const Ve = n.list.getBoundingClientRect(), Uo = pe.getBoundingClientRect();
+          n.list.scrollTop = Math.max(0, n.list.scrollTop + Uo.top - Ve.top - 8), t.lastListTop = n.list.scrollTop, t.holdAnswer = !Re(), Ge = !0;
         }
       }
       t.focusLastAssistant = !1;
@@ -2781,15 +2794,15 @@ function br(s, i) {
       };
       requestAnimationFrame(it), kt.push(window.setTimeout(it, 260)), kt.push(window.setTimeout(it, 900));
     }
-    ce(), wo(), t.toolDetailId && Ia(), Ba(), je();
+    ce(), ko(), t.toolDetailId && Na(), Ra(), je();
   }
-  function za() {
+  function Ca() {
     if (!n.status) return;
     n.status.dataset.status = t.status;
     const e = t.statusText || "连接状态";
-    n.status.title = e, n.status.setAttribute("aria-label", e), re(), vo();
+    n.status.title = e, n.status.setAttribute("aria-label", e), re(), wo();
   }
-  function vo() {
+  function wo() {
     if (n.net) {
       if (t.status !== "busy" && t.status !== "bad") {
         n.net.hidden = !0, n.net.dataset.tone = "";
@@ -2800,14 +2813,14 @@ function br(s, i) {
   }
   function pt(e) {
     const a = String(e || "").trim();
-    a !== t.sessionTitle && (t.sessionTitle = a, Ca());
+    a !== t.sessionTitle && (t.sessionTitle = a, Ba());
   }
-  function Ca() {
+  function Ba() {
     if (!n.title) return;
     const e = t.sessionTitle || "对话";
     n.title.textContent = e, n.title.title = e, ve();
   }
-  function Ba() {
+  function Ra() {
     if (!n.send) return;
     const e = t.waiting || t.running || t.awaitingReply || t.runActive || Ae();
     n.send.textContent = e ? "■" : "↑", n.send.classList.toggle("is-stop", e), n.send.setAttribute("aria-label", e ? "停止等待" : "发送"), n.send.dataset.action = e ? "stop" : "send";
@@ -2815,7 +2828,7 @@ function br(s, i) {
   function Ut() {
     n.list && (n.list.scrollTop = n.list.scrollHeight);
   }
-  function wo() {
+  function ko() {
     if (!n.list) return;
     const e = Math.max(320, Math.round(window.innerHeight * 0.6));
     for (const a of n.list.querySelectorAll(".chat-bubble")) {
@@ -2847,14 +2860,14 @@ function br(s, i) {
   function _e() {
     !c || !n.top || c.style.setProperty("--chat-header-h", Math.round(n.top.getBoundingClientRect().height) + "px");
   }
-  function Ra(e) {
+  function ja(e) {
     if (!e || !c) return;
     const a = t.insets;
     t.insets = e, c.style.setProperty("--chat-top", Math.max(0, Number(e.top) || 0) + "px"), c.style.setProperty("--chat-bottom", Math.max(0, Number(e.bottom) || 0) + "px"), c.style.setProperty("--chat-ime", Math.max(0, Number(e.ime) || 0) + "px"), _e(), (e.ime || 0) !== (a.ime || 0) && window.setTimeout(() => {
       e.ime > 0 && t.view === "settings" && Nt ? Nt.scrollIntoView({ block: "center", behavior: "smooth" }) : Ue();
     }, 60);
   }
-  function ko() {
+  function So() {
     const e = getComputedStyle(document.documentElement);
     return {
       top: Number.parseFloat(e.getPropertyValue("--safe-top")) || 0,
@@ -2862,10 +2875,10 @@ function br(s, i) {
       ime: 0
     };
   }
-  function So() {
-    document.getElementById(Ja) || (F = document.createElement("style"), F.id = Ja, F.textContent = Ho, document.head.appendChild(F));
-  }
   function To() {
+    document.getElementById(Za) || (F = document.createElement("style"), F.id = Za, F.textContent = _o, document.head.appendChild(F));
+  }
+  function $o() {
     const e = document.createElement("div");
     return e.className = "chat-app", e.innerHTML = `
       <div class="chat-main">
@@ -3103,7 +3116,7 @@ function br(s, i) {
       </div>
     `, e;
   }
-  function $o() {
+  function Ao() {
     if (n = {
       title: c.querySelector('[data-role="title"]'),
       status: c.querySelector('[data-role="status"]'),
@@ -3166,7 +3179,7 @@ function br(s, i) {
       viewerNext: c.querySelector('[data-action="viewer-next"]')
     }, n.input && n.input.addEventListener("focus", () => {
       c.style.setProperty("--chat-bottom", "0px");
-    }), n.viewer && (n.viewer.addEventListener("pointerdown", so), n.viewer.addEventListener("pointermove", io), n.viewer.addEventListener("pointerup", Ma), n.viewer.addEventListener("pointercancel", Ma)), n.list) {
+    }), n.viewer && (n.viewer.addEventListener("pointerdown", io), n.viewer.addEventListener("pointermove", co), n.viewer.addEventListener("pointerup", Ma), n.viewer.addEventListener("pointercancel", Ma)), n.list) {
       n.list.addEventListener("scroll", je, { passive: !0 }), n.list.addEventListener("scroll", ca, { passive: !0 });
       const e = () => {
         t.lastUserScroll = Date.now();
@@ -3175,21 +3188,21 @@ function br(s, i) {
     }
     _e();
   }
-  function ja(e) {
+  function Da(e) {
     let a = Wt.get(e);
     return a || (a = { selected: {}, custom: {} }, Wt.set(e, a)), a;
   }
-  function Ao(e) {
+  function qo(e) {
     const a = String(e.dataset.input || ""), o = String(e.dataset.q || ""), r = String(e.dataset.value || "");
     if (!a || !o) return;
-    const l = ja(a), u = Array.isArray(l.selected[o]) ? l.selected[o] : [];
+    const l = Da(a), u = Array.isArray(l.selected[o]) ? l.selected[o] : [];
     e.dataset.multi === "1" ? l.selected[o] = u.includes(r) ? u.filter((y) => y !== r) : [...u, r] : l.selected[o] = [r], j();
   }
-  async function qo(e) {
+  async function Mo(e) {
     if (!e || Kt.has(e)) return;
     const a = w.cards.get("input-" + e);
     if (!a) return;
-    const o = gr(a, Wt.get(e) || {});
+    const o = mr(a, Wt.get(e) || {});
     if (!o) {
       L("先把每个问题都答一下", "error");
       return;
@@ -3201,7 +3214,7 @@ function br(s, i) {
       Kt.delete(e), j(), L("提交失败：" + (r && r.message || "网络错误"), "error");
     }
   }
-  function Mo(e, a) {
+  function Eo(e, a) {
     if (e)
       if (e === "send")
         qe(t.draft);
@@ -3212,7 +3225,7 @@ function br(s, i) {
       else if (e === "attach")
         n.pick && n.pick.click();
       else if (e === "stop")
-        En();
+        In();
       else if (e === "settings")
         $t();
       else if (e === "clear-cache") {
@@ -3222,7 +3235,7 @@ function br(s, i) {
           }, 3e3);
           return;
         }
-        a.dataset.confirm = "", a.textContent = "清理缓存", hn();
+        a.dataset.confirm = "", a.textContent = "清理缓存", fn();
       } else if (e === "reset-app") {
         if (a.dataset.confirm !== "1") {
           a.dataset.confirm = "1", a.textContent = "再点一次确认恢复初始化", window.setTimeout(() => {
@@ -3230,10 +3243,10 @@ function br(s, i) {
           }, 3e3);
           return;
         }
-        a.dataset.confirm = "", a.textContent = "恢复初始化", fn();
-      } else e === "back" ? ya() : e === "switch" ? t.sessionsOpen ? yt() : Xt() : e === "close-app" ? Vn() : e === "confirm-cancel" ? ne() : e === "confirm-ok" ? (ne(), Yn()) : e === "test" ? Xn() : e === "test-relay" ? to() : e === "save" ? eo() : e === "close-sheet" ? yt() : e === "new-session" ? Kn() : e === "close-new" ? Le() : e === "open-help" ? n.helpScrim && (n.helpScrim.hidden = !1) : e === "close-help" ? n.helpScrim && (n.helpScrim.hidden = !0) : e === "create-session" ? Qn() : e === "open-models" ? On() : e === "close-models" ? ae() : e === "apply-model" && Wn();
+        a.dataset.confirm = "", a.textContent = "恢复初始化", gn();
+      } else e === "back" ? ya() : e === "switch" ? t.sessionsOpen ? yt() : Xt() : e === "close-app" ? Yn() : e === "confirm-cancel" ? ne() : e === "confirm-ok" ? (ne(), Qn()) : e === "test" ? Jn() : e === "test-relay" ? eo() : e === "save" ? ao() : e === "close-sheet" ? yt() : e === "new-session" ? Gn() : e === "close-new" ? Le() : e === "open-help" ? n.helpScrim && (n.helpScrim.hidden = !1) : e === "close-help" ? n.helpScrim && (n.helpScrim.hidden = !0) : e === "create-session" ? Xn() : e === "open-models" ? Fn() : e === "close-models" ? ae() : e === "apply-model" && Kn();
   }
-  function Da(e) {
+  function Ua(e) {
     const a = e.target;
     if (!(a instanceof Element)) return;
     if (a.matches('[data-role="tool-sheet"]')) {
@@ -3244,7 +3257,7 @@ function br(s, i) {
     if (o) {
       const h = o.dataset.action;
       if (h === "remove-attach") {
-        $n(o.dataset.key || "");
+        An(o.dataset.key || "");
         return;
       }
       if (h === "tool-copy") {
@@ -3254,7 +3267,7 @@ function br(s, i) {
       }
       if (h === "tool-open") {
         const q = String(o.dataset.tool || "");
-        q && go(q);
+        q && mo(q);
         return;
       }
       if (h === "close-tool-sheet") {
@@ -3269,15 +3282,15 @@ function br(s, i) {
       }
       if (h === "approval-allow" || h === "approval-deny") {
         const q = String(o.dataset.approval || ""), T = q.startsWith("approval-") ? q.slice(9) : q;
-        mn(T, h === "approval-allow");
+        bn(T, h === "approval-allow");
         return;
       }
       if (h === "q-pick") {
-        Ao(o);
+        qo(o);
         return;
       }
       if (h === "q-submit") {
-        qo(String(o.dataset.input || ""));
+        Mo(String(o.dataset.input || ""));
         return;
       }
       if (h === "jump-bottom") {
@@ -3285,7 +3298,7 @@ function br(s, i) {
         return;
       }
       if (h === "search-messages") {
-        Nn();
+        Pn();
         return;
       }
       if (h === "close-search") {
@@ -3293,7 +3306,7 @@ function br(s, i) {
         return;
       }
       if (h === "search-jump") {
-        Pn(String(o.dataset.key || ""));
+        Ln(String(o.dataset.key || ""));
         return;
       }
       if (h === "viewer-prev") {
@@ -3332,7 +3345,7 @@ function br(s, i) {
         return;
       }
       if (h === "pick-preset") {
-        Gn("preset", o.dataset.scope || "settings", o.dataset.value || "");
+        Vn("preset", o.dataset.scope || "settings", o.dataset.value || "");
         return;
       }
       if (h === "pick-permission") {
@@ -3348,7 +3361,7 @@ function br(s, i) {
         return;
       }
       if (h === "pick-model" || h === "pick-effort") {
-        Fn(h === "pick-model" ? "model" : "effort", o.dataset.value || "", o.dataset.provider || "", o.dataset.scope || "model");
+        Wn(h === "pick-model" ? "model" : "effort", o.dataset.value || "", o.dataset.provider || "", o.dataset.scope || "model");
         return;
       }
       if (h === "pick-permission-current") {
@@ -3356,7 +3369,7 @@ function br(s, i) {
         return;
       }
       if (h === "session-menu") {
-        Ln(o.dataset.session || "", o.dataset.title || "");
+        zn(o.dataset.session || "", o.dataset.title || "");
         return;
       }
       if (h === "toggle-session-search") {
@@ -3366,15 +3379,15 @@ function br(s, i) {
         return;
       }
       if (h === "session-rename") {
-        zn();
+        Cn();
         return;
       }
       if (h === "session-fork") {
-        Bn();
+        Rn();
         return;
       }
       if (h === "confirm-rename") {
-        Cn();
+        Bn();
         return;
       }
       if (h === "close-session-menu") {
@@ -3386,11 +3399,11 @@ function br(s, i) {
         return;
       }
       if (h === "archive-session") {
-        Rn(t.sessionMenuId, t.sessionMenuTitle);
+        jn(t.sessionMenuId, t.sessionMenuTitle);
         return;
       }
       if (h === "confirm-archive") {
-        jn();
+        Dn();
         return;
       }
       if (h === "close-archive") {
@@ -3402,32 +3415,32 @@ function br(s, i) {
         return;
       }
       if (h === "restore-session") {
-        Dn(String(o.dataset.session || ""));
+        Un(String(o.dataset.session || ""));
         return;
       }
-      Mo(h, o);
+      Eo(h, o);
       return;
     }
     const r = a.closest(".chat-link");
     if (r) {
-      e.preventDefault(), ao(r.dataset.href || r.getAttribute("href") || "");
+      e.preventDefault(), no(r.dataset.href || r.getAttribute("href") || "");
       return;
     }
     const l = a.closest(".chat-file");
     if (l) {
       if (e.preventDefault(), Date.now() - Ze < 500) return;
-      no(l.dataset.fileUrl || "", l.dataset.fileName || "");
+      oo(l.dataset.fileUrl || "", l.dataset.fileName || "");
       return;
     }
     const u = a.closest(".chat-image");
     if (u) {
       if (Date.now() - Ze < 500) return;
-      oo(qa(u), u);
+      ro(qa(u), u);
       return;
     }
     const y = a.closest(".chat-image-fallback");
     if (y) {
-      Eo(y);
+      Io(y);
       return;
     }
     const M = a.closest("[data-retry]");
@@ -3471,11 +3484,11 @@ function br(s, i) {
       se();
     }
   }
-  function Ua(e) {
+  function Ha(e) {
     const a = e.target;
     if (a instanceof HTMLInputElement && a.dataset.role === "q-custom") {
       const o = String(a.dataset.input || ""), r = String(a.dataset.q || "");
-      o && r && (ja(o).custom[r] = a.value);
+      o && r && (Da(o).custom[r] = a.value);
       return;
     }
     if (a instanceof HTMLInputElement && a.dataset.role === "session-search") {
@@ -3492,25 +3505,25 @@ function br(s, i) {
     }
     a instanceof HTMLTextAreaElement && (t.draft = a.value, He());
   }
-  function Ha(e) {
+  function _a(e) {
     e.target instanceof HTMLTextAreaElement && (e.isComposing || e.key === "Enter" && !e.shiftKey && (e.preventDefault(), qe(t.draft)));
   }
-  function _a(e) {
+  function Oa(e) {
     const a = e.target;
     a instanceof HTMLElement && (a === n.input ? (Ue(), Nt = null) : n.page && n.page.contains(a) && (Nt = a));
   }
-  function Oa() {
+  function Fa() {
     Nt = null;
   }
   function qt() {
     gt && gt.timer && window.clearTimeout(gt.timer), gt = null;
   }
-  function Fa(e) {
-  }
   function Wa(e) {
-    gt && (Math.abs(e.clientX - gt.x) > 8 || Math.abs(e.clientY - gt.y) > 8) && qt();
   }
   function Ka(e) {
+    gt && (Math.abs(e.clientX - gt.x) > 8 || Math.abs(e.clientY - gt.y) > 8) && qt();
+  }
+  function Ga(e) {
     const a = e.target;
     if (!(a instanceof HTMLImageElement) || !a.classList.contains("chat-image")) return;
     const o = a.getAttribute("src") || "";
@@ -3528,7 +3541,7 @@ function br(s, i) {
     const r = document.createElement("button");
     r.type = "button", r.className = "chat-image-fallback", r.dataset.src = a.getAttribute("data-src") || o, r.textContent = "图片打不开 · 点按重试", a.replaceWith(r);
   }
-  function Eo(e) {
+  function Io(e) {
     const a = e.dataset.src || "", o = document.createElement("img");
     o.className = "chat-image", o.alt = "图片", o.dataset.src = a;
     try {
@@ -3539,16 +3552,16 @@ function br(s, i) {
     }
     e.replaceWith(o);
   }
-  function Io() {
+  function No() {
     rt(), Se(), lt();
   }
-  function No() {
+  function Po() {
     t.view === "chat" && (X === "legacy" && zt(), we(!0), dt().then((e) => {
-      !e || U || (X === "legacy" ? Lt() : xt(), bn());
+      !e || U || (X === "legacy" ? Lt() : xt(), xn());
     }));
   }
-  So(), un(), ea(), pn(), i.watch && typeof i.watch.ensurePermission == "function" && i.watch.ensurePermission().catch(() => {
-  }), jt(), c = To(), s.appendChild(c), $o(), c.addEventListener("click", Da), c.addEventListener("input", Ua), c.addEventListener("change", da), c.addEventListener("keydown", Ha), c.addEventListener("focusin", _a), c.addEventListener("focusout", Oa), c.addEventListener("pointerdown", Fa), c.addEventListener("pointermove", Wa), c.addEventListener("pointerup", qt), c.addEventListener("pointercancel", qt), c.addEventListener("error", Ka, !0), i.ui && typeof i.ui.onInsetsChange == "function" ? me = i.ui.onInsetsChange(Ra) : Ra(ko()), typeof i.on == "function" && (be = i.on("pause", Io), xe = i.on("resume", No)), j(!0), st(), za(), Ca(), Tt();
+  To(), pn(), ea(), hn(), i.watch && typeof i.watch.ensurePermission == "function" && i.watch.ensurePermission().catch(() => {
+  }), jt(), c = $o(), s.appendChild(c), Ao(), c.addEventListener("click", Ua), c.addEventListener("input", Ha), c.addEventListener("change", da), c.addEventListener("keydown", _a), c.addEventListener("focusin", Oa), c.addEventListener("focusout", Fa), c.addEventListener("pointerdown", Wa), c.addEventListener("pointermove", Ka), c.addEventListener("pointerup", qt), c.addEventListener("pointercancel", qt), c.addEventListener("error", Ga, !0), i.ui && typeof i.ui.onInsetsChange == "function" ? me = i.ui.onInsetsChange(ja) : ja(So()), typeof i.on == "function" && (be = i.on("pause", No), xe = i.on("resume", Po)), j(!0), st(), Ca(), Ba(), Tt();
   const Oe = t.currentSession;
   Oe ? d.clearOthers(Oe).catch(() => {
   }).then(() => d.get(Oe)).then((e) => {
@@ -3605,7 +3618,7 @@ function br(s, i) {
     }
     n.page && !n.page.hidden && (ya(), e.detail.handled = !0);
   }
-  function Ga(e) {
+  function Va(e) {
     if (!e || e.source !== window.parent) return;
     const a = e.data;
     if (!a || a.type !== "docklet:back") return;
@@ -3616,7 +3629,7 @@ function br(s, i) {
       } catch {
       }
   }
-  window.addEventListener("message", Ga), window.addEventListener("docklet:back", Fe), Ba(), dt(!0).then((e) => {
+  window.addEventListener("message", Va), window.addEventListener("docklet:back", Fe), Ra(), dt(!0).then((e) => {
     if (!e || U) {
       zt();
       return;
@@ -3624,18 +3637,18 @@ function br(s, i) {
     we(!0), xt();
   }), va = window.setInterval(() => {
     !document.hidden && t.status !== "ok" && dt();
-  }, 1e4), ka = window.setInterval(Tn, k), Sa = window.setInterval(Sn, 8e3), wa = window.setInterval(() => {
+  }, 1e4), ka = window.setInterval($n, k), Sa = window.setInterval(Tn, 8e3), wa = window.setInterval(() => {
     !document.hidden && t.status === "ok" && dt();
   }, 6e4);
   const ue = () => {
     U || dt(!0);
   };
   return window.addEventListener("online", ue), window.addEventListener("offline", ue), function() {
-    U = !0, rt(), Se(), lt(), window.removeEventListener("online", ue), window.removeEventListener("offline", ue), window.clearInterval(va), window.clearInterval(wa), window.clearInterval(ka), window.clearInterval(Sa), La(), window.clearTimeout(Ce), qt();
+    U = !0, rt(), Se(), lt(), window.removeEventListener("online", ue), window.removeEventListener("offline", ue), window.clearInterval(va), window.clearInterval(wa), window.clearInterval(ka), window.clearInterval(Sa), za(), window.clearTimeout(Ce), qt();
     for (const a of Ht) window.clearTimeout(a);
-    Ht = [], window.clearTimeout(_), typeof me == "function" && me(), typeof be == "function" && be(), typeof xe == "function" && xe(), c.removeEventListener("click", Da), c.removeEventListener("input", Ua), c.removeEventListener("change", da), c.removeEventListener("keydown", Ha), c.removeEventListener("focusin", _a), c.removeEventListener("focusout", Oa), c.removeEventListener("pointerdown", Fa), c.removeEventListener("pointermove", Wa), c.removeEventListener("pointerup", qt), c.removeEventListener("pointercancel", qt), c.removeEventListener("error", Ka, !0), window.removeEventListener("message", Ga), window.removeEventListener("docklet:back", Fe), c.remove(), F && F.remove(), F = null, c = null, n = {};
+    Ht = [], window.clearTimeout(_), typeof me == "function" && me(), typeof be == "function" && be(), typeof xe == "function" && xe(), c.removeEventListener("click", Ua), c.removeEventListener("input", Ha), c.removeEventListener("change", da), c.removeEventListener("keydown", _a), c.removeEventListener("focusin", Oa), c.removeEventListener("focusout", Fa), c.removeEventListener("pointerdown", Wa), c.removeEventListener("pointermove", Ka), c.removeEventListener("pointerup", qt), c.removeEventListener("pointercancel", qt), c.removeEventListener("error", Ga, !0), window.removeEventListener("message", Va), window.removeEventListener("docklet:back", Fe), c.remove(), F && F.remove(), F = null, c = null, n = {};
   };
 }
 export {
-  br as default
+  xr as default
 };

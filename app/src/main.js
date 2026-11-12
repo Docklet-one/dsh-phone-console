@@ -662,7 +662,7 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
     state.busy = false
     state.waitingSince = 0
     state.running = Boolean(session.running)
-    if (session.running) {
+    if (session.running && !lastTurnHasAssistant(store.timeline())) {
       state.awaitingReply = true
       state.runActive = true
     }
@@ -793,7 +793,7 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
       const session = (event.payload && event.payload.session) || {}
       if (session.running !== undefined) {
       state.running = Boolean(session.running)
-      if (session.running) {
+      if (session.running && !lastTurnHasAssistant(store.timeline())) {
         state.awaitingReply = true
         state.runActive = true
       }
@@ -827,7 +827,8 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
       changed = true
     } else if (event.type === 'message.assistant') {
       state.lastReplyAt = Date.now()
-      // 回复已到：先收起「执行中」气泡；running 还在的话 paintMessages 会继续显示
+      // 最终回复已到：不再显示执行气泡，即使电脑端还有后台进程在跑
+      state.runActive = false
       state.waiting = false
       state.busy = false
     } else if (event.type === 'message.error') {
@@ -2809,6 +2810,20 @@ const RUN_ACTIVE_TIMEOUT_MS = 60 * 1000
   }
 
   /** 工具/交付排到本轮最后一条助手消息之后 */
+  function lastTurnHasAssistant(items) {
+    let lastUser = -1
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i]
+      if (item.kind === 'message' && item.message && item.message.who === 'me') lastUser = i
+    }
+    if (lastUser < 0) return false
+    for (let i = lastUser + 1; i < items.length; i += 1) {
+      const item = items[i]
+      if (item.kind === 'message' && item.message && item.message.who === 'ai') return true
+    }
+    return false
+  }
+
   function lastTurnNotice(items) {
     let lastUser = -1
     for (let i = 0; i < items.length; i += 1) {
