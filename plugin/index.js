@@ -156,6 +156,8 @@ export function apply(ctx, config) {
   let pendingTimer = null
   let nextId = 1
   let target = config.sessionId || ''
+  // 手机发送重试时复用 clientMessageId，避免一次点击被 /send 重复注入
+  const recentSendIds = new Map()
   let lastPoll = 0
   // 每次插件启动换一个 id：手机据此判断电脑端是否重启过（消息 id 会从头来）
   const INSTANCE_ID = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)
@@ -2781,6 +2783,19 @@ export function apply(ctx, config) {
         return
       }
       if (!target) target = String(agent.id)
+      const clientMessageId = String(body.clientMessageId || '').slice(0, 80)
+      if (clientMessageId) {
+        const now = Date.now()
+        for (const [key, at] of recentSendIds) {
+          if (now - at > 5 * 60 * 1000) recentSendIds.delete(key)
+        }
+        const dedupeKey = target + ':' + clientMessageId
+        if (recentSendIds.has(dedupeKey)) {
+          json(res, 200, { ok: true, duplicate: true, current: target })
+          return
+        }
+        recentSendIds.set(dedupeKey, now)
+      }
       const content = []
       if (text) content.push({ type: 'text', text })
       for (const ref of images) content.push({ type: 'image', attachment: ref })

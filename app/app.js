@@ -17,19 +17,19 @@ const Ut = {
 function _o(i) {
   return new Promise((c) => setTimeout(c, i));
 }
-function I(i) {
+function N(i) {
   return String(i ?? "").replace(/[&<>"]/g, (c) => c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&quot;");
 }
-function E(i) {
-  return I(i).replace(/'/g, "&#39;");
+function I(i) {
+  return N(i).replace(/'/g, "&#39;");
 }
 function ue(i) {
   return String(i ?? "").replace(/```[\s\S]*?```/g, (c) => c.replace(/```[a-z]*\n?/gi, "")).replace(/`([^`]+)`/g, "$1").replace(/\*\*([^*]+)\*\*/g, "$1").replace(/__([^_]+)__/g, "$1").replace(/^#{1,6}\s+/gm, "").replace(/^\s*[-*]\s+/gm, "• ").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 }
 function Oo(i) {
   return i.replace(/(https?:\/\/[^\s<>"'`\u3000-\u303f\u4e00-\u9fff\uff00-\uffef]+)/gu, (c) => {
-    const t = c.replace(/[).,;:!?'"”’）】》]+$/gu, ""), S = c.slice(t.length);
-    return `<a class="chat-link" href="${E(t)}" data-href="${E(t)}" target="_blank" rel="noreferrer noopener">${t}</a>${S}`;
+    const t = c.replace(/[).,;:!?'"”’）】》]+$/gu, ""), k = c.slice(t.length);
+    return `<a class="chat-link" href="${I(t)}" data-href="${I(t)}" target="_blank" rel="noreferrer noopener">${t}</a>${k}`;
   });
 }
 function Za(i) {
@@ -37,8 +37,8 @@ function Za(i) {
   return c >= 1024 * 1024 ? (c / 1024 / 1024).toFixed(1) + " MB" : c >= 1024 ? Math.round(c / 1024) + " KB" : c + " B";
 }
 function Et(i) {
-  const c = new Date(Number(i) || Date.now()), t = /* @__PURE__ */ new Date(), S = (w) => String(w).padStart(2, "0"), u = S(c.getHours()) + ":" + S(c.getMinutes());
-  return c.toDateString() === t.toDateString() ? u : S(c.getMonth() + 1) + "-" + S(c.getDate()) + " " + u;
+  const c = new Date(Number(i) || Date.now()), t = /* @__PURE__ */ new Date(), k = (v) => String(v).padStart(2, "0"), u = k(c.getHours()) + ":" + k(c.getMinutes());
+  return c.toDateString() === t.toDateString() ? u : k(c.getMonth() + 1) + "-" + k(c.getDate()) + " " + u;
 }
 function vt(i) {
   return String(i || "").replace(/：/g, ":").replace(/[\u3000\s]+/g, "").replace(/\/+$/, "");
@@ -47,19 +47,19 @@ function Fo(i) {
   return String(i || "").replace(/\/+$/, "");
 }
 function Wo({ base: i, token: c }) {
-  const t = () => Fo(i()) || ft, S = () => String(c() || "").trim();
+  const t = () => Fo(i()) || ft, k = () => String(c() || "").trim();
   function u(T) {
-    const m = Object.assign({}, T || {}), h = S();
+    const m = Object.assign({}, T || {}), h = k();
     return h && (m.Authorization = "Bearer " + h), m;
   }
-  function w() {
+  function v() {
     return u({ "Content-Type": "application/json" });
   }
   function L(T) {
     const m = String(T || "");
     return /^https?:\/\//.test(m) ? m : t() + m;
   }
-  async function A(T, m, h) {
+  async function q(T, m, h) {
     const g = new AbortController(), x = setTimeout(() => g.abort(), h || 8e3);
     try {
       return await fetch(L(T), Object.assign({}, m, { signal: g.signal }));
@@ -68,59 +68,59 @@ function Wo({ base: i, token: c }) {
     }
   }
   async function B(T, m, h) {
-    const g = await A(T, m, h);
+    const g = await q(T, m, h);
     if (!g.ok) {
       const x = await g.json().catch(() => ({})), b = new Error(x && x.error || "HTTP " + g.status);
       throw b.status = g.status, b.code = x && x.code || "", b;
     }
     return g.json();
   }
-  function k(T, m, h) {
-    return B(T, { method: "POST", headers: w(), body: JSON.stringify(m || {}) }, h);
+  function w(T, m, h) {
+    return B(T, { method: "POST", headers: v(), body: JSON.stringify(m || {}) }, h);
   }
   function j(T, m, h) {
-    const g = String(m ?? "").replace(/^file:/, ""), x = t() + "/" + T + "/" + encodeURIComponent(g), b = [], f = S();
+    const g = String(m ?? "").replace(/^file:/, ""), x = t() + "/" + T + "/" + encodeURIComponent(g), b = [], f = k();
     return f && b.push("token=" + encodeURIComponent(f)), h && b.push("name=" + encodeURIComponent(h)), b.length ? x + "?" + b.join("&") : x;
   }
   function H(T, m) {
     const h = [];
     Number.isFinite(Number(T)) && Number(T) > 0 && h.push("after=" + encodeURIComponent(T)), m && h.push("session=" + encodeURIComponent(m));
-    const g = S();
+    const g = k();
     return g && h.push("token=" + encodeURIComponent(g)), t() + "/events" + (h.length ? "?" + h.join("&") : "");
   }
   return {
     baseUrl: t,
     authHeaders: u,
-    authJson: w,
-    fetchWithTimeout: A,
+    authJson: v,
+    fetchWithTimeout: q,
     fetchJson: B,
     assetUrl: j,
     eventsUrl: H,
     health: () => B("/health", { headers: u() }, 5e3),
     messages: ({ since: T = 0, recent: m = 5 } = {}) => B(T > 0 ? "/messages?since=" + T : "/messages?recent=" + m, { headers: u() }, 9e3),
-    send: (T) => k("/send", T, 3e4),
+    send: (T) => w("/send", T, 3e4),
     sessions: () => B("/sessions", { headers: u() }, 1e4),
     options: () => B("/options", { headers: u() }, 8e3),
-    target: (T) => k("/target", { id: T }, 2e4),
-    createSession: (T) => k("/new", T, 2e4),
-    selectModel: (T) => k("/model", T, 1e4),
-    setPermission: (T) => k("/permission", { preset: T }, 8e3),
-    renameSession: (T, m) => k("/rename", { id: T, title: m }, 8e3),
-    forkSession: (T, m) => k("/fork", m ? { id: T, atSeq: m } : { id: T }, 15e3),
-    archiveSession: (T, m) => k("/session/archive", m ? { id: T, stopActivity: !0 } : { id: T }, 1e4),
-    unarchiveSession: (T) => k("/session/unarchive", { id: T }, 8e3),
+    target: (T) => w("/target", { id: T }, 2e4),
+    createSession: (T) => w("/new", T, 2e4),
+    selectModel: (T) => w("/model", T, 1e4),
+    setPermission: (T) => w("/permission", { preset: T }, 8e3),
+    renameSession: (T, m) => w("/rename", { id: T, title: m }, 8e3),
+    forkSession: (T, m) => w("/fork", m ? { id: T, atSeq: m } : { id: T }, 15e3),
+    archiveSession: (T, m) => w("/session/archive", m ? { id: T, stopActivity: !0 } : { id: T }, 1e4),
+    unarchiveSession: (T) => w("/session/unarchive", { id: T }, 8e3),
     presentedFileUrl: (T, m, h, g) => {
       const x = new URLSearchParams({ seq: String(T), index: String(m) });
       g && x.set("session", String(g));
-      const b = S();
+      const b = k();
       return b && x.set("token", b), h && x.set("name", String(h)), t() + "/presented/file?" + x.toString();
     },
-    stop: () => k("/stop", {}, 8e3),
-    approvalDecision: (T, m) => k("/approvals", { id: T, decision: m ? "allow" : "deny" }, 5e3),
-    respond: (T, m, h) => k("/respond", { id: T, answers: m, session: h }, 8e3),
-    presence: (T, m) => k("/presence", m === void 0 ? { phone: !!T } : { phone: !!T, input: !!m }, 3e3),
-    uploadImage: (T) => k("/upload-image", T, 6e4),
-    uploadFile: (T) => k("/upload-file", T, 6e4),
+    stop: () => w("/stop", {}, 8e3),
+    approvalDecision: (T, m) => w("/approvals", { id: T, decision: m ? "allow" : "deny" }, 5e3),
+    respond: (T, m, h) => w("/respond", { id: T, answers: m, session: h }, 8e3),
+    presence: (T, m) => w("/presence", m === void 0 ? { phone: !!T } : { phone: !!T, input: !!m }, 3e3),
+    uploadImage: (T) => w("/upload-image", T, 6e4),
+    uploadFile: (T) => w("/upload-file", T, 6e4),
     snapshot: (T, { turns: m = 0, before: h = 0 } = {}) => {
       const g = new URLSearchParams();
       T && g.set("session", T), m > 0 && g.set("turns", String(m)), h > 0 && g.set("before", String(h));
@@ -130,8 +130,8 @@ function Wo({ base: i, token: c }) {
   };
 }
 function Ko(i) {
-  const c = i || {}, t = c.code ? "（" + c.code + (c.status ? " " + c.status : "") + "）" : "", S = c.message ? "：" + c.message : "";
-  return (c.hint || "执行失败") + t + S;
+  const c = i || {}, t = c.code ? "（" + c.code + (c.status ? " " + c.status : "") + "）" : "", k = c.message ? "：" + c.message : "";
+  return (c.hint || "执行失败") + t + k;
 }
 function Go(i) {
   if (!i || !i.type) return null;
@@ -155,20 +155,20 @@ function Go(i) {
 }
 function Vo() {
   const i = [], c = /* @__PURE__ */ new Map();
-  let t = 0, S = -1;
+  let t = 0, k = -1;
   function u() {
-    i.length = 0, c.clear(), t = 0, S = -1;
+    i.length = 0, c.clear(), t = 0, k = -1;
   }
-  function w(m) {
+  function v(m) {
     if (!m || !m.type) return !1;
     const h = m.payload || {}, g = Number(m.seq), x = (f) => f ? f.seq : Number.isFinite(g) ? g : 0, b = Number(m.at) || Date.now();
     if (m.type === "tool.update") {
       const f = String(h.callId || "");
       if (!f) return !1;
-      const M = "tool-" + f, r = c.get(M);
-      return c.set(M, {
+      const E = "tool-" + f, r = c.get(E);
+      return c.set(E, {
         kind: "tool",
-        id: M,
+        id: E,
         callId: f,
         name: String(h.name || (r ? r.name : "")),
         summary: String(h.summary || (r ? r.summary : "")),
@@ -183,10 +183,10 @@ function Vo() {
       }), !0;
     }
     if (m.type === "tool.start") {
-      const f = String(h.callId || ""), M = "tool-" + (f || m.id), r = c.get(M);
-      return c.set(M, {
+      const f = String(h.callId || ""), E = "tool-" + (f || m.id), r = c.get(E);
+      return c.set(E, {
         kind: "tool",
-        id: M,
+        id: E,
         callId: f,
         name: String(h.name || (r ? r.name : "")),
         summary: String(h.summary || (r ? r.summary : "")),
@@ -198,13 +198,13 @@ function Vo() {
         seq: r && r.provisional !== !0 ? r.seq : Number.isFinite(g) ? g : r ? r.seq : 0,
         provisional: !1,
         at: r ? r.at : b
-      }), A(g), !0;
+      }), q(g), !0;
     }
     if (m.type === "tool.end") {
-      const f = String(h.callId || ""), M = "tool-" + (f || m.id), r = c.get(M);
-      return c.set(M, {
+      const f = String(h.callId || ""), E = "tool-" + (f || m.id), r = c.get(E);
+      return c.set(E, {
         kind: "tool",
-        id: M,
+        id: E,
         callId: f,
         name: r ? r.name : "",
         summary: r ? r.summary : "",
@@ -216,31 +216,31 @@ function Vo() {
         seq: x(r),
         provisional: !1,
         at: r ? r.at : b
-      }), A(g), !0;
+      }), q(g), !0;
     }
     if (m.type === "deliverable.present") {
-      const f = String(h.callId || ""), M = (Array.isArray(h.files) ? h.files : []).filter(
+      const f = String(h.callId || ""), E = (Array.isArray(h.files) ? h.files : []).filter(
         (D) => D && typeof D.path == "string" && D.path.trim()
       );
-      if (M.length === 0) return !1;
+      if (E.length === 0) return !1;
       const r = "deliverable-" + (f || m.id || g), n = c.get(r);
       return c.set(r, {
         kind: "deliverable",
         id: r,
         callId: f,
         turn: Number(h.turn) || 0,
-        files: M,
+        files: E,
         seq: n && n.provisional !== !0 ? n.seq : Number.isFinite(g) ? g : n ? n.seq : 0,
         at: n ? n.at : b
-      }), A(g), !0;
+      }), q(g), !0;
     }
     if (m.type === "approval.request") {
       const f = String(h.approvalId || "");
       if (!f) return !1;
-      const M = "approval-" + f, r = c.get(M);
-      return c.set(M, {
+      const E = "approval-" + f, r = c.get(E);
+      return c.set(E, {
         kind: "approval",
-        id: M,
+        id: E,
         approvalId: f,
         title: String(h.title || (r ? r.title : "")),
         tool: String(h.tool || (r ? r.tool : "")),
@@ -250,15 +250,15 @@ function Vo() {
         outcome: "",
         seq: x(r),
         at: r ? r.at : b
-      }), A(g), !0;
+      }), q(g), !0;
     }
     if (m.type === "approval.result") {
       const f = String(h.approvalId || "");
       if (!f) return !1;
-      const M = "approval-" + f, r = c.get(M);
-      return c.set(M, {
+      const E = "approval-" + f, r = c.get(E);
+      return c.set(E, {
         kind: "approval",
-        id: M,
+        id: E,
         approvalId: f,
         title: r ? r.title : "",
         tool: String(h.tool || (r ? r.tool : "")),
@@ -268,40 +268,40 @@ function Vo() {
         outcome: String(h.outcome || ""),
         seq: x(r),
         at: r ? r.at : b
-      }), A(g), !0;
+      }), q(g), !0;
     }
     if (m.type === "input.request" || m.type === "input.result") {
       const f = String(h.callId || "");
       if (!f) return !1;
-      const M = "input-" + f, r = c.get(M), n = Array.isArray(h.questions) ? h.questions : r ? r.questions : [];
-      return m.type === "input.request" ? c.set(M, {
+      const E = "input-" + f, r = c.get(E), n = Array.isArray(h.questions) ? h.questions : r ? r.questions : [];
+      return m.type === "input.request" ? c.set(E, {
         kind: "input",
-        id: M,
+        id: E,
         callId: f,
         questions: n,
         state: String(h.state || (r ? r.state : "open")),
         answers: r ? r.answers : null,
         seq: x(r),
         at: r ? r.at : b
-      }) : c.set(M, {
+      }) : c.set(E, {
         kind: "input",
-        id: M,
+        id: E,
         callId: f,
         questions: n,
         state: "answered",
         answers: Array.isArray(h.answers) ? h.answers : [],
         seq: x(r),
         at: r ? r.at : b
-      }), A(g), !0;
+      }), q(g), !0;
     }
     return !1;
   }
   function L() {
     t = i.reduce((m, h) => Math.max(m, Number(h && h.id) || 0), 0);
   }
-  function A(m) {
+  function q(m) {
     const h = Number(m);
-    Number.isFinite(h) && h > S && (S = h);
+    Number.isFinite(h) && h > k && (k = h);
   }
   function B(m) {
     const h = i.filter((g) => g.local);
@@ -309,36 +309,36 @@ function Vo() {
     for (const g of m) i.push(g);
     for (const g of h) i.push(g);
     L();
-    for (const g of i) A(g.seq);
+    for (const g of i) q(g.seq);
   }
-  function k(m) {
+  function w(m) {
     if (!m) return !1;
     if (m.id) {
       if (m.who === "me") {
         const h = i.find((g) => g.local && g.text === m.text && !g.id);
         if (h)
-          return h.id = m.id, h.at = m.at || h.at, Number.isFinite(Number(m.seq)) && (h.seq = m.seq), h.local = !1, h.images = m.images || [], h.files = m.files || [], A(h.seq), L(), !0;
+          return h.id = m.id, h.at = m.at || h.at, Number.isFinite(Number(m.seq)) && (h.seq = m.seq), h.local = !1, h.images = m.images || [], h.files = m.files || [], q(h.seq), L(), !0;
       }
       if (i.some((h) => h.id === m.id)) return !1;
     }
-    return i.push(m), A(m.seq), L(), !0;
+    return i.push(m), q(m.seq), L(), !0;
   }
   function j(m) {
-    const h = w(m), g = Go(m);
+    const h = v(m), g = Go(m);
     if (!g)
-      return A(m && m.seq), h;
+      return q(m && m.seq), h;
     if (g.eventId && i.some((x) => x.eventId === g.eventId))
-      return A(g.seq), h;
+      return q(g.seq), h;
     if (g.who === "me") {
       const x = i.find((b) => b.local && b.text === g.text);
       if (x)
-        return x.eventId = g.eventId, x.at = g.at || x.at, x.seq = g.seq, x.local = !1, x.images = g.images, x.files = g.files, A(g.seq), !0;
+        return x.eventId = g.eventId, x.at = g.at || x.at, x.seq = g.seq, x.local = !1, x.images = g.images, x.files = g.files, q(g.seq), !0;
     }
-    return g.seq !== void 0 && g.who === "error" && i.some((x) => x.seq === g.seq && x.who === "error") ? (A(g.seq), h) : (i.push(g), A(g.seq), !0);
+    return g.seq !== void 0 && g.who === "error" && i.some((x) => x.seq === g.seq && x.who === "error") ? (q(g.seq), h) : (i.push(g), q(g.seq), !0);
   }
   function H(m) {
     const h = i.filter((x) => x.local);
-    i.length = 0, c.clear(), S = -1;
+    i.length = 0, c.clear(), k = -1;
     for (const x of h) i.push(x);
     let g = h.length > 0;
     for (const x of [...m || []].sort((b, f) => Number(b.seq) - Number(f.seq)))
@@ -366,14 +366,14 @@ function Vo() {
       t = Number(m) || 0;
     },
     get lastSeq() {
-      return S;
+      return k;
     },
     get size() {
       return i.length;
     },
     clear: u,
     replaceMessages: B,
-    upsertMessage: k,
+    upsertMessage: w,
     upsertEvent: j,
     replaceEvents: H
   };
@@ -388,12 +388,12 @@ function Xo() {
 }
 function Jo({ limit: i = Qo } = {}) {
   let c = null, t = 0;
-  function S(g) {
+  function k(g) {
     return new Promise((x, b) => {
-      const f = g.transaction([pe, Mt], "readwrite"), M = f.objectStore(pe), r = M.get(en);
+      const f = g.transaction([pe, Mt], "readwrite"), E = f.objectStore(pe), r = E.get(en);
       r.onsuccess = () => {
         const n = r.result ? Number(r.result.value) : 0;
-        n !== Ye && (n && n !== Ye && f.objectStore(Mt).clear(), M.put({ key: en, value: Ye }));
+        n !== Ye && (n && n !== Ye && f.objectStore(Mt).clear(), E.put({ key: en, value: Ye }));
       }, f.oncomplete = () => x(), f.onerror = () => b(f.error || new Error("indexedDB schema failed"));
     });
   }
@@ -405,123 +405,123 @@ function Jo({ limit: i = Qo } = {}) {
         f.objectStoreNames.contains(Mt) || f.createObjectStore(Mt, { keyPath: "key" }).createIndex("session", "session", { unique: !1 }), f.objectStoreNames.contains(pe) || f.createObjectStore(pe, { keyPath: "key" });
       }, b.onsuccess = () => {
         const f = b.result;
-        S(f).then(() => g(f)).catch(() => g(f));
+        k(f).then(() => g(f)).catch(() => g(f));
       }, b.onerror = () => x(b.error || new Error("indexedDB open failed")), b.onblocked = () => x(new Error("indexedDB blocked"));
     }), c) : Promise.reject(new Error("no indexedDB"));
   }
-  function w(g, x) {
+  function v(g, x) {
     return u().then(
-      (b) => new Promise((f, M) => {
+      (b) => new Promise((f, E) => {
         const r = b.transaction(Mt, g), n = r.objectStore(Mt);
         let D;
         try {
           D = x(n);
-        } catch (F) {
-          M(F);
+        } catch (W) {
+          E(W);
           return;
         }
-        r.oncomplete = () => f(D), r.onerror = () => M(r.error || new Error("indexedDB transaction failed")), r.onabort = () => M(r.error || new Error("indexedDB transaction aborted"));
+        r.oncomplete = () => f(D), r.onerror = () => E(r.error || new Error("indexedDB transaction failed")), r.onabort = () => E(r.error || new Error("indexedDB transaction aborted"));
       })
     );
   }
   function L(g) {
     return !!(g && (g.name === "QuotaExceededError" || g.code === 22 || /quota|storage/i.test(String(g.message || ""))));
   }
-  function A(g) {
-    return w("readwrite", (x) => {
+  function q(g) {
+    return v("readwrite", (x) => {
       const b = x.index("session");
-      return new Promise((f, M) => {
+      return new Promise((f, E) => {
         const r = b.getAll(g);
         r.onsuccess = () => {
-          const n = (r.result || []).sort((F, Y) => Number(F.seq) - Number(Y.seq)), D = n.slice(0, Math.max(1, Math.ceil(n.length / 2)));
-          for (const F of D) x.delete(F.key);
+          const n = (r.result || []).sort((W, Y) => Number(W.seq) - Number(Y.seq)), D = n.slice(0, Math.max(1, Math.ceil(n.length / 2)));
+          for (const W of D) x.delete(W.key);
           f(D.length);
-        }, r.onerror = () => M(r.error);
+        }, r.onerror = () => E(r.error);
       });
     });
   }
   function B(g, x) {
     const b = String(g || ""), f = (Array.isArray(x) ? x : []).filter((n) => n && n.id && Number.isFinite(Number(n.seq)));
     if (!b || f.length === 0) return Promise.resolve(0);
-    const M = () => w("readwrite", (n) => {
+    const E = () => v("readwrite", (n) => {
       for (const D of f)
         n.put({ key: b + ":" + D.id, session: b, seq: Number(D.seq), event: D });
       return f.length;
-    }), r = () => (t += f.length, t < 40 ? 0 : (t = 0, k(b)));
-    return M().then(r).catch((n) => {
+    }), r = () => (t += f.length, t < 40 ? 0 : (t = 0, w(b)));
+    return E().then(r).catch((n) => {
       if (!L(n)) throw n;
-      return A(b).then(M).then(r).catch(() => 0);
+      return q(b).then(E).then(r).catch(() => 0);
     });
   }
-  function k(g) {
-    return w("readwrite", (x) => {
+  function w(g) {
+    return v("readwrite", (x) => {
       const b = x.index("session");
-      return new Promise((f, M) => {
+      return new Promise((f, E) => {
         const r = b.getAll(g);
         r.onsuccess = () => {
           const n = (r.result || []).sort((_, K) => Number(_.seq) - Number(K.seq)), D = (() => {
             const _ = n.filter((K) => K.event && K.event.type === "turn.start").map((K) => Number(K.seq));
             return _.length ? _ : n.filter((K) => K.event && K.event.type === "message.user").map((K) => Number(K.seq));
-          })(), F = D.length > he ? D[D.length - he] : 0;
-          let Y = F > 0 ? n.filter((_) => Number(_.seq) >= F) : n;
+          })(), W = D.length > he ? D[D.length - he] : 0;
+          let Y = W > 0 ? n.filter((_) => Number(_.seq) >= W) : n;
           Y.length > i && (Y = Y.slice(Y.length - i));
           const U = new Set(Y.map((_) => _.key)), V = n.filter((_) => !U.has(_.key));
           for (const _ of V) x.delete(_.key);
           f(V.length);
-        }, r.onerror = () => M(r.error);
+        }, r.onerror = () => E(r.error);
       });
     });
   }
   function j(g) {
     const x = String(g || "");
-    return x ? w("readwrite", (b) => {
+    return x ? v("readwrite", (b) => {
       const f = b.index("session");
-      return new Promise((M, r) => {
+      return new Promise((E, r) => {
         const n = f.openCursor();
         let D = 0;
         n.onsuccess = () => {
-          const F = n.result;
-          if (!F) {
-            M(D);
+          const W = n.result;
+          if (!W) {
+            E(D);
             return;
           }
-          F.value && F.value.session !== x && (F.delete(), D += 1), F.continue();
+          W.value && W.value.session !== x && (W.delete(), D += 1), W.continue();
         }, n.onerror = () => r(n.error);
       });
     }) : Promise.resolve(0);
   }
   function H(g) {
     const x = String(g || "");
-    return x ? w("readonly", (b) => {
+    return x ? v("readonly", (b) => {
       const f = b.index("session");
-      return new Promise((M, r) => {
+      return new Promise((E, r) => {
         const n = f.getAll(x);
         n.onsuccess = () => {
-          const D = (n.result || []).sort((V, _) => Number(V.seq) - Number(_.seq)), F = (() => {
+          const D = (n.result || []).sort((V, _) => Number(V.seq) - Number(_.seq)), W = (() => {
             const V = D.filter((_) => _.event && _.event.type === "turn.start").map((_) => Number(_.seq));
             return V.length ? V : D.filter((_) => _.event && _.event.type === "message.user").map((_) => Number(_.seq));
-          })(), Y = F.length > he ? F[F.length - he] : 0;
+          })(), Y = W.length > he ? W[W.length - he] : 0;
           let U = Y > 0 ? D.filter((V) => Number(V.seq) >= Y) : D;
-          U.length > i && (U = U.slice(U.length - i)), M(U.map((V) => V.event).filter(Boolean));
+          U.length > i && (U = U.slice(U.length - i)), E(U.map((V) => V.event).filter(Boolean));
         }, n.onerror = () => r(n.error);
       });
     }) : Promise.resolve([]);
   }
   function T(g) {
     const x = String(g || "");
-    return w("readwrite", (b) => {
+    return v("readwrite", (b) => {
       const f = b.index("session");
-      return new Promise((M, r) => {
+      return new Promise((E, r) => {
         const n = f.getAllKeys(x);
         n.onsuccess = () => {
           for (const D of n.result || []) b.delete(D);
-          M(!0);
+          E(!0);
         }, n.onerror = () => r(n.error);
       });
     });
   }
   function m() {
-    return w("readwrite", (g) => (g.clear(), !0));
+    return v("readwrite", (g) => (g.clear(), !0));
   }
   function h() {
     return (async () => {
@@ -546,25 +546,25 @@ function Jo({ limit: i = Qo } = {}) {
   }
   return { put: B, get: H, clear: T, clearAll: m, clearOthers: j, destroy: h };
 }
-function Zo({ appId: i, base: c, token: t, notify: S, mode: u = "turn" }) {
-  const w = {
+function Zo({ appId: i, base: c, token: t, notify: k, mode: u = "turn" }) {
+  const v = {
     id: i,
     endpoint: String(c) + "/health",
     token: t || "",
     intervalMs: 2500,
-    enabled: S !== !1,
+    enabled: k !== !1,
     openApp: i,
     suppressApp: i,
     title: "DSH控制台"
   };
   return u === "message" ? {
-    ...w,
+    ...v,
     mode: "change",
     field: "lastAssistantSeq",
     doneText: "收到新消息",
     failText: "收到新消息"
   } : {
-    ...w,
+    ...v,
     field: "running",
     from: !0,
     to: !1,
@@ -596,70 +596,70 @@ const tr = /^(https?:\/\/|mailto:)/i, an = {
   json: "json"
 };
 function sn(i, c) {
-  return /^https?:\/\//i.test(c) ? /^https:/i.test(c) ? `<img class="chat-image chat-md-image" src="${E(c)}" alt="${E(i)}" loading="lazy" referrerpolicy="no-referrer" />` : `<img class="chat-image chat-md-image" data-remote="${E(c)}" alt="${E(i)}" />` : I(i);
+  return /^https?:\/\//i.test(c) ? /^https:/i.test(c) ? `<img class="chat-image chat-md-image" src="${I(c)}" alt="${I(i)}" loading="lazy" referrerpolicy="no-referrer" />` : `<img class="chat-image chat-md-image" data-remote="${I(c)}" alt="${I(i)}" />` : N(i);
 }
 function wt(i) {
   const c = String(i ?? "");
-  let t = "", S = 0;
+  let t = "", k = 0;
   const u = /!\[([^\]]*)\]\(((?:[^()\s]+|\([^()\s]*\))+)\)|`([^`\n]+)`|\*\*([^*]+)\*\*|__([^_]+)__|\*([^*\n]+)\*|~~([^~]+)~~|\[([^\]]+)\]\(((?:[^()\s]+|\([^()\s]*\))+)\)|(https?:\/\/[^\s<>"'`\u3000-\u303f\u4e00-\u9fff\uff00-\uffef]+)/gu;
-  let w;
-  for (; w = u.exec(c); ) {
-    if (t += I(c.slice(S, w.index)), S = w.index + w[0].length, w[1] !== void 0) {
-      t += sn(w[1], w[2]);
+  let v;
+  for (; v = u.exec(c); ) {
+    if (t += N(c.slice(k, v.index)), k = v.index + v[0].length, v[1] !== void 0) {
+      t += sn(v[1], v[2]);
       continue;
     }
-    if (w[3] !== void 0) {
-      t += `<code class="chat-inline-code">${I(w[3])}</code>`;
+    if (v[3] !== void 0) {
+      t += `<code class="chat-inline-code">${N(v[3])}</code>`;
       continue;
     }
-    if (w[4] !== void 0) {
-      t += `<strong>${I(w[4])}</strong>`;
+    if (v[4] !== void 0) {
+      t += `<strong>${N(v[4])}</strong>`;
       continue;
     }
-    if (w[5] !== void 0) {
-      t += `<strong>${I(w[5])}</strong>`;
+    if (v[5] !== void 0) {
+      t += `<strong>${N(v[5])}</strong>`;
       continue;
     }
-    if (w[6] !== void 0) {
-      t += `<em>${I(w[6])}</em>`;
+    if (v[6] !== void 0) {
+      t += `<em>${N(v[6])}</em>`;
       continue;
     }
-    if (w[7] !== void 0) {
-      t += `<del>${I(w[7])}</del>`;
+    if (v[7] !== void 0) {
+      t += `<del>${N(v[7])}</del>`;
       continue;
     }
-    if (w[8] !== void 0) {
-      const k = w[8], j = w[9];
-      t += tr.test(j) ? `<a class="chat-link" href="${E(j)}" data-href="${E(j)}" target="_blank" rel="noreferrer noopener">${I(k)}</a>` : I(k);
+    if (v[8] !== void 0) {
+      const w = v[8], j = v[9];
+      t += tr.test(j) ? `<a class="chat-link" href="${I(j)}" data-href="${I(j)}" target="_blank" rel="noreferrer noopener">${N(w)}</a>` : N(w);
       continue;
     }
-    const L = w[10], A = L.replace(/[).,;:!?'"”’）】》]+$/gu, ""), B = L.slice(A.length);
-    t += `<a class="chat-link" href="${E(A)}" data-href="${E(A)}" target="_blank" rel="noreferrer noopener">${I(A)}</a>${I(B)}`;
+    const L = v[10], q = L.replace(/[).,;:!?'"”’）】》]+$/gu, ""), B = L.slice(q.length);
+    t += `<a class="chat-link" href="${I(q)}" data-href="${I(q)}" target="_blank" rel="noreferrer noopener">${N(q)}</a>${N(B)}`;
   }
-  return t += I(c.slice(S)), t;
+  return t += N(c.slice(k)), t;
 }
 function ar(i, c) {
-  const t = er[String(c || "").toLowerCase()] || "", S = String(i ?? "");
+  const t = er[String(c || "").toLowerCase()] || "", k = String(i ?? "");
   if (t === "json" || !an[t])
-    return { html: I(S), lang: t || String(c || "").toLowerCase() };
-  const u = t === "js" || t === "ts" ? String.raw`(\/\*[\s\S]*?\*\/|\/\/[^\n]*)` : String.raw`(#[^\n]*)`, w = new RegExp(
+    return { html: N(k), lang: t || String(c || "").toLowerCase() };
+  const u = t === "js" || t === "ts" ? String.raw`(\/\*[\s\S]*?\*\/|\/\/[^\n]*)` : String.raw`(#[^\n]*)`, v = new RegExp(
     u + String.raw`|("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|` + "`(?:\\\\[\\s\\S]|[^`\\\\])*`)",
     "g"
   ), L = [];
-  let A = S.replace(w, (k) => (L.push(k), `\0${"z".repeat(L.length)}\0`));
-  A = I(A);
+  let q = k.replace(v, (w) => (L.push(w), `\0${"z".repeat(L.length)}\0`));
+  q = N(q);
   const B = an[t].split(/\s+/);
-  return A = A.replace(
+  return q = q.replace(
     /\b([A-Za-z_$][\w$]*)\b/g,
-    (k) => B.includes(k) ? `<span class="tk-k">${k}</span>` : k
-  ), A = A.replace(/\b\d+(?:\.\d+)?\b/g, (k) => `<span class="tk-n">${k}</span>`), A = A.replace(/\u0000(z+)\u0000/g, (k, j) => {
+    (w) => B.includes(w) ? `<span class="tk-k">${w}</span>` : w
+  ), q = q.replace(/\b\d+(?:\.\d+)?\b/g, (w) => `<span class="tk-n">${w}</span>`), q = q.replace(/\u0000(z+)\u0000/g, (w, j) => {
     const H = L[j.length - 1] || "";
-    return `<span class="${H.startsWith("/") || H.startsWith("#") ? "tk-c" : "tk-s"}">${I(H)}</span>`;
-  }), { html: A, lang: t };
+    return `<span class="${H.startsWith("/") || H.startsWith("#") ? "tk-c" : "tk-s"}">${N(H)}</span>`;
+  }), { html: q, lang: t };
 }
 function nr(i, c) {
-  const t = ar(i, c), S = t.lang || "code";
-  return `<div class="chat-code"><div class="chat-code-head"><span class="chat-code-lang">${I(S)}</span><button type="button" class="chat-code-copy" data-action="copy-code" data-code="${E(encodeURIComponent(i))}">复制</button></div><pre><code>${t.html}</code></pre></div>`;
+  const t = ar(i, c), k = t.lang || "code";
+  return `<div class="chat-code"><div class="chat-code-head"><span class="chat-code-lang">${N(k)}</span><button type="button" class="chat-code-copy" data-action="copy-code" data-code="${I(encodeURIComponent(i))}">复制</button></div><pre><code>${t.html}</code></pre></div>`;
 }
 function cn(i, c) {
   if (c + 1 >= i.length || !/^\s*\|.*\|\s*$/.test(i[c])) return !1;
@@ -674,90 +674,90 @@ function or(i, c) {
   return /^\s*```/.test(t) || /^(#{1,6})\s+/.test(t) || /^\s*>\s?/.test(t) || /^\s*[-*+]\s+/.test(t) || /^\s*\d+[.)]\s+/.test(t) || /^\s*([-*_])(?:\s*\1){2,}\s*$/.test(t) || cn(i, c);
 }
 function on(i, c, t) {
-  const S = [], u = t ? /^\s*\d+[.)]\s+(.*)$/ : /^\s*[-*+]\s+(.*)$/;
-  let w = c;
-  for (; w < i.length; ) {
-    const L = u.exec(i[w]);
+  const k = [], u = t ? /^\s*\d+[.)]\s+(.*)$/ : /^\s*[-*+]\s+(.*)$/;
+  let v = c;
+  for (; v < i.length; ) {
+    const L = u.exec(i[v]);
     if (!L) {
-      if (S.length > 0 && /^\s{2,}\S/.test(i[w])) {
-        S[S.length - 1] += " " + i[w].trim(), w += 1;
+      if (k.length > 0 && /^\s{2,}\S/.test(i[v])) {
+        k[k.length - 1] += " " + i[v].trim(), v += 1;
         continue;
       }
       break;
     }
-    S.push(L[1]), w += 1;
+    k.push(L[1]), v += 1;
   }
-  return { items: S, next: w };
+  return { items: k, next: v };
 }
 const Qe = /^\s*!\[([^\]]*)\]\(((?:[^()\s]+|\([^()\s]*\))+)\)\s*$/;
 function rr(i) {
   const c = i.length;
-  return `<div class="chat-md-gallery ${c === 1 ? "is-one" : c === 2 ? "is-two" : c >= 5 ? "is-many" : "is-few"}" data-count="${c}">${i.map((S) => sn(S.alt, S.src)).join("")}</div>`;
+  return `<div class="chat-md-gallery ${c === 1 ? "is-one" : c === 2 ? "is-two" : c >= 5 ? "is-many" : "is-few"}" data-count="${c}">${i.map((k) => sn(k.alt, k.src)).join("")}</div>`;
 }
 function ln(i) {
   const t = String(i ?? "").replace(/\r\n?/g, `
 `).split(`
-`), S = [];
+`), k = [];
   let u = 0;
   for (; u < t.length; ) {
-    const w = t[u];
-    if (!w.trim()) {
+    const v = t[u];
+    if (!v.trim()) {
       u += 1;
       continue;
     }
-    const L = /^\s*```(.*)$/.exec(w);
+    const L = /^\s*```(.*)$/.exec(v);
     if (L) {
-      const k = L[1].trim().split(/\s+/)[0] || "", j = [];
+      const w = L[1].trim().split(/\s+/)[0] || "", j = [];
       for (u += 1; u < t.length && !/^\s*```\s*$/.test(t[u]); )
         j.push(t[u]), u += 1;
-      u < t.length && (u += 1), S.push(nr(j.join(`
-`), k));
+      u < t.length && (u += 1), k.push(nr(j.join(`
+`), w));
       continue;
     }
-    const A = /^(#{1,6})\s+(.+?)\s*$/.exec(w);
-    if (A) {
-      const k = A[1].length;
-      S.push(`<h${k}>${wt(A[2])}</h${k}>`), u += 1;
+    const q = /^(#{1,6})\s+(.+?)\s*$/.exec(v);
+    if (q) {
+      const w = q[1].length;
+      k.push(`<h${w}>${wt(q[2])}</h${w}>`), u += 1;
       continue;
     }
-    if (/^\s*([-*_])(?:\s*\1){2,}\s*$/.test(w)) {
-      S.push("<hr />"), u += 1;
+    if (/^\s*([-*_])(?:\s*\1){2,}\s*$/.test(v)) {
+      k.push("<hr />"), u += 1;
       continue;
     }
-    if (/^\s*>\s?/.test(w)) {
-      const k = [];
+    if (/^\s*>\s?/.test(v)) {
+      const w = [];
       for (; u < t.length && /^\s*>\s?/.test(t[u]); )
-        k.push(t[u].replace(/^\s*>\s?/, "")), u += 1;
-      S.push(`<blockquote>${k.map(wt).join("<br />")}</blockquote>`);
+        w.push(t[u].replace(/^\s*>\s?/, "")), u += 1;
+      k.push(`<blockquote>${w.map(wt).join("<br />")}</blockquote>`);
       continue;
     }
-    if (/^\s*[-*+]\s+/.test(w)) {
-      const k = on(t, u, !1);
-      S.push(`<ul>${k.items.map((j) => `<li>${wt(j)}</li>`).join("")}</ul>`), u = k.next;
+    if (/^\s*[-*+]\s+/.test(v)) {
+      const w = on(t, u, !1);
+      k.push(`<ul>${w.items.map((j) => `<li>${wt(j)}</li>`).join("")}</ul>`), u = w.next;
       continue;
     }
-    if (/^\s*\d+[.)]\s+/.test(w)) {
-      const k = on(t, u, !0);
-      S.push(`<ol>${k.items.map((j) => `<li>${wt(j)}</li>`).join("")}</ol>`), u = k.next;
+    if (/^\s*\d+[.)]\s+/.test(v)) {
+      const w = on(t, u, !0);
+      k.push(`<ol>${w.items.map((j) => `<li>${wt(j)}</li>`).join("")}</ol>`), u = w.next;
       continue;
     }
     if (cn(t, u)) {
-      const k = nn(t[u]);
+      const w = nn(t[u]);
       u += 2;
       const j = [];
       for (; u < t.length && /^\s*\|.*\|\s*$/.test(t[u]); )
         j.push(nn(t[u])), u += 1;
-      S.push(
-        `<div class="chat-table-wrap"><table><thead><tr>${k.map((H) => `<th>${wt(H)}</th>`).join("")}</tr></thead><tbody>${j.map((H) => `<tr>${H.map((T) => `<td>${wt(T)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
+      k.push(
+        `<div class="chat-table-wrap"><table><thead><tr>${w.map((H) => `<th>${wt(H)}</th>`).join("")}</tr></thead><tbody>${j.map((H) => `<tr>${H.map((T) => `<td>${wt(T)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
       );
       continue;
     }
-    if (Qe.test(w)) {
-      const k = [];
+    if (Qe.test(v)) {
+      const w = [];
       for (; u < t.length; ) {
         const j = Qe.exec(t[u]);
         if (j) {
-          k.push({ alt: j[1], src: j[2] }), u += 1;
+          w.push({ alt: j[1], src: j[2] }), u += 1;
           continue;
         }
         if (!t[u].trim()) {
@@ -770,86 +770,86 @@ function ln(i) {
         }
         break;
       }
-      if (k.length > 0) {
-        S.push(rr(k));
+      if (w.length > 0) {
+        k.push(rr(w));
         continue;
       }
     }
     const B = [];
     for (; u < t.length && t[u].trim() && !or(t, u); )
       B.push(t[u]), u += 1;
-    B.length === 0 && (B.push(t[u]), u += 1), S.push(`<p>${B.map(wt).join("<br />")}</p>`);
+    B.length === 0 && (B.push(t[u]), u += 1), k.push(`<p>${B.map(wt).join("<br />")}</p>`);
   }
-  return S.join("");
+  return k.join("");
 }
 function sr(i) {
   return i ? i.eventId ? String(i.eventId) : i.id ? "id" + i.id : Number.isFinite(Number(i.seq)) ? "s" + i.seq : "" : "";
 }
 function rn(i, c) {
-  const t = sr(i), S = t ? ` data-mid="${E(t)}"` : "";
+  const t = sr(i), k = t ? ` data-mid="${I(t)}"` : "";
   if (i.who === "sys")
-    return `<div class="chat-sys">${Oo(I(ue(i.text)))}</div>`;
+    return `<div class="chat-sys">${Oo(N(ue(i.text)))}</div>`;
   if (i.who === "error") {
-    const x = i.retryText ? `<button type="button" class="chat-retry" data-retry="${E(encodeURIComponent(i.retryText))}">点按重试</button>` : "";
-    return `<div class="chat-turn is-ai"${S}>${x}<div class="chat-bubble is-error" data-copy="${E(encodeURIComponent(ue(i.text)))}">${I(ue(i.text))}</div></div>`;
+    const x = i.retryText ? `<button type="button" class="chat-retry" data-retry="${I(encodeURIComponent(i.retryText))}">点按重试</button>` : "";
+    return `<div class="chat-turn is-ai"${k}>${x}<div class="chat-bubble is-error" data-copy="${I(encodeURIComponent(ue(i.text)))}">${N(ue(i.text))}</div></div>`;
   }
-  const u = i.who === "me", w = Array.isArray(i.images) ? i.images : [], L = Array.isArray(i.files) ? i.files : [], A = w.length ? `<div class="chat-md-gallery ${w.length === 1 ? "is-one" : w.length === 2 ? "is-two" : w.length >= 5 ? "is-many" : "is-few"}" data-count="${w.length}">${w.map((x) => {
+  const u = i.who === "me", v = Array.isArray(i.images) ? i.images : [], L = Array.isArray(i.files) ? i.files : [], q = v.length ? `<div class="chat-md-gallery ${v.length === 1 ? "is-one" : v.length === 2 ? "is-two" : v.length >= 5 ? "is-many" : "is-few"}" data-count="${v.length}">${v.map((x) => {
     const b = String(x.id || "").startsWith("local:") ? String(x.src || "") : "";
-    if (b) return `<img class="chat-image chat-md-image" src="${E(b)}" alt="图片" />`;
+    if (b) return `<img class="chat-image chat-md-image" src="${I(b)}" alt="图片" />`;
     const f = c("image", x.id);
-    return `<img class="chat-image chat-md-image" data-src="${E(f)}" alt="图片" />`;
+    return `<img class="chat-image chat-md-image" data-src="${I(f)}" alt="图片" />`;
   }).join("")}</div>` : "", B = L.map((x) => {
     const b = x.name || "文件";
     if (String(x.id || "").startsWith("local:"))
-      return `<div class="chat-file"><span class="chat-file-icon">📦</span><span class="chat-file-main"><span class="chat-file-name">${I(b)}</span><span class="chat-file-size">${Za(x.size)} · 发送中</span></span></div>`;
+      return `<div class="chat-file"><span class="chat-file-icon">📦</span><span class="chat-file-main"><span class="chat-file-name">${N(b)}</span><span class="chat-file-size">${Za(x.size)} · 发送中</span></span></div>`;
     const f = c("file", x.id, b);
-    return `<a class="chat-file" href="${E(f)}" data-file-url="${E(f)}" data-file-name="${E(b)}" download="${E(b)}">
+    return `<a class="chat-file" href="${I(f)}" data-file-url="${I(f)}" data-file-name="${I(b)}" download="${I(b)}">
           <span class="chat-file-icon">📦</span>
           <span class="chat-file-main">
-            <span class="chat-file-name">${I(b)}</span>
+            <span class="chat-file-name">${N(b)}</span>
             <span class="chat-file-size">${Za(x.size)} · 点按下载</span>
           </span>
         </a>`;
-  }).join(""), k = i.text ? ln(i.text) : "", j = i.reasoning ? `<details class="chat-thinking"><summary>思考过程</summary><div class="chat-thinking-text">${I(i.reasoning)}</div></details>` : "", H = i.pending ? " is-typing" : "", T = `<div class="chat-bubble ${u ? "is-me" : "is-ai"}${H}${w.length ? " has-images" : ""}" data-copy="${E(encodeURIComponent(ue(i.text || "")))}">${A}${B}${j}${k}</div>`, m = !i.pending && i.text ? '<button type="button" class="chat-copy" data-action="copy-message" aria-label="复制这条消息">复制</button>' : "", h = u && !i.pending && i.text ? '<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>' : "", g = `<div class="chat-meta"><span class="chat-avatar">${u ? "🙂" : "🤖"}</span><span class="chat-stamp">${Et(i.at)}</span>${m}${h}</div>`;
-  return `<div class="chat-turn ${u ? "is-me" : "is-ai"}"${S}>${g}${T}</div>`;
+  }).join(""), w = i.text ? ln(i.text) : "", j = i.reasoning ? `<details class="chat-thinking"><summary>思考过程</summary><div class="chat-thinking-text">${N(i.reasoning)}</div></details>` : "", H = i.pending ? " is-typing" : "", T = `<div class="chat-bubble ${u ? "is-me" : "is-ai"}${H}${v.length ? " has-images" : ""}" data-copy="${I(encodeURIComponent(ue(i.text || "")))}">${q}${B}${j}${w}</div>`, m = !i.pending && i.text ? '<button type="button" class="chat-copy" data-action="copy-message" aria-label="复制这条消息">复制</button>' : "", h = u && !i.pending && i.text ? '<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>' : "", g = `<div class="chat-meta"><span class="chat-avatar">${u ? "🙂" : "🤖"}</span><span class="chat-stamp">${Et(i.at)}</span>${m}${h}</div>`;
+  return `<div class="chat-turn ${u ? "is-me" : "is-ai"}"${k}>${g}${T}</div>`;
 }
 function ir(i, c) {
-  const t = E(i.id || ""), S = i.title || (i.blank ? "新对话" : "未命名对话"), u = I(S), w = i.id === c ? "✓ " : "", L = i.running ? "运行中" : i.online ? "在线" : "", A = Et(i.at);
+  const t = I(i.id || ""), k = i.title || (i.blank ? "新对话" : "未命名对话"), u = N(k), v = i.id === c ? "✓ " : "", L = i.running ? "运行中" : i.online ? "在线" : "", q = Et(i.at);
   return `<div class="chat-session-row">
             <button type="button" class="chat-session" data-session="${t}" data-current="${i.id === c ? "1" : "0"}">
-              <span class="chat-session-label">${w}${u}</span>
-              <span class="chat-session-time">${L ? I(L) + " · " : ""}${A}</span>
+              <span class="chat-session-label">${v}${u}</span>
+              <span class="chat-session-time">${L ? N(L) + " · " : ""}${q}</span>
             </button>
-            <button type="button" class="chat-session-more" data-action="session-menu" data-session="${t}" data-title="${E(S)}" aria-label="会话操作">⋯</button>
+            <button type="button" class="chat-session-more" data-action="session-menu" data-session="${t}" data-title="${I(k)}" aria-label="会话操作">⋯</button>
           </div>`;
 }
 function Xe(i) {
   return i ? `<span class="chat-card-time">${Et(i)}</span>` : "";
 }
-function cr(i, c, t = null, S = 0, u = !1) {
-  const w = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", L = i.name || "工具", A = i.summary || "", B = Number(S) || 0, k = B ? `<span class="chat-tool-index ${w}">${B}</span>` : '<span class="chat-tool-dot" aria-hidden="true"></span>';
-  return `<div class="chat-tool ${w}${u ? " is-active" : ""}" data-tool="${E(i.id)}">
-    <button type="button" class="chat-tool-head" data-action="tool-open" data-tool="${E(i.id)}">
-      ${k}
-      <span class="chat-tool-name">${I(L)}</span>
-      ${A ? `<span class="chat-tool-sum">${I(A)}</span>` : ""}
+function cr(i, c, t = null, k = 0, u = !1) {
+  const v = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", L = i.name || "工具", q = i.summary || "", B = Number(k) || 0, w = B ? `<span class="chat-tool-index ${v}">${B}</span>` : '<span class="chat-tool-dot" aria-hidden="true"></span>';
+  return `<div class="chat-tool ${v}${u ? " is-active" : ""}" data-tool="${I(i.id)}">
+    <button type="button" class="chat-tool-head" data-action="tool-open" data-tool="${I(i.id)}">
+      ${w}
+      <span class="chat-tool-name">${N(L)}</span>
+      ${q ? `<span class="chat-tool-sum">${N(q)}</span>` : ""}
       <span class="chat-tool-chevron" aria-hidden="true">›</span>
     </button>
   </div>`;
 }
 function lr(i, c = null) {
-  const t = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", S = i.name || "工具", u = i.summary || "", w = !!(i.preview || i.error), L = (k) => `<button type="button" class="chat-tool-copy" data-action="tool-copy" data-tool="${E(i.id)}" data-copy="${k}">复制</button>`, A = [
-    i.preview ? `<div class="chat-tool-code-head"><span>结果</span>${L("preview")}</div><pre class="chat-tool-preview">${I(i.preview)}</pre>` : "",
-    i.error ? `<p class="chat-tool-label">错误</p><p class="chat-tool-error">${I([i.error.name, i.error.code, i.error.reason].filter(Boolean).join(" · "))}</p>` : "",
-    w ? "" : '<p class="chat-tool-preview">没有输出</p>'
-  ].join(""), B = i.args ? `<div class="chat-tool-code-head"><span>参数</span>${L("args")}</div><pre class="chat-tool-pre">${I(i.args)}</pre>` : "";
+  const t = i.status === "failed" ? "is-failed" : i.status === "ok" ? "is-ok" : "is-running", k = i.name || "工具", u = i.summary || "", v = !!(i.preview || i.error), L = (w) => `<button type="button" class="chat-tool-copy" data-action="tool-copy" data-tool="${I(i.id)}" data-copy="${w}">复制</button>`, q = [
+    i.preview ? `<div class="chat-tool-code-head"><span>结果</span>${L("preview")}</div><pre class="chat-tool-preview">${N(i.preview)}</pre>` : "",
+    i.error ? `<p class="chat-tool-label">错误</p><p class="chat-tool-error">${N([i.error.name, i.error.code, i.error.reason].filter(Boolean).join(" · "))}</p>` : "",
+    v ? "" : '<p class="chat-tool-preview">没有输出</p>'
+  ].join(""), B = i.args ? `<div class="chat-tool-code-head"><span>参数</span>${L("args")}</div><pre class="chat-tool-pre">${N(i.args)}</pre>` : "";
   return `<div class="chat-tool-detail ${t}">
     <div class="chat-tool-detail-head">
       <span class="chat-tool-dot" aria-hidden="true"></span>
-      <span class="chat-tool-name">${I(S)}</span>
-      ${u ? `<span class="chat-tool-sum">${I(u)}</span>` : ""}
+      <span class="chat-tool-name">${N(k)}</span>
+      ${u ? `<span class="chat-tool-sum">${N(u)}</span>` : ""}
     </div>
-    ${A}
+    ${q}
     ${B}
   </div>`;
 }
@@ -861,99 +861,99 @@ function dr() {
     </div>
   </div>`;
 }
-function ur(i, c, t, S = null, u = {}) {
-  const w = Number.isFinite(Number(u.total)) ? Number(u.total) : i.length, L = i.filter((m) => m.status === "failed").length, A = Number(u.running) || 0, B = L > 0 ? `${L} 次失败` : A > 0 ? "执行中" : "已完成", k = "group-" + (i[0] ? i[0].id : "current"), j = i.map((m, h) => cr(m, !1, S, h + 1, m.id === u.activeId)).join(""), H = c && w > 3 ? `<button type="button" class="chat-tool-group-collapse" data-action="tool-group-toggle" data-group="${E(k)}">收起工具列表</button>` : "", T = i.length ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${E(k)}" aria-expanded="${c ? "true" : "false"}">
+function ur(i, c, t, k = null, u = {}) {
+  const v = Number.isFinite(Number(u.total)) ? Number(u.total) : i.length, L = i.filter((m) => m.status === "failed").length, q = Number(u.running) || 0, B = L > 0 ? `${L} 次失败` : q > 0 ? "执行中" : "已完成", w = "group-" + (i[0] ? i[0].id : "current"), j = i.map((m, h) => cr(m, !1, k, h + 1, m.id === u.activeId)).join(""), H = c && v > 3 ? `<button type="button" class="chat-tool-group-collapse" data-action="tool-group-toggle" data-group="${I(w)}">收起工具列表</button>` : "", T = i.length ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${I(w)}" aria-expanded="${c ? "true" : "false"}">
         <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
-        <span class="chat-tool-group-title">本轮 ${w} 次工具调用</span>
+        <span class="chat-tool-group-title">本轮 ${v} 次工具调用</span>
         <span class="chat-tool-group-badge${L > 0 ? " is-failed" : ""}">${B}</span>
         <span class="chat-tool-chevron" aria-hidden="true">›</span>
       </button>` : `<div class="chat-tool-group-head is-static">
         <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
-        <span class="chat-tool-group-title">本轮 ${w} 次工具调用</span>
+        <span class="chat-tool-group-title">本轮 ${v} 次工具调用</span>
         <span class="chat-tool-group-badge${L > 0 ? " is-failed" : ""}">${B}</span>
       </div>`;
-  return `<div class="chat-tool-group${c ? " is-open" : ""}" data-group="${E(k)}">
+  return `<div class="chat-tool-group${c ? " is-open" : ""}" data-group="${I(w)}">
     ${T}
     <div class="chat-tool-group-body"${c && j ? "" : " hidden"}>${j}</div>
     ${H}
   </div>`;
 }
 function pr(i, c) {
-  const t = Array.isArray(i.files) ? i.files : [], S = t.map((u, w) => {
-    const L = String(u.path || "").split(/[\\/]/).pop() || "文件", A = typeof c == "function" ? c(i.seq, w, L) : "", B = /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(L), k = `<a class="chat-file chat-deliverable-file" href="${E(A)}" data-file-url="${E(A)}" data-file-name="${E(L)}" download="${E(L)}">
+  const t = Array.isArray(i.files) ? i.files : [], k = t.map((u, v) => {
+    const L = String(u.path || "").split(/[\\/]/).pop() || "文件", q = typeof c == "function" ? c(i.seq, v, L) : "", B = /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(L), w = `<a class="chat-file chat-deliverable-file" href="${I(q)}" data-file-url="${I(q)}" data-file-name="${I(L)}" download="${I(L)}">
         <span class="chat-file-icon">${B ? "🖼" : "📄"}</span>
         <span class="chat-file-main">
-          <span class="chat-file-name">${I(L)}</span>
-          <span class="chat-file-size">${I(u.description || (B ? "点图预览 · 点此下载" : "点按下载"))}</span>
+          <span class="chat-file-name">${N(L)}</span>
+          <span class="chat-file-size">${N(u.description || (B ? "点图预览 · 点此下载" : "点按下载"))}</span>
         </span>
         ${B ? '<span class="chat-deliverable-download">下载</span>' : ""}
       </a>`;
     return B ? `<div class="chat-deliverable-media">
-        <img class="chat-image chat-deliverable-thumb" data-src="${E(A)}" alt="${E(L)}" />
-        ${k}
-      </div>` : k;
+        <img class="chat-image chat-deliverable-thumb" data-src="${I(q)}" alt="${I(L)}" />
+        ${w}
+      </div>` : w;
   }).join("");
-  return `<div class="chat-card chat-deliverable" data-deliverable="${E(i.id)}">
+  return `<div class="chat-card chat-deliverable" data-deliverable="${I(i.id)}">
     <div class="chat-card-head">
       <span class="chat-card-icon" aria-hidden="true">📦</span>
       <span class="chat-card-title">交付文件</span>
       <span class="chat-card-badge">${t.length} 个</span>
       ${Xe(i.at)}
     </div>
-    <div class="chat-deliverable-list">${S}</div>
+    <div class="chat-deliverable-list">${k}</div>
   </div>`;
 }
 function hr(i) {
-  const c = !i.decision, t = i.decision === "allow", S = i.title || "等待你授权", u = i.reason || "需要你确认后才能继续。", w = c ? `<div class="chat-card-actions">
-        <button type="button" class="chat-btn is-danger" data-action="approval-deny" data-approval="${E(i.id)}">拒绝</button>
-        <button type="button" class="chat-btn is-primary" data-action="approval-allow" data-approval="${E(i.id)}">允许</button>
+  const c = !i.decision, t = i.decision === "allow", k = i.title || "等待你授权", u = i.reason || "需要你确认后才能继续。", v = c ? `<div class="chat-card-actions">
+        <button type="button" class="chat-btn is-danger" data-action="approval-deny" data-approval="${I(i.id)}">拒绝</button>
+        <button type="button" class="chat-btn is-primary" data-action="approval-allow" data-approval="${I(i.id)}">允许</button>
       </div>` : "", L = c ? '<span class="chat-card-badge is-pending">待授权</span>' : `<span class="chat-card-badge ${t ? "is-ok" : "is-failed"}">${t ? "已允许" : "已拒绝"}</span>`;
-  return `<div class="chat-card chat-approval${c ? " is-pending" : ""}" data-approval="${E(i.id)}">
+  return `<div class="chat-card chat-approval${c ? " is-pending" : ""}" data-approval="${I(i.id)}">
     <div class="chat-card-head">
       <span class="chat-card-icon" aria-hidden="true">🛡</span>
-      <span class="chat-card-title">${I(S)}</span>
+      <span class="chat-card-title">${N(k)}</span>
       ${L}
       ${Xe(i.at)}
     </div>
-    ${i.tool ? `<p class="chat-card-sub">${I(i.tool)}</p>` : ""}
-    <p class="chat-card-text">${I(u)}</p>
-    ${w}
+    ${i.tool ? `<p class="chat-card-sub">${N(i.tool)}</p>` : ""}
+    <p class="chat-card-text">${N(u)}</p>
+    ${v}
   </div>`;
 }
 function fr(i, c) {
-  const t = c && c.selected || {}, S = c && c.custom || {}, u = [];
-  for (const w of i.questions || []) {
-    const L = Array.isArray(t[w.id]) ? t[w.id] : [], A = String(S[w.id] || "").trim();
-    if (L.length === 0 && !A) return null;
-    const B = { id: w.id, selected: L };
-    A && (B.custom = A), u.push(B);
+  const t = c && c.selected || {}, k = c && c.custom || {}, u = [];
+  for (const v of i.questions || []) {
+    const L = Array.isArray(t[v.id]) ? t[v.id] : [], q = String(k[v.id] || "").trim();
+    if (L.length === 0 && !q) return null;
+    const B = { id: v.id, selected: L };
+    q && (B.custom = q), u.push(B);
   }
   return u.length ? u : null;
 }
 function gr(i, c, t) {
-  const S = i.state !== "answered" && !t, u = i.state === "answered", w = c && c.selected || {}, L = c && c.custom || {}, A = (i.questions || []).map((k) => {
-    const j = Array.isArray(w[k.id]) ? w[k.id] : [], H = Array.isArray(k.options) ? k.options : [], T = u && Array.isArray(i.answers) ? i.answers.find((x) => x.id === k.id) : null, m = H.length ? `<div class="chat-q-opts">${H.map((x) => {
+  const k = i.state !== "answered" && !t, u = i.state === "answered", v = c && c.selected || {}, L = c && c.custom || {}, q = (i.questions || []).map((w) => {
+    const j = Array.isArray(v[w.id]) ? v[w.id] : [], H = Array.isArray(w.options) ? w.options : [], T = u && Array.isArray(i.answers) ? i.answers.find((x) => x.id === w.id) : null, m = H.length ? `<div class="chat-q-opts">${H.map((x) => {
       const b = j.includes(x.label), f = T && Array.isArray(T.selected) && T.selected.includes(x.label);
-      return `<button type="button" class="chat-q-opt${b || f ? " is-on" : ""}" data-action="q-pick" data-input="${E(i.callId)}" data-q="${E(k.id)}" data-value="${E(x.label)}" ${k.multiSelect ? 'data-multi="1"' : ""} ${S ? "" : "disabled"}>
-                <span class="chat-q-opt-label">${I(x.label)}</span>
-                ${x.description ? `<small class="chat-q-opt-desc">${I(x.description)}</small>` : ""}
+      return `<button type="button" class="chat-q-opt${b || f ? " is-on" : ""}" data-action="q-pick" data-input="${I(i.callId)}" data-q="${I(w.id)}" data-value="${I(x.label)}" ${w.multiSelect ? 'data-multi="1"' : ""} ${k ? "" : "disabled"}>
+                <span class="chat-q-opt-label">${N(x.label)}</span>
+                ${x.description ? `<small class="chat-q-opt-desc">${N(x.description)}</small>` : ""}
               </button>`;
-    }).join("")}</div>` : "", h = u && T && T.custom ? T.custom : String(L[k.id] || ""), g = S ? `<input class="chat-q-custom" data-role="q-custom" data-input="${E(i.callId)}" data-q="${E(k.id)}" value="${E(h)}" placeholder="或者自己输入" autocomplete="off" />` : h ? `<p class="chat-q-custom-text">${I(h)}</p>` : "";
+    }).join("")}</div>` : "", h = u && T && T.custom ? T.custom : String(L[w.id] || ""), g = k ? `<input class="chat-q-custom" data-role="q-custom" data-input="${I(i.callId)}" data-q="${I(w.id)}" value="${I(h)}" placeholder="或者自己输入" autocomplete="off" />` : h ? `<p class="chat-q-custom-text">${N(h)}</p>` : "";
     return `<div class="chat-q">
-        ${k.header ? `<p class="chat-q-header">${I(k.header)}</p>` : ""}
-        <p class="chat-q-text">${I(k.question || "")}</p>
-        ${k.detail ? `<p class="chat-q-sub">${I(k.detail)}</p>` : ""}
+        ${w.header ? `<p class="chat-q-header">${N(w.header)}</p>` : ""}
+        <p class="chat-q-text">${N(w.question || "")}</p>
+        ${w.detail ? `<p class="chat-q-sub">${N(w.detail)}</p>` : ""}
         ${m}
         ${g}
       </div>`;
-  }).join(""), B = S ? `<div class="chat-card-actions"><button type="button" class="chat-btn is-primary" data-action="q-submit" data-input="${E(i.callId)}">${t ? "已提交" : "提交"}</button></div>` : "";
-  return `<div class="chat-card chat-input-card${S ? " is-pending" : ""}${u ? " is-answered" : ""}" data-input="${E(i.callId)}">
+  }).join(""), B = k ? `<div class="chat-card-actions"><button type="button" class="chat-btn is-primary" data-action="q-submit" data-input="${I(i.callId)}">${t ? "已提交" : "提交"}</button></div>` : "";
+  return `<div class="chat-card chat-input-card${k ? " is-pending" : ""}${u ? " is-answered" : ""}" data-input="${I(i.callId)}">
     <div class="chat-card-head">
       <span class="chat-card-icon" aria-hidden="true">❓</span>
       <span class="chat-card-title">${u ? "已回答" : t ? "已提交，等待继续" : "需要你选择"}</span>
       ${Xe(i.at)}
     </div>
-    ${A}
+    ${q}
     ${B}
   </div>`;
 }
@@ -1038,7 +1038,7 @@ function mr(i, c) {
     sessionPermission: "",
     projections: {},
     openAcc: ""
-  }, S = String(c.manifest && c.manifest.version || ""), u = typeof window < "u" && !!window.__verifyWatchdog && /^(127\.0\.0\.1|localhost)$/.test(location.hostname), w = u ? 120 : 5 * 60 * 1e3, L = 6e3, A = u ? 450 : 15 * 60 * 1e3, B = u ? 80 : 1e4, k = 3, j = 5, H = 30, T = [
+  }, k = String(c.manifest && c.manifest.version || ""), u = typeof window < "u" && !!window.__verifyWatchdog && /^(127\.0\.0\.1|localhost)$/.test(location.hostname), v = u ? 120 : 5 * 60 * 1e3, L = 6e3, q = u ? 450 : 15 * 60 * 1e3, B = u ? 80 : 1e4, w = 3, j = 5, H = 30, T = [
     // 8 道错题：4 道带问号，4 道不带
     "6 × 3 = 19?",
     "9 + 6 = 14?",
@@ -1073,25 +1073,25 @@ function mr(i, c) {
     "11 + 4 = 15",
     "7 × 7 = 49",
     "24 ÷ 6 = 4"
-  ], m = 1e3, h = "我这边在手机上处理不了刚才的确认，已经中断当前回合。请改用不需要电脑端弹窗的方式继续；如果必须用电脑操作，请先告诉我需要做什么。", g = 180, x = String(c.manifest && c.manifest.id || "dsh-console"), b = Wo({ base: () => t.url, token: () => t.token }), f = Vo(), M = Jo();
+  ], m = 1e3, h = "我这边在手机上处理不了刚才的确认，已经中断当前回合。请改用不需要电脑端弹窗的方式继续；如果必须用电脑操作，请先告诉我需要做什么。", g = 180, x = String(c.manifest && c.manifest.id || "dsh-console"), b = Wo({ base: () => t.url, token: () => t.token }), f = Vo(), E = Jo();
   t.messages = f.messages;
-  let r = null, n = {}, D = null, F = 0, Y = !1, U = !1, V = 0, _ = 0, K = [], gt = null, Je = 0, fe = null, ge = null, me = null, It = null, O = { list: [], index: 0, scale: 1, x: 0, y: 0 }, at = null, tt = /* @__PURE__ */ new Map(), mt = null, et = !1, bt = 0, ct = 0, J = "unknown", _t = null, Ze = 0;
+  let r = null, n = {}, D = null, W = 0, Y = !1, U = !1, V = 0, _ = 0, K = [], gt = null, Je = 0, fe = null, ge = null, me = null, It = null, O = { list: [], index: 0, scale: 1, x: 0, y: 0 }, at = null, tt = /* @__PURE__ */ new Map(), mt = null, et = !1, bt = 0, ct = 0, J = "unknown", _t = null, Ze = 0;
   const Ot = /* @__PURE__ */ new Set(), Ft = /* @__PURE__ */ new Map(), Wt = /* @__PURE__ */ new Set();
   function dn() {
-    let e = "", a = "", o = !0, s = "turn", l = "", d = "", v = !0, $ = "lan";
+    let e = "", a = "", o = !0, s = "turn", l = "", d = "", y = !0, A = "lan";
     try {
-      const z = c.storage.get(Ve);
-      if (z) {
-        const p = JSON.parse(z);
-        e = p && typeof p.url == "string" ? p.url : "", a = p && typeof p.token == "string" ? p.token : "", p && p.notify !== void 0 && (o = p.notify !== !1), p && p.notifyMode === "message" && (s = "message"), p && typeof p.lanUrl == "string" && (l = p.lanUrl), p && typeof p.wanUrl == "string" && (d = p.wanUrl), p && p.autoPick !== void 0 && (v = p.autoPick !== !1), p && p.pick === "wan" && ($ = "wan");
+      const C = c.storage.get(Ve);
+      if (C) {
+        const p = JSON.parse(C);
+        e = p && typeof p.url == "string" ? p.url : "", a = p && typeof p.token == "string" ? p.token : "", p && p.notify !== void 0 && (o = p.notify !== !1), p && p.notifyMode === "message" && (s = "message"), p && typeof p.lanUrl == "string" && (l = p.lanUrl), p && typeof p.wanUrl == "string" && (d = p.wanUrl), p && p.autoPick !== void 0 && (y = p.autoPick !== !1), p && p.pick === "wan" && (A = "wan");
       }
     } catch {
     }
     if (!l && !d && e) {
-      const z = vt(e);
-      z && z !== ft ? d = z : l = z;
+      const C = vt(e);
+      C && C !== ft ? d = C : l = C;
     }
-    t.lanUrl = vt(l) || ft, t.wanUrl = d ? vt(d) : "", t.autoPick = v !== !1, t.pick = $, t.mode = t.autoPick ? "auto" : t.pick === "wan" ? "wan" : "lan", t.token = String(a || "").trim(), t.notify = o !== !1, t.notifyMode = s, t.url = t.autoPick ? t.lanUrl : t.pick === "wan" && t.wanUrl ? t.wanUrl : t.lanUrl;
+    t.lanUrl = vt(l) || ft, t.wanUrl = d ? vt(d) : "", t.autoPick = y !== !1, t.pick = A, t.mode = t.autoPick ? "auto" : t.pick === "wan" ? "wan" : "lan", t.token = String(a || "").trim(), t.notify = o !== !1, t.notifyMode = s, t.url = t.autoPick ? t.lanUrl : t.pick === "wan" && t.wanUrl ? t.wanUrl : t.lanUrl;
   }
   function Kt() {
     c.storage.set(Ve, JSON.stringify({
@@ -1140,7 +1140,7 @@ function mr(i, c) {
   async function pn() {
     rt();
     try {
-      await M.clearAll();
+      await E.clearAll();
     } catch {
     }
     try {
@@ -1148,7 +1148,7 @@ function mr(i, c) {
         for (const e of await caches.keys()) await caches.delete(e);
     } catch {
     }
-    ta(), f.clear(), t.toolDetailId = "", t.toolActiveId = "", R(!0), N("缓存已清理");
+    ta(), f.clear(), t.toolDetailId = "", t.toolActiveId = "", R(!0), P("缓存已清理");
     try {
       await xt();
     } catch {
@@ -1157,7 +1157,7 @@ function mr(i, c) {
   async function hn() {
     rt();
     try {
-      await M.destroy();
+      await E.destroy();
     } catch {
     }
     try {
@@ -1171,7 +1171,7 @@ function mr(i, c) {
         await e.removeEntry(a, { recursive: !0 });
     } catch {
     }
-    c.storage.remove(Ve), c.storage.remove(be), c.storage.remove(Qa), f.clear(), R(!0), N("正在恢复初始化…"), window.setTimeout(() => {
+    c.storage.remove(Ve), c.storage.remove(be), c.storage.remove(Qa), f.clear(), R(!0), P("正在恢复初始化…"), window.setTimeout(() => {
       c.shell && typeof c.shell.exit == "function" ? c.shell.exit() : location.reload();
     }, 400);
   }
@@ -1179,7 +1179,7 @@ function mr(i, c) {
   function rt() {
     if (Nt && (window.clearTimeout(Nt), Nt = 0), !Gt.length || !kt) return;
     const e = kt, a = Gt;
-    Gt = [], kt = "", M.put(e, a).catch(() => {
+    Gt = [], kt = "", E.put(e, a).catch(() => {
     });
   }
   function fn(e, a) {
@@ -1194,14 +1194,14 @@ function mr(i, c) {
   }
   async function gn(e, a) {
     if (!e) {
-      N("这条审批已经失效", "error");
+      P("这条审批已经失效", "error");
       return;
     }
     t.lastProgressAt = Date.now();
     try {
-      await b.approvalDecision(e, a), N(a ? "已允许" : "已拒绝");
+      await b.approvalDecision(e, a), P(a ? "已允许" : "已拒绝");
     } catch (o) {
-      N("提交失败：" + (o && o.message || "网络错误"), "error");
+      P("提交失败：" + (o && o.message || "网络错误"), "error");
     }
   }
   const Vt = (e, a, o) => b.assetUrl(e, a, o), ea = (e, a, o) => b.fetchWithTimeout(e, a, o);
@@ -1266,33 +1266,33 @@ function mr(i, c) {
           return;
         }
         s && (t.instance = s);
-        const v = t.running, $ = t.staleShown, z = typeof a.running == "boolean";
-        z && (t.running = !!a.running, a.running && (t.awaitingReply = !0), !t.running && t.waitingSince && Date.now() - t.waitingSince > 2500 && (t.waiting = !1, t.busy = !1, t.waitingSince = 0));
-        const p = t.currentTool, y = p ? String(p.name) + "|" + String(p.detail || "") + "|" + String(!!p.done) : "";
+        const y = t.running, A = t.staleShown, C = typeof a.running == "boolean";
+        C && (t.running = !!a.running, a.running && (t.awaitingReply = !0), !t.running && t.waitingSince && Date.now() - t.waitingSince > 2500 && (t.waiting = !1, t.busy = !1, t.waitingSince = 0));
+        const p = t.currentTool, $ = p ? String(p.name) + "|" + String(p.detail || "") + "|" + String(!!p.done) : "";
         t.currentTool = a.tool && a.tool.name ? {
           name: String(a.tool.name),
           detail: String(a.tool.detail || ""),
           done: !!a.tool.done
         } : null, t.currentTool && (t.lastTool = { name: t.currentTool.name, detail: t.currentTool.detail, done: !0 }, t.lastToolAt = Date.now());
-        const P = t.currentTool ? String(t.currentTool.name) + "|" + String(t.currentTool.detail || "") + "|" + String(t.currentTool.done) : "", C = y !== P;
+        const S = t.currentTool ? String(t.currentTool.name) + "|" + String(t.currentTool.detail || "") + "|" + String(t.currentTool.done) : "", z = $ !== S;
         t.lastEventAge = Number(a.lastEventAgeMs) || 0;
-        const W = t.running && t.lastEventAge > 3e5;
-        t.staleShown = W;
-        const G = z && (v !== t.running || $ !== W);
+        const F = t.running && t.lastEventAge > 3e5;
+        t.staleShown = F;
+        const G = C && (y !== t.running || A !== F);
         if (!t.hydrated) {
           f.replaceMessages(
-            o.map(ve).filter((q) => q.text || q.images.length || q.files.length)
+            o.map(ve).filter((M) => M.text || M.images.length || M.files.length)
           ), t.hydrated = !0, t.booting = !1, !t.waiting && !t.running && (t.busy = !1), R(!0);
           return;
         }
         if (o.length === 0) {
-          (G || C) && R();
+          (G || z) && R();
           return;
         }
         let ht = !1;
-        for (const q of o)
-          f.cursor = Math.max(f.cursor, Number(q.id) || 0), bn(q) && (ht = !0);
-        !z && t.waiting && (t.waiting = !1, t.busy = !1, ht = !0), (ht || G || C) && R();
+        for (const M of o)
+          f.cursor = Math.max(f.cursor, Number(M.id) || 0), bn(M) && (ht = !0);
+        !C && t.waiting && (t.waiting = !1, t.busy = !1, ht = !0), (ht || G || z) && R();
       } catch (e) {
         const a = String(e && e.message || "");
         if (/401|令牌|unauthor/i.test(a)) {
@@ -1306,10 +1306,10 @@ function mr(i, c) {
     }
   }
   function Lt() {
-    F || (F = window.setInterval(aa, 800));
+    W || (W = window.setInterval(aa, 800));
   }
   function we() {
-    F && (window.clearInterval(F), F = 0);
+    W && (window.clearInterval(W), W = 0);
   }
   function xn(e) {
     const a = e && e.session || {}, o = e && Array.isArray(e.events) ? e.events : [];
@@ -1323,7 +1323,7 @@ function mr(i, c) {
       model: a.model || null
     }, St()), R(!0), window.setTimeout(() => {
       U || ia();
-    }, 80), t.status !== "ok" && Q("ok", "已连接"), t.currentSession && o.length > 0 && (rt(), M.put(t.currentSession, o).catch(() => {
+    }, 80), t.status !== "ok" && Q("ok", "已连接"), t.currentSession && o.length > 0 && (rt(), E.put(t.currentSession, o).catch(() => {
     }));
   }
   function na() {
@@ -1457,7 +1457,7 @@ function mr(i, c) {
   async function xt() {
     if (!(U || !t.url) && J !== "legacy")
       try {
-        const e = await b.snapshot(t.currentSession || "", { turns: k });
+        const e = await b.snapshot(t.currentSession || "", { turns: w });
         if (U) return;
         J = "sse", we(), xn(e), ra();
       } catch {
@@ -1478,12 +1478,12 @@ function mr(i, c) {
         turns: Math.min(j, e),
         before: t.oldestSeq
       }), d = Array.isArray(l && l.events) ? l.events : [];
-      for (const $ of d) f.upsertEvent($);
+      for (const A of d) f.upsertEvent(A);
       t.oldestSeq = Number(l && l.oldestSeq) || t.oldestSeq;
-      const v = na() >= H;
-      t.turnHasMore = !!(l && l.hasMore) && !v, t.historyLimitReached = v && !!(l && l.hasMore), R(), a && (a.scrollTop = o + Math.max(0, a.scrollHeight - s));
+      const y = na() >= H;
+      t.turnHasMore = !!(l && l.hasMore) && !y, t.historyLimitReached = y && !!(l && l.hasMore), R(), a && (a.scrollTop = o + Math.max(0, a.scrollHeight - s));
     } catch (l) {
-      N("加载更早失败：" + (l && l.message || "网络错误"), "error");
+      P("加载更早失败：" + (l && l.message || "网络错误"), "error");
     } finally {
       t.loadingOlder = !1, sa();
     }
@@ -1519,15 +1519,15 @@ function mr(i, c) {
     try {
       await b.stop(), a = !0;
     } catch (o) {
-      t.stuckBusy = !1, t.lastProgressAt = Date.now(), R(), N("中断失败：" + (o && o.message || "网络错误"), "error");
+      t.stuckBusy = !1, t.lastProgressAt = Date.now(), R(), P("中断失败：" + (o && o.message || "网络错误"), "error");
       return;
     }
     if (a) {
       t.stopped = !0, t.awaitingReply = !0;
       try {
-        await b.send({ text: h, images: [], files: [] }), N(e ? "长时间无响应，已中断并说明" : "已中断，已让 agent 换方式");
+        await b.send({ text: h, images: [], files: [] }), P(e ? "长时间无响应，已中断并说明" : "已中断，已让 agent 换方式");
       } catch {
-        t.awaitingReply = !1, N("已中断，但说明没发出去");
+        t.awaitingReply = !1, P("已中断，但说明没发出去");
       }
     }
     t.stuckBusy = !1, t.lastProgressAt = Date.now(), R();
@@ -1555,71 +1555,72 @@ function mr(i, c) {
       t.stuckPrompt && (t.stuckPrompt = !1, R());
       return;
     }
-    const e = Date.now() - (Number(t.lastProgressAt) || Date.now()), a = $e() ? 1 / 0 : A;
+    const e = Date.now() - (Number(t.lastProgressAt) || Date.now()), a = $e() ? 1 / 0 : q;
     if (e >= a) {
       ca(!0);
       return;
     }
-    e >= w && !t.stuckPrompt && (t.stuckPrompt = !0, R());
+    e >= v && !t.stuckPrompt && (t.stuckPrompt = !0, R());
   }
   async function Ae(e, a) {
     const o = String(e || "").trim(), s = t.pending || [];
-    if (!a && s.some((y) => y.status === "uploading")) {
-      N("图片/文件还在上传，稍等一下", "error");
+    if (!a && s.some((S) => S.status === "uploading")) {
+      P("图片/文件还在上传，稍等一下", "error");
       return;
     }
-    if (!a && s.some((y) => y.status === "error")) {
-      N("有附件上传失败，先移除再发", "error");
+    if (!a && s.some((S) => S.status === "error")) {
+      P("有附件上传失败，先移除再发", "error");
       return;
     }
     if (!o && s.length === 0) return;
     if (!t.url) {
-      N("先在 ⚙ 里填电脑地址", "error"), Tt();
+      P("先在 ⚙ 里填电脑地址", "error"), Tt();
       return;
     }
     if (t.waiting && !a) return;
     t.lastProgressAt = Date.now(), t.stopped = !1, t.stuckPrompt = !1;
-    const l = s.filter((y) => y.kind === "image" && y.ref).map((y) => y.ref), d = s.filter((y) => y.kind === "file" && y.ref).map((y) => y.ref), v = t.messages.reduce((y, P) => {
-      const C = P && P.seq;
-      return Number.isFinite(Number(C)) ? Math.max(y, Number(C)) : y;
-    }, -1), $ = {
+    const l = s.filter((S) => S.kind === "image" && S.ref).map((S) => S.ref), d = s.filter((S) => S.kind === "file" && S.ref).map((S) => S.ref), y = t.messages.reduce((S, z) => {
+      const F = z && z.seq;
+      return Number.isFinite(Number(F)) ? Math.max(S, Number(F)) : S;
+    }, -1), A = {
       who: "me",
       text: o,
       at: Date.now(),
       // 真实 seq 还没回来之前，先排在已有消息之后、下一条回复之前
-      seq: v + 0.5,
+      seq: y + 0.5,
       local: !0,
-      images: s.filter((y) => y.kind === "image").map((y) => ({
-        id: "local:" + y.key,
-        src: y.preview
+      images: s.filter((S) => S.kind === "image").map((S) => ({
+        id: "local:" + S.key,
+        src: S.preview
       })),
-      files: s.filter((y) => y.kind === "file").map((y) => ({
-        id: "local:" + y.key,
-        name: y.name,
-        size: y.size
+      files: s.filter((S) => S.kind === "file").map((S) => ({
+        id: "local:" + S.key,
+        name: S.name,
+        size: S.size
       }))
     };
-    f.messages.push($), t.draft = "", n.input && (n.input.value = ""), He(), t.waiting = !0, t.waitingSince = Date.now(), t.busy = !0, t.awaitingReply = !0, t.runActive = !0, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, R(!0), J !== "sse" && Lt();
-    let z = null;
-    for (let y = 0; y < 3; y += 1)
+    f.messages.push(A), t.draft = "", n.input && (n.input.value = ""), He(), t.waiting = !0, t.waitingSince = Date.now(), t.busy = !0, t.awaitingReply = !0, t.runActive = !0, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, R(!0), J !== "sse" && Lt();
+    const C = typeof crypto < "u" && typeof crypto.randomUUID == "function" ? crypto.randomUUID() : "local-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+    let p = null;
+    for (let S = 0; S < 3; S += 1)
       try {
-        await b.send({ text: o, images: l, files: d }), z = null, t.pending = [], st(), J !== "sse" ? window.setTimeout(aa, 260) : window.setTimeout(async () => {
+        await b.send({ text: o, images: l, files: d, clientMessageId: C }), p = null, t.pending = [], st(), J !== "sse" ? window.setTimeout(aa, 260) : window.setTimeout(async () => {
           if (!U)
             try {
-              const P = await b.health();
-              P && P.title && pt(P.title);
+              const z = await b.health();
+              z && z.title && pt(z.title);
             } catch {
             }
         }, 700), Q("ok", "已连接");
         return;
-      } catch (P) {
-        z = P, y < 2 && await _o(700 * (y + 1));
+      } catch (z) {
+        p = z, S < 2 && await _o(700 * (S + 1));
       }
     t.waiting = !1, t.busy = !1, t.awaitingReply = !1, t.runActive = !1;
-    const p = f.messages.indexOf($);
-    p >= 0 && f.messages.splice(p, 1), f.messages.push({
+    const $ = f.messages.indexOf(A);
+    $ >= 0 && f.messages.splice($, 1), f.messages.push({
       who: "error",
-      text: "发送失败：" + (z && z.message || "未知错误"),
+      text: "发送失败：" + (p && p.message || "未知错误"),
       at: Date.now(),
       retryText: o
     }), Q("bad", "发送失败"), R(!0);
@@ -1627,8 +1628,8 @@ function mr(i, c) {
   function st() {
     const e = t.pending || [];
     n.attach && (n.attach.hidden = e.length === 0, n.attach.innerHTML = e.map((a) => {
-      const o = a.kind === "image" && a.preview ? `<img class="chat-chip-thumb" src="${E(a.preview)}" alt="" />` : '<span class="chat-chip-icon">📎</span>', s = a.status === "uploading" ? '<span class="chat-chip-state">上传中</span>' : a.status === "error" ? '<span class="chat-chip-state is-bad">失败</span>' : "";
-      return `<div class="chat-chip" data-key="${E(a.key)}"><button type="button" class="chat-chip-x" data-action="remove-attach" data-key="${E(a.key)}" aria-label="移除">×</button>${o}${s}</div>`;
+      const o = a.kind === "image" && a.preview ? `<img class="chat-chip-thumb" src="${I(a.preview)}" alt="" />` : '<span class="chat-chip-icon">📎</span>', s = a.status === "uploading" ? '<span class="chat-chip-state">上传中</span>' : a.status === "error" ? '<span class="chat-chip-state is-bad">失败</span>' : "";
+      return `<div class="chat-chip" data-key="${I(a.key)}"><button type="button" class="chat-chip-x" data-action="remove-attach" data-key="${I(a.key)}" aria-label="移除">×</button>${o}${s}</div>`;
     }).join(""));
   }
   function Tn(e) {
@@ -1657,17 +1658,17 @@ function mr(i, c) {
     const a = Array.from(e || []);
     if (a.length !== 0) {
       if (!t.url) {
-        N("先在 ⚙ 里填电脑地址", "error"), Tt();
+        P("先在 ⚙ 里填电脑地址", "error"), Tt();
         return;
       }
       for (const o of a) {
         const s = String(o.type || "").startsWith("image/");
-        if ((t.pending || []).filter((v) => v.kind === (s ? "image" : "file")).length >= 4) {
-          N(s ? "一条消息最多 4 张图" : "一条消息最多 4 个文件", "error");
+        if ((t.pending || []).filter((y) => y.kind === (s ? "image" : "file")).length >= 4) {
+          P(s ? "一条消息最多 4 张图" : "一条消息最多 4 个文件", "error");
           continue;
         }
         if (o.size > 30 * 1024 * 1024) {
-          N((o.name || "文件") + " 超过 30MB", "error");
+          P((o.name || "文件") + " 超过 30MB", "error");
           continue;
         }
         const d = {
@@ -1697,7 +1698,7 @@ function mr(i, c) {
     if (a === n.relayToggle && a instanceof HTMLInputElement) {
       const s = !!a.checked;
       if (!c.watch || typeof c.watch.start != "function") {
-        a.checked = !s, N("当前壳不支持这个开关", "error");
+        a.checked = !s, P("当前壳不支持这个开关", "error");
         return;
       }
       t.notify = s, Kt(), Rt(), Sa();
@@ -1711,9 +1712,9 @@ function mr(i, c) {
     const e = t.url;
     if (t.waiting = !1, t.busy = !1, R(), !!e)
       try {
-        await b.stop(), t.stopped = !0, Se(!0), R(), N("已停止执行");
+        await b.stop(), t.stopped = !0, Se(!0), R(), P("已停止执行");
       } catch (a) {
-        N("停止失败：" + (a && a.message || "网络错误"), "error");
+        P("停止失败：" + (a && a.message || "网络错误"), "error");
       }
   }
   async function Yt() {
@@ -1726,20 +1727,20 @@ function mr(i, c) {
       const e = await b.sessions(), a = Array.isArray(e.sessions) ? e.sessions : [], o = e.current || t.currentSession || "";
       o && (t.currentSession = String(o)), t.archivedList = Array.isArray(e.archived) ? e.archived : [], t.showArchived = !1, t.sessionsList = a.filter((s) => !s.blank || s.id === o), n.sessionSearch && (n.sessionSearch.value = "", n.sessionSearch.hidden = !0), n.sheetBody.innerHTML = '<div data-role="session-list"></div>', Qt();
     } catch (e) {
-      t.sessionsList = [], n.sheetBody.innerHTML = `<div class="chat-sheet-tip">读取失败：${I(e && e.message || "未知错误")}</div>`;
+      t.sessionsList = [], n.sheetBody.innerHTML = `<div class="chat-sheet-tip">读取失败：${N(e && e.message || "未知错误")}</div>`;
     }
   }
   function Qt() {
     const e = n.sheetBody && n.sheetBody.querySelector('[data-role="session-list"]');
     if (!e) return;
-    const a = String(t.sessionQuery || "").trim().toLowerCase(), o = (t.sessionsList || []).filter((p) => a ? String(p.title || "").toLowerCase().includes(a) || String(p.id || "").toLowerCase().includes(a) : !0), s = t.currentSession || "", l = o.slice(0, 80).map((p) => ir(p, s)).join(""), d = `<div class="chat-sheet-tip">${a ? "没有匹配的对话" : "还没有历史对话"}</div>`, v = (t.archivedList || []).filter((p) => a ? String(p.title || "").toLowerCase().includes(a) || String(p.id || "").toLowerCase().includes(a) : !0), $ = `<button type="button" class="chat-archived-toggle" data-action="toggle-archived">${t.showArchived ? "收起已归档" : "已归档 " + v.length}</button>`;
-    let z = "";
-    t.showArchived && (z = v.length ? v.slice(0, 80).map(
-      (p) => `<div class="chat-session-row is-archived"><button type="button" class="chat-session" data-action="restore-session" data-session="${E(p.id || "")}">
-                <span class="chat-session-label">${I(p.title || "未命名对话")}</span>
+    const a = String(t.sessionQuery || "").trim().toLowerCase(), o = (t.sessionsList || []).filter((p) => a ? String(p.title || "").toLowerCase().includes(a) || String(p.id || "").toLowerCase().includes(a) : !0), s = t.currentSession || "", l = o.slice(0, 80).map((p) => ir(p, s)).join(""), d = `<div class="chat-sheet-tip">${a ? "没有匹配的对话" : "还没有历史对话"}</div>`, y = (t.archivedList || []).filter((p) => a ? String(p.title || "").toLowerCase().includes(a) || String(p.id || "").toLowerCase().includes(a) : !0), A = `<button type="button" class="chat-archived-toggle" data-action="toggle-archived">${t.showArchived ? "收起已归档" : "已归档 " + y.length}</button>`;
+    let C = "";
+    t.showArchived && (C = y.length ? y.slice(0, 80).map(
+      (p) => `<div class="chat-session-row is-archived"><button type="button" class="chat-session" data-action="restore-session" data-session="${I(p.id || "")}">
+                <span class="chat-session-label">${N(p.title || "未命名对话")}</span>
                 <span class="chat-session-time">已归档 · 点按恢复</span>
               </button></div>`
-    ).join("") : '<div class="chat-sheet-tip">没有已归档的对话</div>'), e.innerHTML = (o.length ? l : d) + $ + z;
+    ).join("") : '<div class="chat-sheet-tip">没有已归档的对话</div>'), e.innerHTML = (o.length ? l : d) + A + C;
   }
   function En(e) {
     return e ? e.eventId ? String(e.eventId) : e.id ? "id" + e.id : Number.isFinite(Number(e.seq)) ? "s" + e.seq : "" : "";
@@ -1763,17 +1764,17 @@ function mr(i, c) {
       if (!s) continue;
       const l = s.toLowerCase().indexOf(e);
       if (l < 0) continue;
-      const d = Math.max(0, l - 16), v = l + e.length + 26, $ = (d > 0 ? "…" : "") + s.slice(d, v).replace(/\s+/g, " ") + (v < s.length ? "…" : "");
-      if (a.push({ key: En(o), who: o.who, snippet: $, at: o.at }), a.length >= 80) break;
+      const d = Math.max(0, l - 16), y = l + e.length + 26, A = (d > 0 ? "…" : "") + s.slice(d, y).replace(/\s+/g, " ") + (y < s.length ? "…" : "");
+      if (a.push({ key: En(o), who: o.who, snippet: A, at: o.at }), a.length >= 80) break;
     }
     if (a.length === 0) {
       n.searchBody.innerHTML = '<div class="chat-sheet-tip">没有找到包含该关键词的消息</div>';
       return;
     }
     n.searchBody.innerHTML = a.map(
-      (o) => `<button type="button" class="chat-search-hit" data-action="search-jump" data-key="${E(o.key)}">
+      (o) => `<button type="button" class="chat-search-hit" data-action="search-jump" data-key="${I(o.key)}">
           <span class="chat-search-hit-head">${o.who === "me" ? "我" : o.who === "error" ? "错误" : "助手"} · ${Et(o.at)}</span>
-          <span class="chat-search-hit-text">${I(o.snippet)}</span>
+          <span class="chat-search-hit-text">${N(o.snippet)}</span>
         </button>`
     ).join("");
   }
@@ -1781,7 +1782,7 @@ function mr(i, c) {
     if (qe(), !e || !n.list) return;
     const a = n.list.querySelector('[data-mid="' + e.replace(/["\\]/g, "\\$&") + '"]');
     if (!a) {
-      N("这条消息不在当前窗口里", "error");
+      P("这条消息不在当前窗口里", "error");
       return;
     }
     a.scrollIntoView({ block: "center", behavior: "smooth" });
@@ -1801,25 +1802,25 @@ function mr(i, c) {
   async function zn() {
     const e = t.renameId, a = String(n.renameInput && n.renameInput.value || "").trim();
     if (!e || !a) {
-      N("标题不能为空", "error");
+      P("标题不能为空", "error");
       return;
     }
     try {
       const o = await b.renameSession(e, a);
-      e === t.currentSession && o && o.title && pt(o.title), Me(), N("已重命名"), t.sessionsOpen && await Yt();
+      e === t.currentSession && o && o.title && pt(o.title), Me(), P("已重命名"), t.sessionsOpen && await Yt();
     } catch (o) {
-      N("重命名失败：" + (o && o.message || "未知错误"), "error");
+      P("重命名失败：" + (o && o.message || "未知错误"), "error");
     }
   }
   async function Cn() {
     const e = t.sessionMenuId;
     if (zt(), !!e) {
-      N("正在分支…");
+      P("正在分支…");
       try {
         const a = await b.forkSession(e);
-        a && a.sessionId ? await ua(a.sessionId) : N("分支失败", "error");
+        a && a.sessionId ? await ua(a.sessionId) : P("分支失败", "error");
       } catch (a) {
-        N("分支失败：" + (a && a.message || "未知错误"), "error");
+        P("分支失败：" + (a && a.message || "未知错误"), "error");
       }
     }
   }
@@ -1846,21 +1847,21 @@ function mr(i, c) {
     const e = t.archiveId;
     if (e)
       try {
-        await b.archiveSession(e, t.archiveStop), Jt(), N("已归档"), t.sessionsOpen && await Yt();
+        await b.archiveSession(e, t.archiveStop), Jt(), P("已归档"), t.sessionsOpen && await Yt();
       } catch (a) {
         if (a && a.code === "workspace/session-active" && !t.archiveStop) {
           t.archiveStop = !0, n.archiveText && (n.archiveText.textContent = "这个会话还在执行，停止并归档？");
           return;
         }
-        N("归档失败：" + (a && a.message || "未知错误"), "error");
+        P("归档失败：" + (a && a.message || "未知错误"), "error");
       }
   }
   async function jn(e) {
     if (e)
       try {
-        await b.unarchiveSession(e), N("已恢复"), t.sessionsOpen && await Yt();
+        await b.unarchiveSession(e), P("已恢复"), t.sessionsOpen && await Yt();
       } catch (a) {
-        N("恢复失败：" + (a && a.message || "未知错误"), "error");
+        P("恢复失败：" + (a && a.message || "未知错误"), "error");
       }
   }
   function yt() {
@@ -1870,13 +1871,13 @@ function mr(i, c) {
   }
   async function ua(e) {
     if (yt(), !!e) {
-      N("正在打开对话…");
+      P("正在打开对话…");
       try {
         const a = await b.target(e);
-        rt(), lt(), f.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), a && a.current && (t.currentSession = String(a.current)), t.currentSession && M.clearOthers(t.currentSession).catch(() => {
-        }), pt(a && a.title || ""), t.view = "chat", n.page && (n.page.hidden = !0), R(!0), J === "sse" ? xt() : await Pt(!0), N("已切换对话");
+        rt(), lt(), f.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), a && a.current && (t.currentSession = String(a.current)), t.currentSession && E.clearOthers(t.currentSession).catch(() => {
+        }), pt(a && a.title || ""), t.view = "chat", n.page && (n.page.hidden = !0), R(!0), J === "sse" ? xt() : await Pt(!0), P("已切换对话");
       } catch (a) {
-        N("切换失败：" + (a && a.message || "未知错误"), "error");
+        P("切换失败：" + (a && a.message || "未知错误"), "error");
       }
     }
   }
@@ -1926,54 +1927,54 @@ function mr(i, c) {
     return t.options;
   }
   function ha(e, a, o, s) {
-    return e.map((l) => `<button type="button" class="chat-opt" data-action="${s}" data-scope="${o}" data-value="${E(l.value)}" data-on="${l.value === a ? "1" : "0"}">${I(l.name)}</button>`).join("");
+    return e.map((l) => `<button type="button" class="chat-opt" data-action="${s}" data-scope="${o}" data-value="${I(l.value)}" data-on="${l.value === a ? "1" : "0"}">${N(l.name)}</button>`).join("");
   }
   function fa(e) {
     const a = t.options && t.options.models && Array.isArray(t.options.models.groups) ? t.options.models.groups : [];
     if (a.length === 0) return "";
-    const o = t.formModel || "", s = t.formEffort || "", l = a.map((y) => {
-      const P = (y.models || []).map((C) => `<button type="button" class="chat-opt" data-action="pick-model" data-scope="${e}" data-provider="${E(y.id)}" data-value="${E(C.id)}" data-on="${C.id === o ? "1" : "0"}">${I(C.name || C.id)}</button>`).join("");
-      return e === "new" ? `<div class="chat-chipgroup">${P}</div>` : `<div class="chat-form-block"><p class="chat-sheet-sub">${I(y.name || y.id)}</p><div class="chat-chipgroup">${P}</div></div>`;
-    }).join(""), d = e === "new" ? `<div class="chat-form-block"><p class="chat-sheet-sub">模型</p>${l}</div>` : l, v = Bt(t.formProvider, o), $ = v && v.model && v.model.reasoning && Array.isArray(v.model.reasoning.efforts) ? v.model.reasoning.efforts : [], z = $.length ? `<div class="chat-form-block"><p class="chat-sheet-sub">推理等级</p><div class="chat-chipgroup">${$.map((y) => `<button type="button" class="chat-opt" data-action="pick-effort" data-scope="${e}" data-value="${E(y.id)}" data-on="${y.id === s ? "1" : "0"}">${I(y.name || y.id)}</button>`).join("")}</div></div>` : "";
+    const o = t.formModel || "", s = t.formEffort || "", l = a.map(($) => {
+      const S = ($.models || []).map((z) => `<button type="button" class="chat-opt" data-action="pick-model" data-scope="${e}" data-provider="${I($.id)}" data-value="${I(z.id)}" data-on="${z.id === o ? "1" : "0"}">${N(z.name || z.id)}</button>`).join("");
+      return e === "new" ? `<div class="chat-chipgroup">${S}</div>` : `<div class="chat-form-block"><p class="chat-sheet-sub">${N($.name || $.id)}</p><div class="chat-chipgroup">${S}</div></div>`;
+    }).join(""), d = e === "new" ? `<div class="chat-form-block"><p class="chat-sheet-sub">模型</p>${l}</div>` : l, y = Bt(t.formProvider, o), A = y && y.model && y.model.reasoning && Array.isArray(y.model.reasoning.efforts) ? y.model.reasoning.efforts : [], C = A.length ? `<div class="chat-form-block"><p class="chat-sheet-sub">推理等级</p><div class="chat-chipgroup">${A.map(($) => `<button type="button" class="chat-opt" data-action="pick-effort" data-scope="${e}" data-value="${I($.id)}" data-on="${$.id === s ? "1" : "0"}">${N($.name || $.id)}</button>`).join("")}</div></div>` : "";
     let p = "";
     if (e === "model") {
-      const y = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((P) => ({
-        value: String(P.value),
-        name: Ja[String(P.value)] || P.name || String(P.value)
+      const $ = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((S) => ({
+        value: String(S.value),
+        name: Ja[String(S.value)] || S.name || String(S.value)
       }));
-      if (y.length > 0) {
-        const P = t.sessionPermission || t.meta && t.meta.permission || "";
-        p = `<div class="chat-form-block"><p class="chat-sheet-sub">权限</p><div class="chat-chipgroup">${y.map((C) => `<button type="button" class="chat-opt" data-action="pick-permission-current" data-value="${E(C.value)}" data-on="${C.value === P ? "1" : "0"}">${I(C.name)}</button>`).join("")}</div><p class="chat-opt-desc">切换后从下一次操作开始生效；完全权限不再询问。</p></div>`;
+      if ($.length > 0) {
+        const S = t.sessionPermission || t.meta && t.meta.permission || "";
+        p = `<div class="chat-form-block"><p class="chat-sheet-sub">权限</p><div class="chat-chipgroup">${$.map((z) => `<button type="button" class="chat-opt" data-action="pick-permission-current" data-value="${I(z.value)}" data-on="${z.value === S ? "1" : "0"}">${N(z.name)}</button>`).join("")}</div><p class="chat-opt-desc">切换后从下一次操作开始生效；完全权限不再询问。</p></div>`;
       }
     }
-    return d + z + p;
+    return d + C + p;
   }
   function ga() {
-    const e = t.options && t.options.models ? t.options.models.default : null, a = t.options && t.options.models && Array.isArray(t.options.models.groups) ? t.options.models.groups : [], o = a[0] && Array.isArray(a[0].models) ? a[0].models[0] : null, s = e && e.provider ? String(e.provider) : a[0] ? String(a[0].id) : "", l = e && e.model ? String(e.model) : o ? String(o.id) : "", d = Bt(s, l), v = e && e.reasoningEffort ? String(e.reasoningEffort) : d && d.model && d.model.reasoning ? String(d.model.reasoning.defaultEffort || "") : "";
-    t.formProvider = s, t.formModel = l, t.formEffort = v;
+    const e = t.options && t.options.models ? t.options.models.default : null, a = t.options && t.options.models && Array.isArray(t.options.models.groups) ? t.options.models.groups : [], o = a[0] && Array.isArray(a[0].models) ? a[0].models[0] : null, s = e && e.provider ? String(e.provider) : a[0] ? String(a[0].id) : "", l = e && e.model ? String(e.model) : o ? String(o.id) : "", d = Bt(s, l), y = e && e.reasoningEffort ? String(e.reasoningEffort) : d && d.model && d.model.reasoning ? String(d.model.reasoning.defaultEffort || "") : "";
+    t.formProvider = s, t.formModel = l, t.formEffort = y;
   }
   function Ct() {
     if (!n.newBody) return;
-    const e = Dn(), a = e.find((v) => v.value === t.formPreset) || e.find((v) => v.value === Ie()), o = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((v) => ({
-      value: String(v.value),
-      name: Ja[String(v.value)] || v.name || String(v.value),
-      description: Uo[String(v.value)] || v.description || ""
-    })), s = t.formPermission || Ne(), l = o.find((v) => v.value === s), d = l && l.description ? l.description : s === "danger-full-access" ? "完全权限：不再询问，直接执行。" : "非完全权限时，需要授权的操作会先弹到手机确认。";
+    const e = Dn(), a = e.find((y) => y.value === t.formPreset) || e.find((y) => y.value === Ie()), o = (t.options && Array.isArray(t.options.permissions) ? t.options.permissions : []).map((y) => ({
+      value: String(y.value),
+      name: Ja[String(y.value)] || y.name || String(y.value),
+      description: Uo[String(y.value)] || y.description || ""
+    })), s = t.formPermission || Ne(), l = o.find((y) => y.value === s), d = l && l.description ? l.description : s === "danger-full-access" ? "完全权限：不再询问，直接执行。" : "非完全权限时，需要授权的操作会先弹到手机确认。";
     n.newBody.innerHTML = `
       <div class="chat-form-block">
         <p class="chat-sheet-sub">标题</p>
-        <input class="chat-sheet-search" data-role="new-title" value="${E(t.formTitle || "")}" placeholder="可不填，自动取第一句" autocomplete="off" spellcheck="false" />
+        <input class="chat-sheet-search" data-role="new-title" value="${I(t.formTitle || "")}" placeholder="可不填，自动取第一句" autocomplete="off" spellcheck="false" />
       </div>
       <div class="chat-form-block">
         <p class="chat-sheet-sub">模式</p>
         <div class="chat-chipgroup">${ha(e, a ? a.value : t.formPreset, "new", "pick-preset")}</div>
-        <p class="chat-opt-desc">${I(a && a.description || "")}</p>
+        <p class="chat-opt-desc">${N(a && a.description || "")}</p>
       </div>
       ${o.length > 0 ? `
       <div class="chat-form-block">
         <p class="chat-sheet-sub">权限</p>
         <div class="chat-chipgroup">${ha(o, s, "new", "pick-permission")}</div>
-        <p class="chat-opt-desc">${I(d)}</p>
+        <p class="chat-opt-desc">${N(d)}</p>
       </div>` : ""}
       ${fa("new")}
       <button type="button" class="chat-btn is-primary is-block" data-action="create-session">开始对话</button>
@@ -1993,7 +1994,7 @@ function mr(i, c) {
     return o && o.model && o.model.name ? String(o.model.name) : String(a || "");
   }
   function Un(e, a, o) {
-    const s = Bt(e, a), d = (s && s.model && s.model.reasoning && Array.isArray(s.model.reasoning.efforts) ? s.model.reasoning.efforts : []).find((v) => v && v.id === o);
+    const s = Bt(e, a), d = (s && s.model && s.model.reasoning && Array.isArray(s.model.reasoning.efforts) ? s.model.reasoning.efforts : []).find((y) => y && y.id === o);
     return d && d.name ? String(d.name) : String(o || "");
   }
   function St() {
@@ -2025,8 +2026,8 @@ function mr(i, c) {
   function On(e, a, o, s) {
     if (e === "model") {
       t.formProvider = o || t.formProvider, t.formModel = a;
-      const l = Bt(t.formProvider, a), d = l && l.model && l.model.reasoning && Array.isArray(l.model.reasoning.efforts) ? l.model.reasoning.efforts : [], v = l && l.model && l.model.reasoning && l.model.reasoning.defaultEffort || "";
-      t.formEffort = d.some(($) => $.id === t.formEffort) ? t.formEffort : v || (d[0] ? d[0].id : "");
+      const l = Bt(t.formProvider, a), d = l && l.model && l.model.reasoning && Array.isArray(l.model.reasoning.efforts) ? l.model.reasoning.efforts : [], y = l && l.model && l.model.reasoning && l.model.reasoning.defaultEffort || "";
+      t.formEffort = d.some((A) => A.id === t.formEffort) ? t.formEffort : y || (d[0] ? d[0].id : "");
     } else
       t.formEffort = a;
     s === "new" ? Ct() : Zt();
@@ -2042,9 +2043,9 @@ function mr(i, c) {
         s && s.meta && (t.meta = s.meta);
       }
       const o = await b.selectModel(e);
-      o && o.meta && (t.meta = o.meta), St(), te(), N("已应用");
+      o && o.meta && (t.meta = o.meta), St(), te(), P("已应用");
     } catch (a) {
-      N("应用失败：" + (a && a.message || "未知错误"), "error");
+      P("应用失败：" + (a && a.message || "未知错误"), "error");
     }
   }
   function Wn() {
@@ -2090,7 +2091,7 @@ function mr(i, c) {
       return;
     }
     const e = t.formPreset || Ie(), a = t.formPermission || Ne(), o = String(t.formTitle || "").trim();
-    N("正在新建对话…");
+    P("正在新建对话…");
     try {
       const s = await b.createSession({
         preset: e,
@@ -2108,10 +2109,10 @@ function mr(i, c) {
           d && d.meta && (t.meta = d.meta);
         } catch {
         }
-      rt(), lt(), f.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), s && s.current && (t.currentSession = String(s.current)), t.currentSession && M.clearOthers(t.currentSession).catch(() => {
-      }), s && s.meta && (t.meta = s.meta, St()), pt(s && s.title || "新对话"), t.view = "chat", n.page && (n.page.hidden = !0), R(!0), J === "sse" && xt(), n.input && n.input.focus(), yt(), t.formTitle = "", N(s && s.created === !1 ? "已经是新对话" : "新对话已就绪");
+      rt(), lt(), f.clear(), t.booting = !0, t.historyLimitReached = !1, t.stopped = !1, t.awaitingReply = !1, t.notRunningSince = 0, t.stream = null, t.focusLastAssistant = !1, t.holdAnswer = !1, t.reading = !1, t.pendingPaint = !1, t.lastListTop = 0, t.projections = {}, t.hydrated = !1, t.waiting = !1, t.busy = !1, t.pending = [], t.running = !1, t.lastEventAge = 0, t.waitingSince = 0, t.staleShown = !1, st(), s && s.current && (t.currentSession = String(s.current)), t.currentSession && E.clearOthers(t.currentSession).catch(() => {
+      }), s && s.meta && (t.meta = s.meta, St()), pt(s && s.title || "新对话"), t.view = "chat", n.page && (n.page.hidden = !0), R(!0), J === "sse" && xt(), n.input && n.input.focus(), yt(), t.formTitle = "", P(s && s.created === !1 ? "已经是新对话" : "新对话已就绪");
     } catch (s) {
-      N("新建失败：" + (s && s.message || "未知错误"), "error");
+      P("新建失败：" + (s && s.message || "未知错误"), "error");
     }
   }
   function ma() {
@@ -2127,34 +2128,34 @@ function mr(i, c) {
       a.dataset.on = a.dataset.value === e ? "1" : "0";
   }
   function Tt() {
-    yt(), t.view = "settings", t.testResult = null, t.openAcc = "", Ue(), n.page.hidden = !1, n.inputUrl.value = t.lanUrl || ft, n.inputWan && (n.inputWan.value = t.wanUrl || ""), ma(), n.inputToken.value = t.token || "", n.lanState && (n.lanState.textContent = "", n.lanState.dataset.tone = ""), n.wanState && (n.wanState.textContent = "", n.wanState.dataset.tone = ""), n.version.textContent = S ? "v" + S + " · 由 DSH 插件托管" : "由 DSH 插件托管", ba(), Ta(""), ne(), Sa();
+    yt(), t.view = "settings", t.testResult = null, t.openAcc = "", Ue(), n.page.hidden = !1, n.inputUrl.value = t.lanUrl || ft, n.inputWan && (n.inputWan.value = t.wanUrl || ""), ma(), n.inputToken.value = t.token || "", n.lanState && (n.lanState.textContent = "", n.lanState.dataset.tone = ""), n.wanState && (n.wanState.textContent = "", n.wanState.dataset.tone = ""), n.version.textContent = k ? "v" + k + " · 由 DSH 插件托管" : "由 DSH 插件托管", ba(), Ta(""), ne(), Sa();
   }
   function xa() {
     t.view = "chat", n.page.hidden = !0, R();
   }
   async function Qn() {
-    const e = vt(n.inputUrl.value), a = n.inputWan ? vt(n.inputWan.value) : "", o = n.inputToken.value.trim(), s = o ? { Authorization: "Bearer " + o } : {}, l = (p, y, P) => {
-      p && (p.textContent = y, p.dataset.tone = P || "");
+    const e = vt(n.inputUrl.value), a = n.inputWan ? vt(n.inputWan.value) : "", o = n.inputToken.value.trim(), s = o ? { Authorization: "Bearer " + o } : {}, l = (p, $, S) => {
+      p && (p.textContent = $, p.dataset.tone = S || "");
     };
     l(n.lanState, e ? "· 网络测试中" : "· 未填", e ? "busy" : ""), l(n.wanState, a ? "· 网络测试中" : "· 未填", a ? "busy" : "");
     const d = r && r.querySelector('[data-action="test"]');
     d && (d.dataset.busy = "1");
-    const v = async (p, y) => {
+    const y = async (p, $) => {
       if (!p) return { text: "未填", tone: "" };
-      const P = Date.now();
+      const S = Date.now();
       try {
-        const C = await ea(p + "/health", { headers: s }, y);
-        if (!C.ok) throw new Error("HTTP " + C.status);
-        const W = await C.json().catch(() => ({})), G = Date.now() - P;
+        const z = await ea(p + "/health", { headers: s }, $);
+        if (!z.ok) throw new Error("HTTP " + z.status);
+        const F = await z.json().catch(() => ({})), G = Date.now() - S;
         return {
-          text: (W && W.hasKey === !1 ? "可连接（未配 Key）" : "可连接") + " · " + G + "ms",
+          text: (F && F.hasKey === !1 ? "可连接（未配 Key）" : "可连接") + " · " + G + "ms",
           tone: "ok"
         };
       } catch {
         return { text: "连不上", tone: "bad" };
       }
-    }, [$, z] = await Promise.all([v(e, 4e3), v(a, 6e3)]);
-    l(n.lanState, "· " + $.text, $.tone), l(n.wanState, "· " + z.text, z.tone), d && delete d.dataset.busy;
+    }, [A, C] = await Promise.all([y(e, 4e3), y(a, 6e3)]);
+    l(n.lanState, "· " + A.text, A.tone), l(n.wanState, "· " + C.text, C.tone), d && delete d.dataset.busy;
   }
   function Xn() {
     return Zo({
@@ -2195,25 +2196,25 @@ function mr(i, c) {
       if (l.length === 0)
         return Q("bad", o === "wan" ? "外部地址未填" : "家里地址未填"), !1;
       const d = t.status === "ok";
-      let v = 0;
-      d || (v = window.setTimeout(() => {
+      let y = 0;
+      d || (y = window.setTimeout(() => {
         t.status !== "ok" && Q("busy", "网络连接中…");
       }, 1e3));
-      const $ = (G) => G === t.lanUrl ? 1600 : 5e3, z = await Promise.all(l.map((G) => Jn(G, $(G))));
-      if (window.clearTimeout(v), a !== Le) return !1;
-      const p = z.findIndex(Boolean), y = p >= 0 ? l[p] : "";
-      if (!y) {
+      const A = (G) => G === t.lanUrl ? 1600 : 5e3, C = await Promise.all(l.map((G) => Jn(G, A(G))));
+      if (window.clearTimeout(y), a !== Le) return !1;
+      const p = C.findIndex(Boolean), $ = p >= 0 ? l[p] : "";
+      if (!$) {
         const G = l.length > 1 ? "家里和外部都连不上" : o === "wan" ? "外部连不上" : "家里连不上";
         return Q("bad", G), t.wanFirst = !0, ze = window.setTimeout(() => {
           U || dt();
         }, 2e3), !1;
       }
-      const P = t.url;
+      const S = t.url;
       t.wanFirst = !1;
-      const C = y !== t.url;
-      t.url = y;
-      const W = y === t.lanUrl ? "家里" : "外部";
-      return Q("ok", "已连接 · " + W), C && P && N("已切换到" + W), (C || e) && (t.hydrated = !1, f.cursor = 0, Kt(), Rt(), lt(), J === "sse" ? xt() : Pt(!0)), ne(), !0;
+      const z = $ !== t.url;
+      t.url = $;
+      const F = $ === t.lanUrl ? "家里" : "外部";
+      return Q("ok", "已连接 · " + F), z && S && P("已切换到" + F), (z || e) && (t.hydrated = !1, f.cursor = 0, Kt(), Rt(), lt(), J === "sse" ? xt() : Pt(!0)), ne(), !0;
     } finally {
       a === Le && (ae = !1);
     }
@@ -2254,27 +2255,27 @@ function mr(i, c) {
   }
   async function Zn() {
     if (!c.watch || typeof c.watch.test != "function") {
-      N("当前壳不支持测试提醒", "error");
+      P("当前壳不支持测试提醒", "error");
       return;
     }
     try {
       if (typeof c.watch.ensurePermission == "function" && !await c.watch.ensurePermission()) {
-        N("通知权限没开：去系统设置里允许「像素盒子」发通知后再试", "error");
+        P("通知权限没开：去系统设置里允许「像素盒子」发通知后再试", "error");
         return;
       }
-      await c.watch.test(), N("已发送测试提醒");
+      await c.watch.test(), P("已发送测试提醒");
     } catch (e) {
-      N("发送失败：" + (e && e.message || "未知错误"), "error");
+      P("发送失败：" + (e && e.message || "未知错误"), "error");
     }
   }
   function to() {
     if (!n.inputToken.value.trim()) {
-      N("访问令牌不能为空，电脑端「设置 → 手机中转」里可以看到", "error");
+      P("访问令牌不能为空，电脑端「设置 → 手机中转」里可以看到", "error");
       return;
     }
     t.lanUrl = vt(n.inputUrl.value) || ft, t.wanUrl = n.inputWan ? vt(n.inputWan.value) : "", t.autoPick = t.mode === "auto", t.pick = t.mode === "wan" ? "wan" : "lan", t.url = t.mode === "wan" && t.wanUrl || t.lanUrl, t.token = n.inputToken.value.trim(), Kt(), Rt(), t.hydrated = !1, f.cursor = 0, t.openAcc = "", n.serverBody && (n.serverBody.hidden = !0);
     const e = r && r.querySelector('[data-acc="server"]');
-    e && (e.dataset.open = "0"), ne(), N("已保存"), dt(!0);
+    e && (e.dataset.open = "0"), ne(), P("已保存"), dt(!0);
   }
   async function $a(e) {
     try {
@@ -2292,7 +2293,7 @@ function mr(i, c) {
   function eo(e) {
     if (e) {
       if (c.openExternal && typeof c.openExternal == "function") {
-        c.openExternal(e).catch(() => N("打不开链接", "error"));
+        c.openExternal(e).catch(() => P("打不开链接", "error"));
         return;
       }
       window.open(e, "_blank", "noopener,noreferrer");
@@ -2306,9 +2307,9 @@ function mr(i, c) {
         const o = document.createElement("a");
         o.href = e, o.download = a || "", o.rel = "noopener", document.body.appendChild(o), o.click(), o.remove();
       }
-      N("已开始下载" + (a ? "：" + a : ""));
+      P("已开始下载" + (a ? "：" + a : ""));
     } catch (o) {
-      N("下载失败：" + (o && o.message || "未知错误"), "error");
+      P("下载失败：" + (o && o.message || "未知错误"), "error");
     }
   }
   function Aa(e) {
@@ -2323,9 +2324,9 @@ function mr(i, c) {
   function no(e, a) {
     if (!e) return;
     const o = a && a.closest(".chat-turn") || a && a.closest(".chat-tool") || a && a.closest(".chat-card") || n.list, s = o ? Array.from(o.querySelectorAll("img.chat-image")) : [], l = [];
-    for (const v of s) {
-      const $ = Aa(v);
-      $ && !l.includes($) && l.push($);
+    for (const y of s) {
+      const A = Aa(y);
+      A && !l.includes(A) && l.push(A);
     }
     l.length === 0 && l.push(e);
     const d = Math.max(0, l.indexOf(e));
@@ -2401,7 +2402,7 @@ function mr(i, c) {
       ct = 0, oe();
     }, 300);
   }
-  function N(e, a) {
+  function P(e, a) {
     n.toast && (n.toast.textContent = e, n.toast.style.background = a === "error" ? "rgba(150, 62, 50, 0.92)" : "rgba(30, 40, 48, 0.88)", n.toast.classList.add("is-on"), window.clearTimeout(V), V = window.setTimeout(() => {
       n.toast.classList.remove("is-on");
     }, 2200));
@@ -2499,14 +2500,14 @@ function mr(i, c) {
   function lo(e) {
     let a = -1;
     for (let d = 0; d < e.length; d += 1) {
-      const v = e[d];
-      v.kind === "message" && v.message && v.message.who === "me" && (a = d);
+      const y = e[d];
+      y.kind === "message" && y.message && y.message.who === "me" && (a = d);
     }
     if (a < 0) return null;
     let o = !1, s = !1, l = !1;
     for (let d = a + 1; d < e.length; d += 1) {
-      const v = e[d];
-      v.kind === "tool" && (o = !0), v.kind === "message" && v.message && (v.message.who === "ai" && (s = !0), v.message.who === "error" && (l = !0));
+      const y = e[d];
+      y.kind === "tool" && (o = !0), y.kind === "message" && y.message && (y.message.who === "ai" && (s = !0), y.message.who === "error" && (l = !0));
     }
     return !o || s || l || t.stopped ? null : t.status === "bad" ? {
       kind: "offline",
@@ -2523,63 +2524,63 @@ function mr(i, c) {
       return [{ key: "x:skeleton", html: co() }];
     const o = [];
     let s = [], l = [], d = [];
-    const v = (q, Z, ot, X) => {
-      ot && q.push({ key: Z, html: ot, ...X || {} });
+    const y = (M, Z, ot, X) => {
+      ot && M.push({ key: Z, html: ot, ...X || {} });
     };
-    let $ = !1, z = !1, p = 0, y = -1;
-    for (let q = 0; q < e.length; q += 1)
-      e[q].kind === "message" && e[q].message && e[q].message.who === "me" && (y = q);
-    const P = Math.max(1, e.filter((q) => q.kind === "message" && q.message && q.message.who === "me").length);
-    let C = 0, W = 0;
+    let A = !1, C = !1, p = 0, $ = -1;
+    for (let M = 0; M < e.length; M += 1)
+      e[M].kind === "message" && e[M].message && e[M].message.who === "me" && ($ = M);
+    const S = Math.max(1, e.filter((M) => M.kind === "message" && M.message && M.message.who === "me").length);
+    let z = 0, F = 0;
     const G = () => {
-      if (s.length === 0 && C === 0) return;
-      const q = p >= P - 2 && !(t.stopped && z), Z = s[0] ? "group-" + s[0].id : "group-turn-" + p;
-      q && v(
+      if (s.length === 0 && z === 0) return;
+      const M = p >= S - 2 && !(t.stopped && C), Z = s[0] ? "group-" + s[0].id : "group-turn-" + p;
+      M && y(
         d,
         "g:" + p,
         ur(s, Ot.has(Z), null, Vt, {
-          total: C,
-          running: W,
+          total: z,
+          running: F,
           activeId: t.toolActiveId
         }),
         { className: "chat-tool-footer-block" }
-      ), s = [], C = 0, W = 0;
+      ), s = [], z = 0, F = 0;
     }, ht = () => {
       G();
-      let q = d.find((X) => X.key === "g:" + p);
-      const Z = [...l].reverse().find((X) => X.assistant || X.key === "x:streaming" || X.key === "x:typing"), ot = $ || !!l.some((X) => X.key === "x:streaming" || X.key === "x:typing");
-      z && !t.stopped && t.awaitingReply && ot && Z && (q ? q.className = "chat-tool-footer-block" : (q = {
+      let M = d.find((X) => X.key === "g:" + p);
+      const Z = [...l].reverse().find((X) => X.assistant || X.key === "x:streaming" || X.key === "x:typing"), ot = A || !!l.some((X) => X.key === "x:streaming" || X.key === "x:typing");
+      C && !t.stopped && t.awaitingReply && ot && Z && (M ? M.className = "chat-tool-footer-block" : (M = {
         key: "g:" + p,
         html: dr(),
         className: "chat-tool-footer-block"
-      }, d.push(q))), q && (d = d.filter((X) => X !== q), d.unshift(q)), o.push(...l, ...d), l = [], d = [], $ = !1, z = !1, p += 1;
+      }, d.push(M))), M && (d = d.filter((X) => X !== M), d.unshift(M)), o.push(...l, ...d), l = [], d = [], A = !1, C = !1, p += 1;
     };
-    return e.forEach((q, Z) => {
-      if (q.kind === "message" && q.message.who === "me") {
-        ht(), z = Z === y;
-        const ot = q.message.id || q.message.eventId || q.message.seq || `at-${q.message.at}-${Z}`;
-        v(o, "m:" + ot, rn(q.message, Vt));
+    return e.forEach((M, Z) => {
+      if (M.kind === "message" && M.message.who === "me") {
+        ht(), C = Z === $;
+        const ot = M.message.id || M.message.eventId || M.message.seq || `at-${M.message.at}-${Z}`;
+        y(o, "m:" + ot, rn(M.message, Vt));
         return;
       }
-      if (q.kind === "tool") {
-        if (C += 1, (q.status === "running" || !q.status && q.done !== !0) && (W += 1), q.status === "ok" || q.status === "failed") {
-          s.push(q);
+      if (M.kind === "tool") {
+        if (z += 1, (M.status === "running" || !M.status && M.done !== !0) && (F += 1), M.status === "ok" || M.status === "failed") {
+          s.push(M);
           return;
         }
         return;
       }
-      if (q.kind === "deliverable") {
-        v(d, q.kind + ":" + (q.id || Z), Ma(q));
+      if (M.kind === "deliverable") {
+        y(d, M.kind + ":" + (M.id || Z), Ma(M));
         return;
       }
-      if (q.kind === "message") {
-        const ot = q.message.id || q.message.eventId || q.message.seq || `at-${q.message.at}-${Z}`;
-        q.message.who === "ai" && ($ = !0), v(l, "m:" + ot, rn(q.message, Vt), {
-          assistant: q.message.who === "ai"
+      if (M.kind === "message") {
+        const ot = M.message.id || M.message.eventId || M.message.seq || `at-${M.message.at}-${Z}`;
+        M.message.who === "ai" && (A = !0), y(l, "m:" + ot, rn(M.message, Vt), {
+          assistant: M.message.who === "ai"
         });
       } else
-        v(l, q.kind + ":" + (q.id || Z), Ma(q));
-    }), a.execution && l.push({ key: "x:exec", html: a.execution }), ht(), v(o, "x:tip", a.tip), v(o, "x:projections", a.projections), t.stuckPrompt && v(
+        y(l, M.kind + ":" + (M.id || Z), Ma(M));
+    }), a.execution && l.push({ key: "x:exec", html: a.execution }), ht(), y(o, "x:tip", a.tip), y(o, "x:projections", a.projections), t.stuckPrompt && y(
       o,
       "x:stuck",
       `<div class="chat-card chat-stuck">
@@ -2593,7 +2594,7 @@ function mr(i, c) {
     ), t.historyLimitReached && o.unshift({
       key: "x:history-limit",
       html: `<div class="chat-history-limit">只显示最近 ${H} 轮，更早记录请在电脑端查看</div>`
-    }), a.localNotice && v(
+    }), a.localNotice && y(
       o,
       "x:local-notice",
       `<div class="chat-local-notice is-${a.localNotice.kind}" role="status">
@@ -2652,26 +2653,26 @@ function mr(i, c) {
       d.dataset && d.dataset.block ? o.set(d.dataset.block, d) : d.remove();
     let l = a.firstChild;
     for (const d of e) {
-      const v = "chat-block" + (d.className ? " " + d.className : "");
-      let $ = o.get(d.key);
-      if (!$)
-        $ = document.createElement("div"), $.className = v, $.dataset.block = d.key, $.innerHTML = d.html, $.__html = d.html;
-      else if ($.className !== v && ($.className = v), $.__html !== d.html) {
-        const z = $.querySelector(".chat-tool-group-body"), p = z ? {
-          top: z.scrollTop,
-          atBottom: z.scrollHeight - z.scrollTop - z.clientHeight < 24
+      const y = "chat-block" + (d.className ? " " + d.className : "");
+      let A = o.get(d.key);
+      if (!A)
+        A = document.createElement("div"), A.className = y, A.dataset.block = d.key, A.innerHTML = d.html, A.__html = d.html;
+      else if (A.className !== y && (A.className = y), A.__html !== d.html) {
+        const C = A.querySelector(".chat-tool-group-body"), p = C ? {
+          top: C.scrollTop,
+          atBottom: C.scrollHeight - C.scrollTop - C.clientHeight < 24
         } : null;
-        if ($.innerHTML = d.html, $.__html = d.html, p) {
-          const y = $.querySelector(".chat-tool-group-body");
-          if (y) {
-            const P = () => {
-              y.scrollTop = p.atBottom ? y.scrollHeight : p.top;
+        if (A.innerHTML = d.html, A.__html = d.html, p) {
+          const $ = A.querySelector(".chat-tool-group-body");
+          if ($) {
+            const S = () => {
+              $.scrollTop = p.atBottom ? $.scrollHeight : p.top;
             };
-            P(), window.requestAnimationFrame(P);
+            S(), window.requestAnimationFrame(S);
           }
         }
       }
-      s.set(d.key, $), $ === l ? l = l.nextSibling : a.insertBefore($, l);
+      s.set(d.key, A), A === l ? l = l.nextSibling : a.insertBefore(A, l);
     }
     for (; l; ) {
       const d = l.nextSibling;
@@ -2682,16 +2683,16 @@ function mr(i, c) {
   function mo() {
     const e = t.projections || {}, a = [], o = Array.isArray(e.todos) ? e.todos : null;
     if (o && o.length > 0) {
-      const d = o.filter(($) => $.status === "completed").length, v = o.map(($) => `<li class="chat-todo-item ${$.status === "completed" ? "is-done" : $.status === "in_progress" ? "is-active" : ""}"><span class="chat-todo-mark" aria-hidden="true"></span><span>${I($.content || "")}</span></li>`).join("");
+      const d = o.filter((A) => A.status === "completed").length, y = o.map((A) => `<li class="chat-todo-item ${A.status === "completed" ? "is-done" : A.status === "in_progress" ? "is-active" : ""}"><span class="chat-todo-mark" aria-hidden="true"></span><span>${N(A.content || "")}</span></li>`).join("");
       a.push(
-        `<div class="chat-card chat-todo"><div class="chat-card-head"><span class="chat-card-icon" aria-hidden="true">☑</span><span class="chat-card-title">待办</span><span class="chat-card-badge">${d}/${o.length}</span></div><ul class="chat-todo-list">${v}</ul></div>`
+        `<div class="chat-card chat-todo"><div class="chat-card-head"><span class="chat-card-icon" aria-hidden="true">☑</span><span class="chat-card-title">待办</span><span class="chat-card-badge">${d}/${o.length}</span></div><ul class="chat-todo-list">${y}</ul></div>`
       );
     }
     const s = e.goal;
     if (s && s.goal && s.goal.objective) {
-      const d = String(s.goal.phase || "active"), v = d === "complete" ? "已完成" : d === "paused" ? "已暂停" : d === "blocked" ? "受阻" : "进行中";
+      const d = String(s.goal.phase || "active"), y = d === "complete" ? "已完成" : d === "paused" ? "已暂停" : d === "blocked" ? "受阻" : "进行中";
       a.push(
-        `<div class="chat-card chat-goal"><div class="chat-card-head"><span class="chat-card-icon" aria-hidden="true">◎</span><span class="chat-card-title">目标</span><span class="chat-card-badge">${I(v)}</span></div><p class="chat-card-text">${I(s.goal.objective)}</p><p class="chat-card-sub">第 ${Number(s.roundsStarted) || 0} / ${Number(s.goal.maxGoalRounds) || 0} 轮</p></div>`
+        `<div class="chat-card chat-goal"><div class="chat-card-head"><span class="chat-card-icon" aria-hidden="true">◎</span><span class="chat-card-title">目标</span><span class="chat-card-badge">${N(y)}</span></div><p class="chat-card-text">${N(s.goal.objective)}</p><p class="chat-card-sub">第 ${Number(s.roundsStarted) || 0} / ${Number(s.goal.maxGoalRounds) || 0} 轮</p></div>`
       );
     }
     const l = e.plan;
@@ -2712,7 +2713,7 @@ function mr(i, c) {
   function Ia() {
     return [ut.slice(0, 1), ut.slice(1, 2)].map(
       (a) => `<div class="chat-math-row">${a.map(
-        (o) => `<span class="chat-math-item" style="left:${o.left}px">${I(o.text)}</span>`
+        (o) => `<span class="chat-math-item" style="left:${o.left}px">${N(o.text)}</span>`
       ).join("")}</div>`
     ).join("");
   }
@@ -2745,10 +2746,10 @@ function mr(i, c) {
   }
   function R(e) {
     if (!n.list) return;
-    const a = n.list ? n.list.scrollTop : 0, o = n.list ? n.list.scrollHeight : 0, s = Be(), l = !e && !t.reading && !t.holdAnswer && s, d = f.timeline(), v = [...d].reverse().find((it) => it.kind === "tool" && it.status === "running"), $ = t.lastEventAt ? Date.now() - t.lastEventAt : Number(t.lastEventAge) || 0, z = (t.runActive || t.awaitingReply || t.running || v) && $ > 3e5;
-    t.staleShown = z;
-    const p = t.runActive || t.awaitingReply || t.waiting || t.running || !!(t.currentTool && !t.currentTool.done) || !!v, y = !t.currentTool && t.lastTool && Date.now() - (t.lastToolAt || 0) < 1e4 ? { ...t.lastTool, done: !0 } : null, P = p ? v || t.currentTool || y : null, C = P && P.name ? String(P.name) : "", W = p && !C && !z, G = P && (P.summary || P.detail) ? String(P.summary || P.detail) : "", ht = !!(P && P.status !== "running" && P.done), q = z ? "可能已断开" : C ? ht ? "执行完成…" : "执行中…" : "思考中…", Z = z ? "" : C ? C + (G ? "：" + G : "") : "", ot = W ? Na() : "", X = z ? "" : W ? ot : `<span class="chat-typing-detail">${I(Z)}</span>`, qt = t.stream && t.stream.text ? String(t.stream.text) : "", Fe = t.stream && t.stream.reasoning ? String(t.stream.reasoning) : "", We = !!(Fe && !qt && !z), No = We ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${Na()}` : "", Po = qt || Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${We ? " is-thinking" : ""}">${No}${qt ? `<div class="chat-stream-text">${ln(qt)}</div>` : ""}${qt ? '<span class="chat-typing-dot"></span>' : ""}</div></div>` : "", Lo = p && !qt && !Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${W ? " is-thinking" : ""}${z ? " is-stale" : ""}"><span class="chat-typing-head"><span class="chat-typing-text">${q}</span><span class="chat-typing-dot"></span></span>${X}</div></div>` : "", Ga = t.runActive && !t.stopped ? Po || Lo : "";
-    W || We ? xo() : Pa();
+    const a = n.list ? n.list.scrollTop : 0, o = n.list ? n.list.scrollHeight : 0, s = Be(), l = !e && !t.reading && !t.holdAnswer && s, d = f.timeline(), y = [...d].reverse().find((it) => it.kind === "tool" && it.status === "running"), A = t.lastEventAt ? Date.now() - t.lastEventAt : Number(t.lastEventAge) || 0, C = (t.runActive || t.awaitingReply || t.running || y) && A > 3e5;
+    t.staleShown = C;
+    const p = t.runActive || t.awaitingReply || t.waiting || t.running || !!(t.currentTool && !t.currentTool.done) || !!y, $ = !t.currentTool && t.lastTool && Date.now() - (t.lastToolAt || 0) < 1e4 ? { ...t.lastTool, done: !0 } : null, S = p ? y || t.currentTool || $ : null, z = S && S.name ? String(S.name) : "", F = p && !z && !C, G = S && (S.summary || S.detail) ? String(S.summary || S.detail) : "", ht = !!(S && S.status !== "running" && S.done), M = C ? "可能已断开" : z ? ht ? "执行完成…" : "执行中…" : "思考中…", Z = C ? "" : z ? z + (G ? "：" + G : "") : "", ot = F ? Na() : "", X = C ? "" : F ? ot : `<span class="chat-typing-detail">${N(Z)}</span>`, qt = t.stream && t.stream.text ? String(t.stream.text) : "", Fe = t.stream && t.stream.reasoning ? String(t.stream.reasoning) : "", We = !!(Fe && !qt && !C), No = We ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${Na()}` : "", Po = qt || Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${We ? " is-thinking" : ""}">${No}${qt ? `<div class="chat-stream-text">${ln(qt)}</div>` : ""}${qt ? '<span class="chat-typing-dot"></span>' : ""}</div></div>` : "", Lo = p && !qt && !Fe ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${Et(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${F ? " is-thinking" : ""}${C ? " is-stale" : ""}"><span class="chat-typing-head"><span class="chat-typing-text">${M}</span><span class="chat-typing-dot"></span></span>${X}</div></div>` : "", Ga = t.runActive && !t.stopped ? Po || Lo : "";
+    F || We ? xo() : Pa();
     const Va = mo(), zo = lo(d), Co = !!t.url, Bo = d.length === 0 && !Ga && !Va ? `<div class="chat-sys">${Co ? "说点什么吧，电脑端的回复会同步过来" : "先在 ⚙ 里填电脑地址，例如 http://192.168.2.6:8788"}</div>` : "", Ya = uo(d, {
       tip: Bo,
       projections: Va,
@@ -2824,8 +2825,8 @@ function mr(i, c) {
       const s = document.createElement("button");
       s.type = "button", s.className = "chat-to-top", s.setAttribute("aria-label", "回到这条消息顶部"), s.textContent = "↖", s.addEventListener("click", (l) => {
         l.stopPropagation();
-        const d = n.list, v = a.getBoundingClientRect().top - d.getBoundingClientRect().top + d.scrollTop;
-        d.scrollTo({ top: Math.max(0, v - 8), behavior: "smooth" });
+        const d = n.list, y = a.getBoundingClientRect().top - d.getBoundingClientRect().top + d.scrollTop;
+        d.scrollTo({ top: Math.max(0, y - 8), behavior: "smooth" });
       }), a.appendChild(s);
     }
   }
@@ -3178,7 +3179,7 @@ function mr(i, c) {
     const a = String(e.dataset.input || ""), o = String(e.dataset.q || ""), s = String(e.dataset.value || "");
     if (!a || !o) return;
     const l = Ra(a), d = Array.isArray(l.selected[o]) ? l.selected[o] : [];
-    e.dataset.multi === "1" ? l.selected[o] = d.includes(s) ? d.filter((v) => v !== s) : [...d, s] : l.selected[o] = [s], R();
+    e.dataset.multi === "1" ? l.selected[o] = d.includes(s) ? d.filter((y) => y !== s) : [...d, s] : l.selected[o] = [s], R();
   }
   async function Ao(e) {
     if (!e || Wt.has(e)) return;
@@ -3186,14 +3187,14 @@ function mr(i, c) {
     if (!a) return;
     const o = fr(a, Ft.get(e) || {});
     if (!o) {
-      N("先把每个问题都答一下", "error");
+      P("先把每个问题都答一下", "error");
       return;
     }
     Wt.add(e), t.lastProgressAt = Date.now(), R();
     try {
-      await b.respond(e, o, t.currentSession || ""), N("已回答");
+      await b.respond(e, o, t.currentSession || ""), P("已回答");
     } catch (s) {
-      Wt.delete(e), R(), N("提交失败：" + (s && s.message || "网络错误"), "error");
+      Wt.delete(e), R(), P("提交失败：" + (s && s.message || "网络错误"), "error");
     }
   }
   function qo(e, a) {
@@ -3243,13 +3244,13 @@ function mr(i, c) {
         return;
       }
       if (p === "tool-copy") {
-        const y = String(o.dataset.tool || ""), P = String(o.dataset.copy || ""), C = y ? f.cards.get(y) : null, W = P === "args" ? C && C.args : C && C.preview;
-        W && c.clipboard && typeof c.clipboard.write == "function" && c.clipboard.write(String(W)).then(() => N("已复制")).catch(() => N("复制失败", "error"));
+        const $ = String(o.dataset.tool || ""), S = String(o.dataset.copy || ""), z = $ ? f.cards.get($) : null, F = S === "args" ? z && z.args : z && z.preview;
+        F && c.clipboard && typeof c.clipboard.write == "function" && c.clipboard.write(String(F)).then(() => P("已复制")).catch(() => P("复制失败", "error"));
         return;
       }
       if (p === "tool-open") {
-        const y = String(o.dataset.tool || "");
-        y && fo(y);
+        const $ = String(o.dataset.tool || "");
+        $ && fo($);
         return;
       }
       if (p === "close-tool-sheet") {
@@ -3257,14 +3258,14 @@ function mr(i, c) {
         return;
       }
       if (p === "tool-group-toggle") {
-        const y = String(o.dataset.group || "");
-        if (!y) return;
-        Ot.has(y) ? Ot.delete(y) : Ot.add(y), R();
+        const $ = String(o.dataset.group || "");
+        if (!$) return;
+        Ot.has($) ? Ot.delete($) : Ot.add($), R();
         return;
       }
       if (p === "approval-allow" || p === "approval-deny") {
-        const y = String(o.dataset.approval || ""), P = y.startsWith("approval-") ? y.slice(9) : y;
-        gn(P, p === "approval-allow");
+        const $ = String(o.dataset.approval || ""), S = $.startsWith("approval-") ? $.slice(9) : $;
+        gn(S, p === "approval-allow");
         return;
       }
       if (p === "q-pick") {
@@ -3300,15 +3301,15 @@ function mr(i, c) {
         return;
       }
       if (p === "copy-message") {
-        const y = o.closest(".chat-turn"), P = y ? y.querySelector(".chat-bubble") : null, C = P ? decodeURIComponent(P.dataset.copy || "") : "";
-        C && $a(C).then((W) => N(W ? "已复制这条消息" : "复制失败", W ? "" : "error"));
+        const $ = o.closest(".chat-turn"), S = $ ? $.querySelector(".chat-bubble") : null, z = S ? decodeURIComponent(S.dataset.copy || "") : "";
+        z && $a(z).then((F) => P(F ? "已复制这条消息" : "复制失败", F ? "" : "error"));
         return;
       }
       if (p === "copy-code") {
-        const y = decodeURIComponent(o.dataset.code || "");
-        y && $a(y).then((P) => {
-          if (!P) {
-            N("复制失败", "error");
+        const $ = decodeURIComponent(o.dataset.code || "");
+        $ && $a($).then((S) => {
+          if (!S) {
+            P("复制失败", "error");
             return;
           }
           o.textContent = "已复制", window.setTimeout(() => {
@@ -3318,8 +3319,8 @@ function mr(i, c) {
         return;
       }
       if (p === "resend-message") {
-        const y = o.closest(".chat-turn"), P = y ? y.querySelector(".chat-bubble") : null, C = P ? decodeURIComponent(P.dataset.copy || "") : "";
-        C && n.input && (t.draft = C, n.input.value = C, He(), n.input.focus(), N("已放进输入框，可改完再发"));
+        const $ = o.closest(".chat-turn"), S = $ ? $.querySelector(".chat-bubble") : null, z = S ? decodeURIComponent(S.dataset.copy || "") : "";
+        z && n.input && (t.draft = z, n.input.value = z, He(), n.input.focus(), P("已放进输入框，可改完再发"));
         return;
       }
       if (p === "toggle-acc") {
@@ -3356,8 +3357,8 @@ function mr(i, c) {
       }
       if (p === "toggle-session-search") {
         if (!n.sessionSearch) return;
-        const y = n.sessionSearch.hidden;
-        n.sessionSearch.hidden = !y, y ? n.sessionSearch.focus() : (n.sessionSearch.value = "", t.sessionQuery = "", Qt());
+        const $ = n.sessionSearch.hidden;
+        n.sessionSearch.hidden = !$, $ ? n.sessionSearch.focus() : (n.sessionSearch.value = "", t.sessionQuery = "", Qt());
         return;
       }
       if (p === "session-rename") {
@@ -3420,21 +3421,21 @@ function mr(i, c) {
       no(Aa(d), d);
       return;
     }
-    const v = a.closest(".chat-image-fallback");
-    if (v) {
-      Mo(v);
+    const y = a.closest(".chat-image-fallback");
+    if (y) {
+      Mo(y);
       return;
     }
-    const $ = a.closest("[data-retry]");
-    if ($) {
+    const A = a.closest("[data-retry]");
+    if (A) {
       e.preventDefault();
-      const p = decodeURIComponent($.dataset.retry || ""), y = $.parentElement ? $.parentElement.querySelector(".chat-bubble.is-error") : null;
-      y && y.parentElement ? y.parentElement.remove() : $.remove(), Ae(p, !0);
+      const p = decodeURIComponent(A.dataset.retry || ""), $ = A.parentElement ? A.parentElement.querySelector(".chat-bubble.is-error") : null;
+      $ && $.parentElement ? $.parentElement.remove() : A.remove(), Ae(p, !0);
       return;
     }
-    const z = a.closest("[data-session]");
-    if (z) {
-      e.preventDefault(), ua(z.dataset.session || "");
+    const C = a.closest("[data-session]");
+    if (C) {
+      e.preventDefault(), ua(C.dataset.session || "");
       return;
     }
     if (a === n.scrim) {
@@ -3545,8 +3546,8 @@ function mr(i, c) {
   ko(), dn(), ta(), un(), c.watch && typeof c.watch.ensurePermission == "function" && c.watch.ensurePermission().catch(() => {
   }), Rt(), r = So(), i.appendChild(r), To(), r.addEventListener("click", ja), r.addEventListener("input", Da), r.addEventListener("change", la), r.addEventListener("keydown", Ha), r.addEventListener("focusin", Ua), r.addEventListener("focusout", _a), r.addEventListener("pointerdown", Oa), r.addEventListener("pointermove", Fa), r.addEventListener("pointerup", At), r.addEventListener("pointercancel", At), r.addEventListener("error", Wa, !0), c.ui && typeof c.ui.onInsetsChange == "function" ? fe = c.ui.onInsetsChange(Ba) : Ba(wo()), typeof c.on == "function" && (ge = c.on("pause", Eo), me = c.on("resume", Io)), R(!0), st(), La(), za(), St();
   const _e = t.currentSession;
-  _e ? M.clearOthers(_e).catch(() => {
-  }).then(() => M.get(_e)).then((e) => {
+  _e ? E.clearOthers(_e).catch(() => {
+  }).then(() => E.get(_e)).then((e) => {
     U || f.size > 0 || e.length && (f.replaceEvents(e), t.booting = !1, t.hydrated = !1, R(!0));
   }).catch(() => {
   }) : (t.booting = !1, R(!0)), window.setTimeout(() => {
