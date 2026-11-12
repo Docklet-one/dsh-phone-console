@@ -407,6 +407,75 @@
   place-items: center;
 }
 
+.chat-avatar.has-image {
+  overflow: hidden;
+  background: #fff;
+}
+
+.chat-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat-avatar-edit {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-avatar-pick {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  text-align: left;
+  color: var(--chat-text);
+  background: var(--chat-card);
+  border: 1px solid var(--chat-line);
+  border-radius: 12px;
+}
+
+.chat-avatar-preview {
+  display: grid;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  color: var(--chat-muted);
+  font-size: 20px;
+  background: #fff;
+  border-radius: 10px;
+  place-items: center;
+}
+
+.chat-avatar-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat-avatar-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chat-avatar-copy b {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chat-avatar-copy em {
+  color: var(--chat-faint);
+  font-size: 11px;
+  font-style: normal;
+}
+
 .chat-stamp {
   white-space: nowrap;
 }

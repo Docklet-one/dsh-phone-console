@@ -17,7 +17,7 @@ import { createStore } from './store.js'
 import { createEventCache } from './db.js'
 import { sortMessages as sortTimeline } from './timeline.js'
 import { buildWatchPolicy } from './watch.js'
-import { messageHtml as renderMessage } from './ui/message.js'
+import { avatarHtml, messageHtml as renderMessage } from './ui/message.js'
 import { sessionRowHtml } from './ui/session-row.js'
 import { approvalCardHtml, buildInputAnswers, deliverableCardHtml, inputCardHtml, toolDetailHtml, toolGroupEmptyHtml, toolGroupHtml } from './ui/cards.js'
 import { renderMarkdown } from './ui/markdown.js'
@@ -54,6 +54,8 @@ export default function mount(root, api) {
     searchQuery: '',
     insets: { top: 0, bottom: 0, ime: 0 },
     draft: '',
+    avatarMe: '',
+    avatarAi: '',
     pending: [],
     turnHasMore: false,
     historyLimitReached: false,
@@ -75,6 +77,7 @@ export default function mount(root, api) {
     mode: 'auto',
     wanFirst: false,
     running: false,
+    liveDown: false,
     currentTool: null,
     lastTool: null,
     lastToolAt: 0,
@@ -114,6 +117,8 @@ export default function mount(root, api) {
     /^(127\.0\.0\.1|localhost)$/.test(location.hostname)
   const STUCK_PROMPT_MS = VERIFY_WATCHDOG ? 120 : 5 * 60 * 1000
   const NOT_RUNNING_GRACE_MS = 6000
+const SSE_WATCHDOG_MS = 45 * 1000
+const SSE_WATCHDOG_CHECK_MS = 10 * 1000
   const STUCK_ABORT_MS = VERIFY_WATCHDOG ? 450 : 15 * 60 * 1000
   const STUCK_CHECK_MS = VERIFY_WATCHDOG ? 80 : 10000
   const INITIAL_TURNS = 3
@@ -193,6 +198,9 @@ export default function mount(root, api) {
   let liveMode = 'unknown'
   let liveSource = null
   let liveRetry = 0
+  let liveWatchdog = 0
+  let lastSseAt = 0
+  let heartbeatSeen = false
   // P3：展开的工具卡片、提问草稿、已提交的提问
   const expandedToolGroups = new Set()
   const inputDrafts = new Map()
@@ -221,6 +229,8 @@ export default function mount(root, api) {
         if (parsed && typeof parsed.wanUrl === 'string') wan = parsed.wanUrl
         if (parsed && parsed.autoPick !== undefined) autoPick = parsed.autoPick !== false
         if (parsed && parsed.pick === 'wan') pick = 'wan'
+        if (parsed && typeof parsed.avatarMe === 'string') state.avatarMe = parsed.avatarMe
+        if (parsed && typeof parsed.avatarAi === 'string') state.avatarAi = parsed.avatarAi
       }
     } catch {
       /* 忽略 */
@@ -255,6 +265,8 @@ export default function mount(root, api) {
       token: state.token,
       notify: state.notify !== false,
       notifyMode: state.notifyMode === 'message' ? 'message' : 'turn',
+      avatarMe: state.avatarMe || '',
+      avatarAi: state.avatarAi || '',
     }))
   }
 
@@ -878,8 +890,23 @@ export default function mount(root, api) {
       liveSource = null
     }
     window.clearTimeout(liveRetry)
+    window.clearInterval(liveWatchdog)
+    liveWatchdog = 0
+    lastSseAt = 0
     // 流式内容只在这条连接上有效，断了就别留着半截
     state.stream = null
+  }
+
+  function markLiveLost() {
+    if (disposed) return
+    state.liveDown = true
+    state.runActive = false
+    setStatus('bad', '连接中断，正在重连')
+    paintMessages()
+    closeLive()
+    liveRetry = window.setTimeout(() => {
+      if (!disposed && liveMode === 'sse') connectLive()
+    }, 1500)
   }
 
   function connectLive() {
@@ -891,12 +918,31 @@ export default function mount(root, api) {
     // after 语义：服务端补「seq > after」；after 就是我们最后收到的 seq
     const source = new EventSource(transport.eventsUrl(store.lastSeq, state.currentSession))
     liveSource = source
+    lastSseAt = Date.now()
     let received = false
+    liveWatchdog = window.setInterval(() => {
+      if (disposed || !liveSource || document.hidden || !heartbeatSeen) return
+      if (Date.now() - lastSseAt > SSE_WATCHDOG_MS) markLiveLost()
+    }, SSE_WATCHDOG_CHECK_MS)
+    source.onopen = () => {
+      if (disposed) return
+      lastSseAt = Date.now()
+      const wasDown = state.liveDown
+      state.liveDown = false
+      if (wasDown) {
+        setStatus('ok', '已连接')
+        paintMessages()
+      }
+    }
     source.onmessage = (message) => {
       if (disposed) return
       received = true
+      lastSseAt = Date.now()
+      state.liveDown = false
       try {
-        handleLiveEvent(JSON.parse(message.data))
+        const event = JSON.parse(message.data)
+        if (event && event.type === 'heartbeat') heartbeatSeen = true
+        handleLiveEvent(event)
       } catch {
         /* 坏帧忽略 */
       }
@@ -908,16 +954,13 @@ export default function mount(root, api) {
         fallbackLegacy()
         return
       }
-      // 断线重连：带上最后收到的 seq，服务端补拉，store 用 eventId 去重
-      closeLive()
-      liveRetry = window.setTimeout(() => {
-        if (!disposed && liveMode === 'sse') connectLive()
-      }, 1500)
+      markLiveLost()
     }
   }
 
   function fallbackLegacy() {
     closeLive()
+    state.liveDown = false
     if (liveMode === 'legacy') {
       startPolling()
       return
@@ -1324,8 +1367,83 @@ export default function mount(root, api) {
     }
   }
 
+  function avatarPreviewHtml(value, fallback) {
+    return value ? `<img src="${value}" alt="" />` : fallback
+  }
+
+  function paintAvatarSettings() {
+    if (!appEl) return
+    const me = appEl.querySelector('[data-role="avatar-me-preview"]')
+    const ai = appEl.querySelector('[data-role="avatar-ai-preview"]')
+    if (me) me.innerHTML = avatarPreviewHtml(state.avatarMe, '🙂')
+    if (ai) ai.innerHTML = avatarPreviewHtml(state.avatarAi, '🤖')
+  }
+
+  function readAvatarFile(file) {
+    return new Promise((resolve, reject) => {
+      if (!file || !String(file.type || '').startsWith('image/')) {
+        reject(new Error('请选择图片'))
+        return
+      }
+      if (file.size > 8 * 1024 * 1024) {
+        reject(new Error('图片不能超过 8MB'))
+        return
+      }
+      const reader = new FileReader()
+      reader.onerror = () => reject(new Error('读不到这张图片'))
+      reader.onload = () => {
+        const img = new Image()
+        img.onerror = () => reject(new Error('图片格式不支持'))
+        img.onload = () => {
+          const size = 256
+          const canvas = document.createElement('canvas')
+          canvas.width = size
+          canvas.height = size
+          const ctx = canvas.getContext('2d')
+          if (!ctx) {
+            reject(new Error('图片处理失败'))
+            return
+          }
+          const side = Math.min(img.width || size, img.height || size)
+          const sx = Math.max(0, ((img.width || side) - side) / 2)
+          const sy = Math.max(0, ((img.height || side) - side) / 2)
+          ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size)
+          resolve(canvas.toDataURL('image/jpeg', 0.86))
+        }
+        img.src = String(reader.result || '')
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  async function applyAvatar(who, file) {
+    try {
+      const data = await readAvatarFile(file)
+      if (who === 'ai') state.avatarAi = data
+      else state.avatarMe = data
+      savePrefs()
+      paintAvatarSettings()
+      paintMessages()
+      toast('头像已更新')
+    } catch (error) {
+      toast((error && error.message) || '头像更新失败', 'error')
+    }
+  }
+
   function onPickChange(event) {
     const target = event.target
+    if (target instanceof HTMLInputElement && target.dataset.role === 'avatar-me') {
+      const file = target.files && target.files[0]
+      target.value = ''
+      if (file) void applyAvatar('me', file)
+      return
+    }
+    if (target instanceof HTMLInputElement && target.dataset.role === 'avatar-ai') {
+      const file = target.files && target.files[0]
+      target.value = ''
+      if (file) void applyAvatar('ai', file)
+      return
+    }
     if (target === refs.relayToggle && target instanceof HTMLInputElement) {
       const enabled = Boolean(target.checked)
       if (!api.watch || typeof api.watch.start !== 'function') {
@@ -2152,6 +2270,7 @@ export default function mount(root, api) {
     }
     refs.version.textContent = version ? 'v' + version + ' · 由 DSH 插件托管' : '由 DSH 插件托管'
     paintNotifyMode()
+    paintAvatarSettings()
     toggleAcc('')
     updateServerSum()
     void refreshRelay()
@@ -2342,6 +2461,7 @@ export default function mount(root, api) {
     const next = state.openAcc === name ? '' : name
     state.openAcc = next
     if (refs.serverBody) refs.serverBody.hidden = next !== 'server'
+    if (refs.avatarBody) refs.avatarBody.hidden = next !== 'avatar'
     if (refs.relayBody) refs.relayBody.hidden = next !== 'relay'
     if (refs.cacheBody) refs.cacheBody.hidden = next !== 'cache'
     if (refs.resetBody) refs.resetBody.hidden = next !== 'reset'
@@ -2936,7 +3056,7 @@ export default function mount(root, api) {
         flushTurn()
         turnIsLast = index === lastUserIndex
         const key = item.message.id || item.message.eventId || item.message.seq || `at-${item.message.at}-${index}`
-        push(blocks, 'm:' + key, renderMessage(item.message, assetUrl), {
+        push(blocks, 'm:' + key, renderMessage(item.message, assetUrl, { me: state.avatarMe, ai: state.avatarAi }), {
           mine: true,
           mineText: String(item.message.text || ''),
         })
@@ -2959,7 +3079,7 @@ export default function mount(root, api) {
       if (item.kind === 'message') {
         const key = item.message.id || item.message.eventId || item.message.seq || `at-${item.message.at}-${index}`
         if (item.message.who === 'ai') lastAssistantInTurn = true
-        push(pre, 'm:' + key, renderMessage(item.message, assetUrl), {
+        push(pre, 'm:' + key, renderMessage(item.message, assetUrl, { me: state.avatarMe, ai: state.avatarAi }), {
           assistant: item.message.who === 'ai',
           assistantText: item.message.who === 'ai' ? String(item.message.text || '') : '',
         })
@@ -3281,13 +3401,13 @@ export default function mount(root, api) {
       ? `<span class="chat-typing-head"><span class="chat-typing-text">思考中…</span><span class="chat-typing-dot"></span></span>${mathBoardHtml()}`
       : ''
     const streaming = streamText || streamReasoning
-      ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${streamThinkingOnly ? ' is-thinking' : ''}">${streamThinking}${streamText ? `<div class="chat-stream-text">${renderMarkdown(streamText)}</div>` : ''}${streamText ? '<span class="chat-typing-dot"></span>' : ''}</div></div>`
+      ? `<div class="chat-turn is-ai"><div class="chat-meta">${avatarHtml(false, { me: state.avatarMe, ai: state.avatarAi })}<span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing is-streaming${streamThinkingOnly ? ' is-thinking' : ''}">${streamThinking}${streamText ? `<div class="chat-stream-text">${renderMarkdown(streamText)}</div>` : ''}${streamText ? '<span class="chat-typing-dot"></span>' : ''}</div></div>`
       : ''
     const typing = active && !streamText && !streamReasoning
-      ? `<div class="chat-turn is-ai"><div class="chat-meta"><span class="chat-avatar">🤖</span><span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${thinking ? ' is-thinking' : ''}${stale ? ' is-stale' : ''}"><span class="chat-typing-head"><span class="chat-typing-text">${typingLabel}</span><span class="chat-typing-dot"></span></span>${typingDetail}</div></div>`
+      ? `<div class="chat-turn is-ai"><div class="chat-meta">${avatarHtml(false, { me: state.avatarMe, ai: state.avatarAi })}<span class="chat-stamp">${fmtClock(Date.now())}</span></div><div class="chat-bubble is-ai is-typing${thinking ? ' is-thinking' : ''}${stale ? ' is-stale' : ''}"><span class="chat-typing-head"><span class="chat-typing-text">${typingLabel}</span><span class="chat-typing-dot"></span></span>${typingDetail}</div></div>`
       : ''
     // 正在输出/执行，且仍允许本轮输出时才显示；最终回复后立即隐藏
-    const execution = active && state.runActive && !state.stopped ? streaming || typing : ''
+    const execution = active && state.runActive && !state.stopped && !state.liveDown ? streaming || typing : ''
     if (thinking || streamThinkingOnly) startThinkingMath()
     else stopThinkingMath()
     const projections = projectionHtml()
@@ -3577,11 +3697,11 @@ export default function mount(root, api) {
           <div class="chat-acc-body" data-role="server-body" hidden>
             <label class="chat-field">
               <span>家里（Wi-Fi）<em class="chat-field-state" data-role="lan-state"></em></span>
-              <input data-role="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="http://192.168.2.6:8788" />
+              <input data-role="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="例如：http://192.168.1.1:8788" />
             </label>
             <label class="chat-field">
               <span>外部（可选）<em class="chat-field-state" data-role="wan-state"></em></span>
-              <input data-role="wan" inputmode="url" autocomplete="off" spellcheck="false" placeholder="http://10.126.126.1:8788" />
+              <input data-role="wan" inputmode="url" autocomplete="off" spellcheck="false" placeholder="例如：http://10.126.126.1:8788" />
             </label>
             <p class="chat-sheet-sub">连接方式</p>
             <div class="chat-chipgroup" data-role="mode-group">
@@ -3596,6 +3716,30 @@ export default function mount(root, api) {
             </label>
             <p class="chat-hint">连接不上时，可能电脑防火墙未放行端口。请检查 Windows 防火墙是否允许 Node.js / DeepSeek Harness。</p>
             <button type="button" class="chat-btn is-primary is-block is-sticky" data-action="save">保存</button>
+          </div>
+        </section>
+
+        <section class="chat-acc" data-acc="avatar" data-open="0">
+          <button type="button" class="chat-acc-head" data-action="toggle-acc" data-acc="avatar">
+            <span class="chat-acc-title">头像</span>
+            <span class="chat-acc-sum">对话里的我和助手</span>
+            <span class="chat-acc-chevron">›</span>
+          </button>
+          <div class="chat-acc-body" data-role="avatar-body" hidden>
+            <div class="chat-avatar-edit">
+              <button type="button" class="chat-avatar-pick" data-action="pick-avatar" data-who="me">
+                <span class="chat-avatar-preview" data-role="avatar-me-preview">🙂</span>
+                <span class="chat-avatar-copy"><b>我的头像</b><em>点按上传</em></span>
+              </button>
+              <button type="button" class="chat-avatar-pick" data-action="pick-avatar" data-who="ai">
+                <span class="chat-avatar-preview" data-role="avatar-ai-preview">🤖</span>
+                <span class="chat-avatar-copy"><b>助手头像</b><em>点按上传</em></span>
+              </button>
+            </div>
+            <p class="chat-hint">只保存在这台手机，不上传电脑端。</p>
+            <button type="button" class="chat-btn" data-action="reset-avatars">恢复默认头像</button>
+            <input class="chat-pick" type="file" accept="image/*" data-role="avatar-me" hidden />
+            <input class="chat-pick" type="file" accept="image/*" data-role="avatar-ai" hidden />
           </div>
         </section>
 
@@ -3813,6 +3957,7 @@ export default function mount(root, api) {
       relaySum: appEl.querySelector('[data-role="relay-sum"]'),
       relayToggle: appEl.querySelector('[data-role="relay-toggle"]'),
       relayBody: appEl.querySelector('[data-role="relay-body"]'),
+    avatarBody: appEl.querySelector('[data-role="avatar-body"]'),
     cacheBody: appEl.querySelector('[data-role="cache-body"]'),
     resetBody: appEl.querySelector('[data-role="reset-body"]'),
       notifyMode: appEl.querySelector('[data-role="notify-mode"]'),
@@ -3999,6 +4144,21 @@ export default function mount(root, api) {
       const action = actionEl.dataset.action
       if (action === 'remove-attach') {
         removePending(actionEl.dataset.key || '')
+        return
+      }
+      if (action === 'pick-avatar') {
+        const who = actionEl.dataset.who === 'ai' ? 'ai' : 'me'
+        const input = appEl ? appEl.querySelector(`[data-role="avatar-${who}"]`) : null
+        if (input instanceof HTMLInputElement) input.click()
+        return
+      }
+      if (action === 'reset-avatars') {
+        state.avatarMe = ''
+        state.avatarAi = ''
+        savePrefs()
+        paintAvatarSettings()
+        paintMessages()
+        toast('已恢复默认头像')
         return
       }
       if (action === 'tool-copy') {

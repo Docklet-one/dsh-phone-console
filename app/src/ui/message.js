@@ -16,7 +16,16 @@ function messageKey(message) {
   return ''
 }
 
-export function messageHtml(message, assetUrl) {
+/** 对话头像：默认 emoji，可在设置里换成上传的图片 */
+export function avatarHtml(mine, avatars) {
+  const src = mine ? avatars && avatars.me : avatars && avatars.ai
+  if (src) {
+    return `<span class="chat-avatar has-image"><img src="${escapeAttr(src)}" alt="" /></span>`
+  }
+  return `<span class="chat-avatar">${mine ? '🙂' : '🤖'}</span>`
+}
+
+export function messageHtml(message, assetUrl, avatars) {
   const key = messageKey(message)
   const mid = key ? ` data-mid="${escapeAttr(key)}"` : ''
   if (message.who === 'sys') {
@@ -75,6 +84,6 @@ export function messageHtml(message, assetUrl) {
     mine && !message.pending && message.text
       ? `<button type="button" class="chat-copy chat-resend" data-action="resend-message" aria-label="放进输入框重发">重发</button>`
       : ''
-  const meta = `<div class="chat-meta"><span class="chat-avatar">${mine ? '🙂' : '🤖'}</span><span class="chat-stamp">${fmtClock(message.at)}</span>${copy}${resend}</div>`
+  const meta = `<div class="chat-meta">${avatarHtml(mine, avatars)}<span class="chat-stamp">${fmtClock(message.at)}</span>${copy}${resend}</div>`
   return `<div class="chat-turn ${mine ? 'is-me' : 'is-ai'}"${mid}>${meta}${bubble}</div>`
 }
