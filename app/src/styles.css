@@ -1855,7 +1855,8 @@
   padding: 0;
   background: none;
   color: var(--chat-muted);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .chat-tool-footer-block .chat-tool-group-badge.is-failed {
@@ -1887,13 +1888,21 @@
 
 .chat-tool-group-icon {
   flex: none;
-  font-size: 13px;
+  position: relative;
+  top: -1px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--chat-muted);
+  font-family: "Segoe UI Symbol", "Apple Symbols", sans-serif;
 }
 
 .chat-tool-group-title {
   flex: 1;
   min-width: 0;
-  font-weight: 600;
+  color: var(--chat-muted);
+  font-size: 12px;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2046,17 +2055,6 @@
   position: relative;
   border-color: var(--chat-primary);
   background: rgba(91, 127, 150, 0.14);
-}
-
-.chat-tool.is-active::before,
-.chat-tool-group-body .chat-tool.is-active::before {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 3px;
-  content: '';
-  background: var(--chat-primary);
 }
 
 .chat-tool.is-active .chat-tool-name,

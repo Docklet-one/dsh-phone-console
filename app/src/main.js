@@ -4026,9 +4026,43 @@ export default function mount(root, api) {
       if (action === 'tool-group-toggle') {
         const gid = String(actionEl.dataset.group || '')
         if (!gid) return
-        if (expandedToolGroups.has(gid)) expandedToolGroups.delete(gid)
-        else expandedToolGroups.add(gid)
+        const opening = !expandedToolGroups.has(gid)
+        if (opening) expandedToolGroups.add(gid)
+        else expandedToolGroups.delete(gid)
+        const beforeHeaderTop = actionEl.getBoundingClientRect().top
+        const beforeScrollTop = refs.list ? refs.list.scrollTop : 0
+        const previousHold = Boolean(state.holdAnswer)
+        // 阻止本次重绘按“底部吸附”滚动，改为锚定工具组标题
+        state.holdAnswer = true
+        for (const timer of bottomTimers) window.clearTimeout(timer)
+        bottomTimers = []
         paintMessages()
+        window.requestAnimationFrame(() => {
+          if (!refs.list) {
+            state.holdAnswer = previousHold
+            return
+          }
+          const group = [...refs.list.querySelectorAll('.chat-tool-group')].find(
+            (node) => node.dataset.group === gid,
+          )
+          if (!opening) {
+            // 收起时保持外层原位置，不再把标题拉回视口
+            refs.list.scrollTop = beforeScrollTop
+          } else if (group) {
+            const header = group.querySelector('.chat-tool-group-head')
+            if (header) {
+              const delta = header.getBoundingClientRect().top - beforeHeaderTop
+              if (Math.abs(delta) > 1) refs.list.scrollTop += delta
+            }
+            const body = group.querySelector('.chat-tool-group-body')
+            if (body) body.scrollTop = 0
+          }
+          refs.list.scrollTop = Math.max(
+            0,
+            Math.min(refs.list.scrollTop, refs.list.scrollHeight - refs.list.clientHeight),
+          )
+          state.holdAnswer = previousHold
+        })
         return
       }
       if (action === 'approval-allow' || action === 'approval-deny') {

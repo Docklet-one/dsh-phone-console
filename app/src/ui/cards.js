@@ -66,7 +66,7 @@ export function toolDetailHtml(card, assetUrl = null) {
 export function toolGroupEmptyHtml() {
   return `<div class="chat-tool-group is-empty">
     <div class="chat-tool-group-head">
-      <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
+      <span class="chat-tool-group-icon" aria-hidden="true">&#9874;&#xFE0E;</span>
       <span class="chat-tool-group-title">本轮 0 次工具调用</span>
     </div>
   </div>`
@@ -88,13 +88,13 @@ export function toolGroupHtml(cards, open, expandedTools, assetUrl = null, meta 
       : ''
   const head = cards.length
     ? `<button type="button" class="chat-tool-group-head" data-action="tool-group-toggle" data-group="${escapeAttr(groupId)}" aria-expanded="${open ? 'true' : 'false'}">
-        <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
+        <span class="chat-tool-group-icon" aria-hidden="true">&#9874;&#xFE0E;</span>
         <span class="chat-tool-group-title">本轮 ${total} 次工具调用</span>
         <span class="chat-tool-group-badge${failed > 0 ? ' is-failed' : ''}">${badge}</span>
         <span class="chat-tool-chevron" aria-hidden="true">›</span>
       </button>`
     : `<div class="chat-tool-group-head is-static">
-        <span class="chat-tool-group-icon" aria-hidden="true">🧰</span>
+        <span class="chat-tool-group-icon" aria-hidden="true">&#9874;&#xFE0E;</span>
         <span class="chat-tool-group-title">本轮 ${total} 次工具调用</span>
         <span class="chat-tool-group-badge${failed > 0 ? ' is-failed' : ''}">${badge}</span>
       </div>`
